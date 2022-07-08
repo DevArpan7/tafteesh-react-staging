@@ -13,6 +13,8 @@ const Dashboard = (props) => {
     const dispatch = useDispatch();
     const api = "https://tafteesh-staging-node.herokuapp.com/api/";
     const token = localStorage.getItem("accessToken");
+    const role = localStorage.getItem("role");
+
     let axiosConfig = {
       headers: {
         "Content-Type": "application/json;charset=UTF-8",
@@ -29,6 +31,12 @@ const [loader , setLoader] = useState(false);
     if (!token) {
       props.history.push("/")
 
+    }
+    else if(token && role && role== "Admin"){
+      props.history.push("/admin")
+
+    }else{
+      console.log("data")
     }
   }, [token]);
 
