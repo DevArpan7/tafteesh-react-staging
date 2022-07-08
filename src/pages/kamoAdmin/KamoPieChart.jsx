@@ -34,8 +34,8 @@ const KamoPieChart = () => {
         let tempcountArr = []
         ageDashboardData && ageDashboardData.length > 0 && ageDashboardData.map((item) => {
             return (
-                tempmonthArr.push(item.age),
-                tempcountArr.push(item.count),
+                tempmonthArr.push(item && item.age),
+                tempcountArr.push(item && item.count),
                 console.log(tempcountArr, tempmonthArr, "arr")
 
             ),
