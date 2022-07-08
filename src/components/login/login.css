@@ -1,0 +1,315 @@
+
+.login__body{
+    display: flex;
+    flex-wrap: wrap;
+    min-height: 100vh;
+    overflow-y:auto;
+    padding: 90px 0 20px;
+    position: relative;
+    align-items: center;
+    justify-content: center;
+}
+.login__body_left{
+    width: 45%;
+    background: #0C7698;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: url(../../assets/img/login-bg.jpg);
+    position: absolute;
+    left: 0;
+    height: 100%;
+    top: 0;
+}
+.login__body_left:after{
+    content: "";
+    width: 100%;
+    height: 100%;
+    background: rgba(12, 118, 152, 0.7);
+    backdrop-filter: blur(10px);
+    border-radius: 2px;
+    position: absolute;
+    left: 0;
+    top: 0;
+}
+.login__body_left__logo{
+    max-width: 200px;
+    position: absolute;
+    left: 20px;
+    top: 20px;
+    z-index: 11;
+}
+.login__body_right{
+    width: 55%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: url(../../assets/img/login-bg-logo.png);
+    background-repeat: no-repeat;
+    background-position: right center;
+    position: absolute;
+    right: 0;
+    top: 0;
+    height: 100%;
+    background-size: auto;
+}
+.login__body_box{
+    max-width: 600px;
+    width: calc(100% - 30px);
+    padding: 60px 65px;
+    background: #FCFEFF;
+    box-shadow: 0px 6px 60px rgba(12, 118, 152, 0.15);
+    border-radius: 10px;
+    z-index: 11;
+}
+.login__body_box h2{
+    color: #2C2B29;
+    font-size: 30px;
+    line-height: 1.2;
+    font-weight: bold;
+    letter-spacing: 0.1em;
+    margin-bottom: 15px;
+    text-align: center;
+}
+.login__body_box h2 span{
+    color: #0C7698;
+}
+.login__body_box p{
+    margin-bottom: 40px;
+    color: #777;
+    text-align: center;
+}
+
+.login_form input:not([type=checkbox]){
+    height: 60px;
+    border-left: 0;
+    border-color: rgba(44, 43, 41, 0.30);
+    border-radius: 0 5px 5px 0;
+    color: #282828;
+}
+.login_form input:focus{
+    outline: none;
+    box-shadow: none;
+}
+.login_form input:not([type=checkbox])::placeholder{
+    color: #999;
+}
+.login_form input:not([type=checkbox])::-moz-placeholder{
+    color: #999;
+}
+.login_form input:not([type=checkbox])::-webkit-input-placeholder{
+    color: #999;
+}
+
+.login_form .input-group-append span{
+    height: 100%;
+    background: #fff;
+    border-radius: 5px 0 0 5px;
+    padding-left: 20px;
+    border-color: rgba(44, 43, 41, 0.30);
+    font-size: 21px;
+    color: #CDCCCC;
+}
+.login_form .input-group-append span svg{
+    stroke: #ccc;
+}
+
+.form-group__forgot{
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+}
+.forgot_text a{
+    font-size: 15px;
+    color: rgba(44, 43, 41, 0.5);
+}
+.forgot_text a:hover{
+    color: #0C7698;
+}
+
+/* Custom Check Box */
+.custom-checkbox input{
+    padding: 0;
+    height: initial;
+    width: initial;
+    margin-bottom: 0;
+    display: none;
+    cursor: pointer;
+}  
+.custom-checkbox label {
+    position: relative;
+    cursor: pointer;
+    color: #282828;
+    font-size: 15px;
+    color: rgba(44, 43, 41, 0.5);
+}  
+.custom-checkbox label:before {
+    content:'';
+    -webkit-appearance: none;
+    background-color: transparent;
+    border: 1px solid rgba(44, 43, 41, 0.30);
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05), inset 0px -15px 10px -12px rgba(0, 0, 0, 0.05);
+    padding: 0;
+    display: inline-block;
+    position: relative;
+    vertical-align: middle;
+    cursor: pointer;
+    margin-right: 10px;
+    width: 17px;
+    height: 17px;
+    border-radius: 2px;
+}  
+.custom-checkbox input:checked + label:after {
+    content: '';
+    display: block;
+    position: absolute;
+    top: 5px;
+    left: 6px;
+    width: 6px;
+    height: 10px;
+    border: solid #0079bf;
+    border-width: 0 2px 2px 0;
+    transform: rotate(45deg);
+}
+.custom-checkbox input:checked + label:before {
+    border-color:#0079bf;
+}
+.login_container{
+    margin-top: 50px;
+}
+.login_btn{
+    background-color: #0C7698;
+    height: 50px;
+    line-height: 50px;
+    width: auto;
+    padding: 0 60px;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    color: #fff;
+    border: none;
+}
+.login_btn:hover{
+    background: #045e92;
+    color: #fff;
+}
+.login_btn:focus{
+    outline: none;
+    box-shadow: none;
+}
+
+.login__border{
+    display: flex;
+    justify-content: center;
+    padding-top: 50px;
+}
+.login__border__one{
+    width: 170px;
+    height: 3px;
+    display: block;
+    background: #0C7698;
+    margin-right: 10px;
+    border-radius: 5px;
+}
+.login__border__two{
+    width: 170px;
+    height: 3px;
+    border-radius: 5px;
+    display: block;
+    background: #E5E5E5;;
+}
+
+
+/* NDA Modal */
+.nda_modal .modal-content{
+    border: none;
+    border-radius: 0;
+}
+.nda_modal .modal-body{
+    padding: 80px 100px;
+}
+.nda_modal h3{
+    font-size: 30px;
+    font-weight: 600;
+    margin-bottom: 30px;
+}
+.nda_modal p{
+    font-size: 16px;
+    line-height: 1.75;
+    margin-bottom: 20px;
+}
+.nda_modal p:last-child{
+    margin-bottom: 0;
+}
+.nda_modal_footer{
+    margin-top: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+.login_btn .p-button-icon{
+    margin-right: 15px;
+}
+
+@media (max-width:1600px) {
+    .nda_modal p{
+        font-size: 15px;
+        line-height: 1.6;
+    }
+}
+@media (max-width:1200px){
+    .login__body_box{
+        padding:60px 45px;
+    }
+    .login__body{
+        padding-bottom: 50px;
+    }
+    .nda_modal .modal-body{
+        padding: 50px 40px;
+    }    
+}
+
+@media (max-width:767px){
+    .login__body_box{
+        padding: 40px 30px;
+        margin: 0 auto;
+    }
+    .login__border{
+        padding-top: 40px;
+    }
+    .login__border__one{
+        width:100px;
+    }
+    .login__border__two{
+        width:100px;
+    }
+    .login__body{
+        padding-top: 120px;
+    }
+    .nda_modal h3{
+        font-size: 20px;
+    }
+    .nda_modal .modal-body{
+        padding: 30px 20px;
+    }
+}
+@media (max-width:575px){
+    .login__body_box{
+        padding: 30px 20px;
+    }
+    .login__border{
+        padding-top: 30px;
+    }
+    .login__border__one{
+        width:80px;
+    }
+    .login__border__two{
+        width:80px;
+    }
+    .login__body_box h2{
+        font-size: 22px;
+        letter-spacing: 1px;
+    }
+    .login__body_box p{
+        margin-bottom: 30px;
+    }
+}

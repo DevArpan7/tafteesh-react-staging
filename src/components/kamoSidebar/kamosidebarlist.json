@@ -1,0 +1,131 @@
+[
+    {
+        "title": "Dashboard",
+        "icon": "fal fa-clipboard",
+        "path": "/admin"
+    },
+    {
+        "title": "Partners",
+        "icon": "fal fa-handshake",
+        "path": "/partners"
+    },
+    {
+        "title": "CIT List",
+        "icon": "fal fa-home-heart",
+        "path": "/all-cit"
+    },
+    {
+        "title": "CIT Dimension",
+        "icon": "fal fa-home-heart",
+        "path": "/cit_dimension"
+    },
+    {
+        "title": "CIT Dimension Question",
+        "icon": "fal fa-home-heart",
+        "path": "/cit_dimension_ques"
+    },
+    {
+        "title": "Organizations",
+        "icon": "fal fa-sitemap",
+        "path": "/organizations"
+    },
+    {
+        "title": "SHG Name",
+        "icon": "fal fa-home-heart",
+        "path": "/shg-home"
+    },
+    {
+        "title": "Collectives",
+        "icon": "fal fa-hands-helping",
+        "path": "/collectives"
+    },
+    {
+        "title": "All Survivors",
+        "icon": "fal fa-hands-helping",
+        "path": "/all-survivor"
+    },
+    {
+        "title": "User Magagement",
+        "icon": "fal fa-user-circle",
+        "childrens": [
+           
+            {
+                "title": "Add User",
+                "path": "/add-user"
+            },
+            {
+                "title": "User List",
+                "path": "/user-list"
+            }
+            
+        ]
+    },
+    {
+        "title": "Lawyers",
+        "icon": "fal fa-gavel",
+        "path": "/lawyers-list"
+    },
+    {
+        "title": "Lawyers category",
+        "icon": "fal fa-sitemap",
+        "path": "/lawyers-category"
+    },
+    {
+        "title": "Authority Types",
+        "icon": "fal fa-gavel",
+        "path": "/authority_type"
+    },
+    {
+        "title": "Authority List",
+        "icon": "fal fa-gavel",
+        "path": "/authority_list"
+    },
+    
+    {
+        "title": "Traffickers List",
+        "icon": "fal fa-user-secret",
+        "path": "/traffickers-list"
+    },
+  
+    {
+        "title": "Location Mgmt",
+        "icon": "fal fa-location",
+        "childrens": [
+            {
+                "title": "State",
+                "path": "/states"
+            },
+            {
+                "title": "District",
+                "path": "/districts"
+            },
+            {
+                "title": "Blocks",
+                "path": "/blocks"
+            },
+            {
+                "title": "Police Stations",
+                "path": "/police-station"
+            }
+        ]
+    },
+    {
+        "title": "Act List",
+        "icon": "fal fa-gavel",
+        "path": "/act_list"
+    },
+    {
+        "title": "Section List",
+        "icon": "fal fa-gavel",
+        "path": "/section_list"
+    },
+    {
+        "title": "Document List",
+        "icon": "fal fa-gavel",
+        "path": "/document_list"
+    }
+  
+  
+   
+]
+

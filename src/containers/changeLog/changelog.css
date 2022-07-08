@@ -1,0 +1,15 @@
+.logdate_design li{
+    margin-bottom:12px;
+    font-size: 13px;
+    line-height: 1.2;
+}
+.logdate_design li div:first-child{
+    font-weight: 500;
+    position: relative;
+}
+.logdate_design li div:first-child::after{
+    content: ":";
+    right: 0;
+    top: 0;
+    position: absolute;
+}

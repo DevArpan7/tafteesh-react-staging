@@ -1,0 +1,211 @@
+.main_header{
+    padding: 10px 20px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    background: #fff;
+    box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.05);
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 1005;
+}
+
+
+.header_left{
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    flex: 1 0 0%;
+}
+.logo{
+    max-width: 280px;
+    width: 100%;
+    margin-right: 0;
+}
+.mobilelogo{
+    display: none;
+}
+
+.acount_lastseen{
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+}
+
+/* Myacount */
+.myacount_btn{
+    background: transparent;
+    border: none;
+}
+.myacount_btn:hover,
+.myacount_btn:active:focus,
+.myacount_btn:focus{
+    outline: none;
+    box-shadow: none !important;
+    background: transparent;
+}
+.myacount .show.dropdown .myacount_btn{
+    background: transparent;
+    box-shadow: none;
+}
+.myacount_btn::after{
+    color: #000000;
+    border: none;
+    content: "\f107";
+    font-size: 17px;
+    font-weight: 400;
+    font-family: "Font Awesome 5 Pro";
+    line-height: 1;
+    margin-left: 10px;
+    top: 5px;
+    position: relative;
+    transition: all 300ms ease-in-out;
+}
+.myacount .show.dropdown .myacount_btn::after{
+    transform:rotate(180deg)
+}
+.myacount img{
+    width: 45px;
+    height: 45px;
+    border: 2px solid #0C7698;
+    border-radius: 50%;
+    object-fit: cover;
+}
+.pending_case_icon{
+    width: 45px;
+    height: 45px;
+}
+.pending_case_text{
+    padding-left: 15px;
+}
+.pending_case_text .pendingcount{
+    border: 1px solid #F55757;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-left: 10px;
+    border-radius: 50%;
+    color: #F55757;
+}
+
+/* last_seen */
+.last_seen{
+    margin-right: 20px;
+}
+.last_seen span{
+    color: #999;
+}
+
+/* togglebtn */
+.togglebtn{
+    display: none;
+    border: none;
+    font-size: 19px;
+    padding: 0;
+    width: 35px;
+    height: 38px;
+    justify-content: center;
+    align-items: center;
+    border-radius: 3px;
+    color: #fff;
+    background: #0C7698;
+    margin-right: 15px;
+}
+.togglebtn i{
+    line-height: 1;
+}
+
+
+/* Responsive */
+@media (max-width:1200px){
+    .main_header{
+        padding: 10px 15px;
+        align-items: center;
+    }
+    .togglebtn{
+        display: flex;
+    }
+    .togglebtn_hide i:before{
+        content: "\f00d";
+    }
+    .bodyleft{
+        transform: translateX(-100%);
+    }
+    .bodyleftHide{
+        transform: translateX(0);
+    }
+}
+@media (max-width:991px){
+    .mobilelogo{
+        display: block;
+    }
+    .desktoplogo{
+        display: none;
+    }
+    .logo{
+        max-width: 50px;
+        margin-right: 5%;
+    }
+    .pending_case_icon{
+        width: 32px;
+        height: 32px;
+    }
+    .pendingtext{
+        font-size: 13px;
+    }
+    .pending_case_text{
+        padding-left: 10px;
+    }
+    .pending_case_text .pendingcount{
+        margin-left: 10px;
+        font-size: 11px;
+        font-weight: 500;
+        width: 20px;
+        height: 20px;
+    }
+    .last_seen{
+        font-size: 13px;
+    }
+    .myacount img{
+        width: 35px;
+        height: 35px;
+    }
+}
+
+@media (max-width:575px){
+    .pendingtext{
+        display: none;
+    }
+    .pending_case_text .pendingcount{
+        margin-left: 0;
+    }
+    .pending_case_text .pendingcount{
+        background: #F55757;
+        color: #fff;
+    }
+    .pending_case{
+        position: relative;
+        margin-right: 25px;
+    }
+    .pending_case_text {
+        padding-left: 0;
+        position: absolute;
+        right: -10px;
+        top: -4px;
+    }
+    .last_seen{
+        text-align: right;
+        line-height: 1.2;
+        margin-right: 12px;
+    }
+    .last_seen span{
+        display: block;
+    }
+    .myacount_btn::after{
+        top: 8px;
+        margin-left:5px;
+    }    
+}

@@ -1,0 +1,208 @@
+.single_profile_box_top{
+    display: flex;
+    flex-wrap: wrap;
+    margin-bottom: 0;
+    align-items: center;
+}
+.single_profile_box_top_left{
+    max-width: 140px;
+}
+.single_profile_box_top_left img{
+    width: 140px;
+    height: 140px;
+    object-fit: cover;
+}
+.single_profile_box_top_right{
+    flex: 1 0 0%;
+    padding-left: 30px;
+}
+.single_profile_box_top_right h3{
+    font-size: 60px;
+    font-weight: 500;
+    line-height: 1.2;
+    color: #282828;
+    margin-bottom: 20px;
+}
+.single_profile_box_top_right ul{
+    display: inline-block;
+    flex-wrap: wrap;
+}
+.single_profile_box_top_right li{
+    padding-right: 10%;
+    margin-bottom: 15px;
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 24px;
+    color: #616060;
+    letter-spacing: 0.5px;
+    display: inline-block;
+}
+.single_profile_box_top_right li span{
+    margin-right: 20px;
+}
+.single_profile_box_top_right li:last-child{
+    padding-right: 0;
+    margin-bottom: 0;
+}
+.single_profile_box_top_right li strong{
+    margin-right: 15px;
+    color: #282828;
+    font-weight: 600;
+}
+.fileupload_button label{
+    font-style: italic;
+    font-weight: 400;
+    font-size: 14px;
+    color: #565656;
+    display: block;
+    margin-bottom: 10px;
+}
+.fileupload_buttoninner{
+    position: relative;
+    overflow: hidden;
+    width: 150px;
+}
+.fileupload_buttoninner input{
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    cursor: pointer;
+}
+.fileupload_buttoninner span{
+    border-radius: 3px;
+    background: #AB9D1A;
+    display:block;
+    padding: 10px 0;
+    text-align: center;
+    color: #fff;
+    letter-spacing: 1px;
+    font-weight: 500;
+}
+
+.survivors_details_table_wrap table td{
+    padding: 18px 15px;
+    font-weight: 500;
+    font-size: 16px;
+    line-height: 24px;
+    letter-spacing: 0.04em;
+    color: #282828;
+}
+.availabletext,
+.unavailabletext{
+    display: flex;
+}
+.unavailabletext i{
+    margin-right: 10px;
+    font-size: 21px;
+    vertical-align: middle;
+    color: #ff2020ba;
+}
+.unavailabletext span{
+    background: #ff2020ba;
+    color: #fff;
+    font-size: 13px;
+    font-weight: 400;
+    border-radius: 15px;
+    padding: 1px 10px;
+}
+.availabletext i{
+    margin-right: 10px;
+    font-size: 21px;
+    vertical-align: middle;
+    color: #49791Aba;
+}
+.availabletext span{
+    background: #49791Aba;
+    color: #fff;
+    font-size: 13px;
+    font-weight: 400;
+    border-radius: 15px;
+    padding: 1px 10px;
+}
+.profiledetailsview{
+    min-width: 120px;
+    border: 1px solid #0C7698;
+    color: #282828;
+    background: #fff;
+    display: inline-block;
+    text-align: center;
+    padding: 6px 0;
+    border-radius: 3px;
+}
+.profiledetailsview:hover{
+    background: #0C7698;
+    color: #fff;
+}
+.profiledetailsadd{
+    min-width: 120px;
+    border: 1px solid #0C7698;
+    color: #fff;
+    background: #0C7698;
+    display: inline-block;
+    text-align: center;
+    padding: 6px 0;
+    border-radius: 3px;
+}
+.profiledetailsadd:hover{
+    color: #282828;
+    background: #fff;
+}
+
+
+
+@media (max-width:1600px) {
+    .single_profile_box_top_right h3{
+        font-size: 30px;
+        font-weight: 600;
+    }
+}
+@media (max-width:1440px) {
+    .single_profile_box_top_right h3{
+        font-size: 30px;
+        font-weight: 600;
+    }
+}
+@media (max-width:1200px) {
+    .single_profile_box_top_right h3{
+        font-size: 30px;
+        font-weight: 600;
+    }
+}
+@media (max-width:991px) {
+    .single_profile_box_top_right h3{
+        font-size: 25px;
+        margin-bottom: 15px;
+    }
+    .single_profile_box_top_right{
+        padding-left: 40px;
+    }
+}
+@media (max-width:767px) {
+    .single_profile_box_top_right h3{
+        font-size: 25px;
+    }
+    .single_profile_box_top_right{
+        padding-left: 30px;
+    }
+    .single_profile_box_top_right li{
+        flex-direction: column;
+    }
+    .single_profile_box_top_right li strong{
+        margin-bottom: 5px;
+    }
+}
+@media (max-width:575px) {
+    .single_profile_box_top{
+        flex-direction: column;
+    }
+    .single_profile_box_top_left{
+        margin-bottom: 20px;
+    }
+    .single_profile_box_top_right{
+        padding-left: 0;
+    }
+    .single_profile_box_top_right h3{
+        font-size: 22px;
+    }
+}

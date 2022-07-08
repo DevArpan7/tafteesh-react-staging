@@ -1,0 +1,284 @@
+.main_body{
+    flex-wrap: wrap;
+    min-height: calc(100vh - 89px);
+    background: rgba(12, 118, 152, 0.05);
+    margin-left: 300px;
+    margin-top: 85px;
+}
+.bodyright{
+    padding: 40px 30px;
+}
+.page_title{
+    font-size: 24px;
+    margin-bottom: 30px;
+    font-weight: 500;
+}
+.page_title span{
+    color: #0C7698;
+}
+.white_box_shadow{
+    background: #fff;
+    box-shadow: 0px 6px 15px rgba(0, 0, 0, 0.05);
+    border-radius: 5px;
+}
+.white_box_shadow_20{
+    padding: 20px;
+    background: #fff;
+    box-shadow: 0px 6px 15px rgba(0, 0, 0, 0.05);
+    border-radius: 5px;
+}
+.white_box_title{
+    font-size: 24px;
+    font-weight: 500;
+    margin-bottom: 25px;
+}
+.mb30{
+    margin-bottom: 30px;
+}
+
+.socialworker_tab_menu.react-tabs__tab--selected{
+    background: none;
+}
+.socialworker_tab_menu.react-tabs__tab--selected:focus-visible{
+    outline: none;
+}
+.totla_profile_box{
+    cursor: pointer;
+    padding: 30px 40px;
+    background: #fff;
+    text-align: center;
+    box-shadow: 0px 6px 15px rgba(0, 0, 0, 0.05);
+    border-radius: 5px;
+    transition: all 300ms ease-in-out;
+    margin-bottom: 30px;
+}
+.totla_profile_box:hover,
+.react-tabs__tab--selected .totla_profile_box{
+    background: #0C7698;
+}
+.react-tabs__tab--selected .totla_profile_box{
+    cursor: default;
+}
+
+.totla_profile_box_top{
+    padding-bottom: 10px;
+    transition: all 300ms ease-in-out;
+    margin-bottom: 10px;
+    border-bottom: 1px solid rgba(40, 40, 40, 0.5);;
+}
+.totla_profile_box:hover .totla_profile_box_top,
+.react-tabs__tab--selected .totla_profile_box_top{
+    border-color: rgba(255, 255, 255, 0.5);
+}
+.totla_profile_box_top span{
+    width: 50px;
+    height: 50px;
+    margin: 0 auto 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 18px;
+    background: #6DADC1;
+    transition: all 300ms ease-in-out;
+    color: #fff;
+    border-radius: 50%;
+}
+.totla_profile_box:hover .totla_profile_box_top span,
+.react-tabs__tab--selected .totla_profile_box_top span{
+    background: #fff;
+    color: #0C7698;
+}
+.totla_profile_box_top h3{
+    transition: all 300ms ease-in-out;
+    font-size: 16px;
+}
+.totla_profile_box:hover .totla_profile_box_top h3,
+.react-tabs__tab--selected .totla_profile_box_top h3{
+    color: #fff;
+}
+.totla_profile_box_bottom li{
+    display: flex;
+    justify-content: space-between;
+    transition: all 300ms ease-in-out;
+    margin-bottom: 10px;
+}
+.totla_profile_box_bottom li:last-child{
+    margin-bottom: 0;
+}
+.totla_profile_box:hover .totla_profile_box_bottom li,
+.react-tabs__tab--selected .totla_profile_box_bottom li{
+    color: #fff;
+}
+
+/* Survivor List */
+.survivor_list_box a{
+    border: 1px solid #0C7698;
+    border-radius: 5px;
+    color: #000;
+    padding: 6px 15px;
+    display: inline-flex;
+}
+
+
+/* Feedback Box */
+.tafteesh_feedback_box h3{
+    font-size: 20px;
+    margin-bottom: 20px;
+}
+.tafteesh_feedback_box_list{
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    margin-bottom: 35px;
+}
+.tafteesh_feedback_box_list:last-child{
+    margin-bottom: 0;
+}
+.tafteesh_feedback_box_list_img{
+    flex: 0 0 45px;
+    max-width: 45px;
+}
+.tafteesh_feedback_box_list_img img{
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+.tafteesh_feedback_box_list_text{
+    flex: 1 0 0%;
+    padding-left: 15px;
+}
+.tafteesh_feedback_box_list_text h6{
+    font-size: 16px;
+    margin-bottom: 5px;
+    color: #2C2B29;
+}
+.tafteesh_feedback_box_list_text p{
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    max-width: 275px;
+    width: 100%;
+    margin-bottom: 0;
+    font-size: 14px;
+    color: #565656;
+}
+
+
+/* SA DA tab */
+.vc_summary_tab_menu li{
+    width: 140px;
+    border: none;
+    background: #33425266;
+    border-radius: 20px 20px 0 0;
+    margin-right: 15px;
+    font-size: 20px;
+    color: #565656;
+    text-align: center;
+}
+.vc_summary_tab_menu .react-tabs__tab--selected{
+    color: #fff;
+    background: #AB9D1A;
+}
+.vc_summary_tab_menu .react-tabs__tab--selected:after{
+    display: none;
+}
+.vc_summary_tab_text table,
+.vc_case_history table{
+    border-spacing: 0 15px;
+    border-collapse: separate;    
+}
+.vc_summary_tab_text table tr{
+    border-radius: 5px;
+}
+.vc_summary_tab_text table tr:nth-child(3n+1),
+.vc_case_history table tbody tr:nth-child(3n+1){    
+    background: #0C76980D;
+}
+.vc_summary_tab_text table tr:nth-child(3n+2),
+.vc_case_history table tbody tr:nth-child(3n+2){    
+    background: #0C76981A;
+}
+.vc_summary_tab_text table tr:nth-child(3n+3),
+.vc_case_history table tbody tr:nth-child(3n+3){    
+    background: #0C769826;
+}
+.vc_summary_tab_text table tr:last-child{    
+    margin-bottom: 0;
+}
+.vc_summary_tab_text table td,
+.vc_case_history table td{
+    padding: 15px 20px;
+    flex: 1 0 0%;
+    font-size: 12px;
+    color: #282828;
+    font-weight: 400;
+}
+.vc_case_history table th{
+    padding: 0;
+    font-weight: 500;
+    font-size: 16px;
+    color: #282828;
+}
+
+
+
+
+/* Responsive */
+@media (max-width:1440px){
+    .main_body{
+        margin-left: 270px;
+    }
+    .bodyright{
+        padding: 30px 20px;
+    }
+}
+@media (max-width:1200px){
+    .main_body{
+        margin-left: 0;
+    }
+}
+
+
+@media (max-width:991px) {
+    .totla_profile_box{
+        padding: 20px;
+    }
+    .totla_profile_box_top h3{
+        font-size: 15px;
+    }
+    .totla_profile_box_bottom li{
+        font-size: 14px;
+        letter-spacing: 0.5px;
+    }
+    .white_box_title, .page_title{
+        font-size: 22px;
+    }
+    .vc_summary_tab_text table td, .vc_case_history table td{
+        padding: 15px;
+    }
+    .white_box_shadow_20 {
+        padding: 15px;
+    }
+    .main_body{
+        margin-top: 70px;
+    }
+    .bodyright{
+        padding-left: 15px;
+        padding-right: 15px;
+    }
+}
+@media (max-width:575px) {
+    .white_box_title, .page_title{
+        font-size: 20px;
+    }
+    .vc_summary_tab_menu li{
+        width: 110px;
+    }
+    .tafteesh_feedback_box_list_text p{
+        max-width: 200px;
+    }
+    .survivor_list_box table{
+        width: 540px;
+    }
+}

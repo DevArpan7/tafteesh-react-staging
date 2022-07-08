@@ -1,0 +1,66 @@
+.topbg{
+    margin: -40px -30px;
+    height: 270px;
+}
+.topbg img{
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+}
+
+.accountImage_wrap{
+    margin-bottom: 35px;
+    margin-top: -60px;
+}
+.accountImage_wrap h3{
+    font-size: 30px;
+}
+.accountImage{
+    width: 150px;
+    height: 150px;
+    border: 4px solid #FCFEFF;
+    border-radius: 10px;
+}
+.accountImage img{
+    width: 100%;
+    border-radius: 10px;
+    height: 100%;
+    object-fit: cover;
+}
+
+.myAccount_form h4,
+.ChangePassword_box h4{
+    font-weight: 500;
+    font-size: 20px;
+    line-height: 30px;
+    letter-spacing: 0.02em;
+    color: #282828;
+}
+.myAccount_form .form-label,
+.ChangePassword_box .form-label{
+    font-weight: 500;
+    font-size: 12px;
+    line-height: 18px;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: #7C7C7C;
+}
+.myAccount_form .form-control,
+.myAccount_form .form-select,
+.ChangePassword_box .form-control,
+.ChangePassword_box .form-select{
+    background-color: #FCFEFF;
+    border: 1px solid #E3E3E3;
+    box-sizing: border-box;
+    border-radius: 4px;
+    height: 42px;
+    font-size: 13px;
+    letter-spacing: 0.7px;
+}
+.myAccount_form .form-control:focus-visible,
+.myAccount_form .form-select:focus-visible{
+    box-shadow: none;
+    outline: none;
+    border-color: #0C7698;
+}

@@ -1,0 +1,76 @@
+
+.kamoadmin_tab_menu_top .kamoadmintabImg{
+    height: 40px;
+    display: block;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 10px;
+}
+.kamoadmin_tab_menu_top .kamoadmintabImg img{
+    max-width: 100%;
+    max-height: 100%;
+    transition:  all 300ms ease-in-out;
+}
+.kamoadmin_tab_menu_top h3{
+    font-weight: 500;
+    font-size: 16px;
+    transition:  all 300ms ease-in-out;
+    line-height: 24px;
+    color: #0C7698;
+    letter-spacing: .5px;
+}
+.kamoadmin_tab_menu_top{
+    position: relative;
+    padding-bottom: 15px;
+}
+.kamoadmin_tab_menu_top:after{
+    content: "";
+    height: 1px;
+    width: 80%;
+    background: rgba(40, 40, 40, 0.5);
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    margin: 0 auto;
+    transition:  all 300ms ease-in-out;
+}
+.kamoadmin_tab_menu_bottom{
+    padding-top: 15px;
+    text-align: center;
+}
+.kamoadmin_tab_menu_bottom span{
+    width: 50px;
+    height: 50px;
+    background: #6DADC1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 50%;
+    margin: 0 auto;
+    color: #fff;
+    transition:  all 300ms ease-in-out;
+}
+.react-tabs__tab--selected.kamoadmin_tab_menu .kamoadmin_tab_menu_top h3, .kamoadmin_tab_menu:hover .kamoadmin_tab_menu_top h3{
+    color: #fff;
+}
+.react-tabs__tab--selected.kamoadmin_tab_menu .kamoadmin_tab_menu_top:after,
+.kamoadmin_tab_menu:hover .kamoadmin_tab_menu_top:after{
+    background: rgba(255, 255, 255, 0.5);
+}
+.react-tabs__tab--selected.kamoadmin_tab_menu .kamoadmin_tab_menu_top span img,
+.kamoadmin_tab_menu:hover .kamoadmin_tab_menu_top span img{
+    filter: brightness(0) invert(1);
+}
+.react-tabs__tab--selected.kamoadmin_tab_menu .kamoadmin_tab_menu_bottom span,
+.kamoadmin_tab_menu:hover .kamoadmin_tab_menu_bottom span {
+    background: #fff;
+    color: #0C7698;
+}
+.survivors_table_wrap_gap table{
+    border-spacing: 0 15px;
+    border-collapse: separate;
+}
+.survivors_table_wrap_gap table th{
+    padding-bottom: 5px;
+}

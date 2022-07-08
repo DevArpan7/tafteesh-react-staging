@@ -1,0 +1,194 @@
+.topcartbar .accordion-flush .survivor_cardbar_wrap {
+    border-radius: 5px;
+}
+.topcartbar .accordion-flush .accordion-item .accordion-button{
+    font-size: 20px;
+    font-weight: 500;
+    color: #282828;
+    border-radius: 5px 5px 0 0;
+    letter-spacing: 1px;
+    order: 1;
+}
+.topcartbar .accordion-flush .accordion-item .accordion-button.collapsed::before{
+    content: "Click to Expand";
+    order: 2;
+    font-size: 12px;
+    line-height: 21px;
+    letter-spacing: 0.04em;
+    color: #535353;
+    font-weight: 400;
+    margin-left: 5px;
+}
+.topcartbar .accordion-flush .accordion-item .accordion-button::after{
+    order: 3;
+}
+
+.survivor_cardbar_wrap .accordion-body{
+    padding: 0;
+}
+
+.activeClassname{
+    cursor: pointer;
+    background: green
+}
+.inActiveClass{
+    cursor: pointer;
+    background: red
+}
+.survivor_card_bar ul{
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+}
+.survivor_card_bar li{
+    flex: 0 0 25%;
+    max-width: 25%;
+    padding: 15px;
+    border-bottom: 1px solid #E3E3E3;
+    border-right: 1px solid #E3E3E3;
+}
+
+
+.survivor_card_bar li h6{
+    font-weight: 500;
+    font-size: 14px;
+    line-height: 21px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+}
+.survivor_card_bar li h5{
+    font-style: normal;
+    font-weight: 400;
+    font-size: 15px;
+    line-height: 1.2;
+    letter-spacing: 0.04em;
+    color: #535353;
+}
+
+.topbreadcrumb li {
+    font-size: 14px;
+    letter-spacing: 0.5px;
+    color: #0C7698;
+}
+.topbreadcrumb li.active {
+    color: #0C7698;
+}
+.topbreadcrumb li a{
+    color: #000000;
+}
+.topbreadcrumb li a:hover{
+    color: #0C7698;
+}
+.btn-border{
+    border: 1px solid #282828;
+    text-transform: capitalize;
+    font-size: 14px;
+    letter-spacing: 0.5px;
+    padding: 7px 15px;
+    font-weight: 400;
+    line-height: 1;
+    color: #000;
+}
+.btn-border-gray{
+    border-radius: 4px;
+    border: 1px solid #CDCCCC;
+    background: #fff;
+}
+.inactivemodal .modal-header{
+    background: #0C7698;
+}
+.inactivemodal .modal-title{
+    color: #fff;
+    letter-spacing: 1px;
+}
+.inactivemodal .btn-close{
+    filter: brightness(0) invert(1);
+}
+.inactivemodal .modal-body textarea.form-control{
+    padding: 15px;
+    font-size: 14px;
+    letter-spacing: 0.5px;
+    color: #000;
+    resize: none;
+}
+.inactivemodal .modal-body textarea.form-control:focus{
+    border-color: #0C7698;
+    outline: none;
+    box-shadow: none;
+}
+.addFormModal .modal-content{
+    border-radius: 0;
+}
+.addFormModal .modal-header {
+    background: #0C7698;
+    border-radius: 0;
+}
+.addFormModal .modal-header .modal-title{
+    font-size: 20px;
+    letter-spacing: 1px;
+    color: #fff;
+}
+.addFormModal .btn-close{
+    filter: brightness(0) invert(1);
+}
+.addFormModal .site_form_wraper form label{
+    font-weight: 500;
+    font-size: 12px;
+    line-height: 18px;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: #4a4a4a;
+}
+
+.download__img img{
+    width: 100px;  
+}
+
+.redclassName {
+    background: #ff5353;
+    padding: 2px 10px 3px;
+    border-radius: 15px;
+    color: #fff;
+}
+
+@media screen and (max-width:1440px) {
+    .survivor_card_bar li{
+        flex: 0 0 33.33%;
+        max-width: 33.33%;
+        border-right: 1px solid #E3E3E3;
+    }
+    .survivor_card_bar li:nth-child(3n+3){
+        border-right: 0;
+    }
+}
+
+@media (max-width:767px) {
+    .survivor_card_bar li{
+        flex: 0 0 50%;
+        max-width: 50%;
+        border-right: 1px solid #E3E3E3 !important;
+    }
+    .survivor_card_bar li:nth-child(2n+2){
+        border-right: 0 !important;
+    }
+}
+
+@media (max-width:575px) {
+    .survivor_card_bar li{
+        flex: 0 0 100%;
+        max-width: 100%;
+        border-right: 0 !important;
+    }
+    .survivor_card_bar li:last-child{
+        border-bottom: 0;
+    }
+    .fileupload_buttoninner{
+        width: 125px;
+    }
+}
+
+@media (min-width:1441px) {
+    .survivor_card_bar li:nth-child(4n + 4){
+        border-right: none;
+    }
+}

@@ -1,0 +1,101 @@
+.forminnertitle{
+    font-weight: 500;
+    font-size: 20px;
+    line-height: 30px;
+    letter-spacing: 0.02em;
+    color: #282828;
+}
+
+.switchOnOff.form-switch .form-check-input{
+    height: 30px;
+    width: 70px;
+    border-radius: 20px;
+    background: rgb(195 195 195);
+}
+.switchOnOff.form-switch .form-check-input:checked[type=checkbox]{
+    background: rgb(146, 245, 133);
+}
+
+.switchOnOff.form-switch .form-check-input:after{
+    width: 24px;
+    height: 24px;
+    transition: all 300ms ease-in-out;
+    margin-top: 3px;
+    left: 3px;
+    margin-left: 0;
+}
+.switchOnOff.form-switch .form-check-input:checked[type=checkbox]:after{
+    width: 24px;
+    height: 24px;
+    margin-top: 3px;
+    left: 26px;
+    background-color: #fff;
+    transition: all 300ms ease-in-out;
+}
+.switchOnOff .form-check-input[type=checkbox]:checked:after{
+    transform: rotate(0);
+}
+.switchOnOff.form-switch .form-check-input:before{
+    content: "Off";
+    opacity: 1;
+    width: auto;
+    height: auto;
+    box-shadow: none;
+    transform: scale(1) translateY(-50%);
+    right: 10px;
+    top: 50%;
+    font-size: 13px;
+    font-weight: 500;
+    color: #fff;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+}
+.switchOnOff .form-check-input[type=checkbox]:checked:before{
+    content: "On";
+    right: 40px;
+}
+.switchOnOff.form-switch .form-check-input:checked:focus:before{
+    margin-left: 0;
+    transform: scale(1) translateY(-50%);
+    box-shadow: none;   
+}
+.was-validated .switchOnOff.form-switch .form-check-input:valid:focus:before{
+    box-shadow: none;
+}
+.was-validated .switchOnOff.form-switch .form-check-input:valid:checked[type=checkbox]:after{
+    box-shadow: none;
+    background-color: #fff;
+}
+
+.shortboxSelect .form-select{
+    height: 40px;
+    font-size: 15px;
+    letter-spacing: 0.5px;
+}
+.shortboxTitle h6{
+    font-size: 15px;
+    font-weight: normal;
+    letter-spacing: 0.5px;
+}
+
+.site_form_wraper table .viewhead{
+    background: rgba(44, 253, 99, 0.752);
+    color: #000;
+    padding: 5px 10px;
+    display: inline-block;
+    border-radius: 3px;
+}
+.site_form_wraper table .edithead{
+    background: rgba(208, 253, 44, 0.752);
+    color: #000;
+    padding: 5px 10px;
+    display: inline-block;
+    border-radius: 3px;
+}
+.site_form_wraper table .deletehead{
+    background: rgba(253, 44, 44, 0.752);
+    color: #fff;
+    padding: 5px 10px;
+    display: inline-block;
+    border-radius: 3px;
+}
