@@ -25,7 +25,7 @@ const KamoCollectives = (props) => {
   const collectivesList = useSelector((state) => state.collectivesList);
   const [addCollectiveData, setAddCollectiveData] = useState({});
   const [updateMessage, setUpdateMessage] = useState("");
-  const api = "https://kamo-api.herokuapp.com/api/collective";
+  const api = "https://tafteesh-staging-node.herokuapp.com/api/collective";
   const token = localStorage.getItem("accessToken");
   let axiosConfig = {
     headers: {

@@ -28,7 +28,7 @@ const SurvivorsNextPlan = (props) => {
   const [open, setOpen] = useState(false);
   const [selectedData, setSelectedData] = useState({});
   const [updateMessage, setUpdateMessage] = useState("");
-  const api = "https://kamo-api.herokuapp.com/api/survival-nextplanaction";
+  const api = "https://tafteesh-staging-node.herokuapp.com/api/survival-nextplanaction";
   const token = localStorage.getItem("accessToken");
   let axiosConfig = {
     headers: {

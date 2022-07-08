@@ -17,7 +17,7 @@ const AllCitList = (props) => {
     const allCitList = useSelector((state) => state.allCitList);
     const [addShgData, setAddShgData] = useState({});
     const [updateMessage, setUpdateMessage] = useState("");
-    const api = "https://kamo-api.herokuapp.com/api";
+    const api = "https://tafteesh-staging-node.herokuapp.com/api";
     const token = localStorage.getItem("accessToken");
     let axiosConfig = {
         headers: {

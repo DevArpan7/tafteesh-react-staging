@@ -25,7 +25,7 @@ const DocumentList = (props) => {
 
     const [addShgData, setAddShgData] = useState({});
     const [updateMessage, setUpdateMessage] = useState("");
-    const api = "https://kamo-api.herokuapp.com/api/document";
+    const api = "https://tafteesh-staging-node.herokuapp.com/api/document";
     const token = localStorage.getItem("accessToken");
     let axiosConfig = {
         headers: {

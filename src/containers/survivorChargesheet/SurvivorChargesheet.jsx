@@ -35,7 +35,7 @@ import { NavLink, useHistory, useLocation } from "react-router-dom";
 
 const SurvivorChargesheet = (props) => {
   const [modalChargesheetShow, setModalChargesheetShow] = useState(false);
-  const api = "https://kamo-api.herokuapp.com/api";
+  const api = "https://tafteesh-staging-node.herokuapp.com/api";
   const token = localStorage.getItem("accessToken");
   let axiosConfig = {
     headers: {

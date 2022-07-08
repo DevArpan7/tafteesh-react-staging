@@ -79,7 +79,7 @@ const SurvivorCIT = (props) => {
   const [defaultData,setDefaultData]= useState({version: 1, status: "ongoing"})
   const [addCitData, setAddCitData] = useState({});
   const [updateMessage, setUpdateMessage] = useState("");
-  const api = "https://kamo-api.herokuapp.com/api";
+  const api = "https://tafteesh-staging-node.herokuapp.com/api";
   const token = localStorage.getItem("accessToken");
   let axiosConfig = {
     headers: {
@@ -370,14 +370,14 @@ const SurvivorCIT = (props) => {
         formData.append("file", addDimnsionData.file);
         axios
           .post(
-            "https://kamo-api.herokuapp.com/api/file/upload",
+            "https://tafteesh-staging-node.herokuapp.com/api/file/upload",
             formData,
             axiosConfig
           )
           .then(function (response) {
             if (response && response.data.error === false) {
               const { data } = response;
-              const obj = `https://kamo-api.herokuapp.com/${
+              const obj = `https://tafteesh-staging-node.herokuapp.com/${
                 data.data && data.data.filePath
               }`;
               toSendObj.reference_documents = obj;

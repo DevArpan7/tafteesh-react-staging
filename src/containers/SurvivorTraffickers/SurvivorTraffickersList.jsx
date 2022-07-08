@@ -21,7 +21,7 @@ const SurvivorTraffickersList = (props) => {
     const [updateMessage, setUpdateMessage] = useState("");
     const [addTraffickerData, setAddTraffickerData] = useState({});
     const traffickerList = useSelector((state) => state.traffickerList);
-    const api = "https://kamo-api.herokuapp.com/api";
+    const api = "https://tafteesh-staging-node.herokuapp.com/api";
     const token = localStorage.getItem("accessToken");
     let axiosConfig = {
         headers: {
@@ -97,7 +97,7 @@ useEffect(() => {
         formData.append("file", file);
         axios
             .post(
-                "https://kamo-api.herokuapp.com/api/file/upload",
+                "https://tafteesh-staging-node.herokuapp.com/api/file/upload",
                 formData,
                 axiosConfig
             )
@@ -107,7 +107,7 @@ useEffect(() => {
                     const { data } = response
                     setPictureData(data.data)
                     let obj = ""
-                    obj = `https://kamo-api.herokuapp.com/${data.data && data.data.filePath}`
+                    obj = `https://tafteesh-staging-node.herokuapp.com/${data.data && data.data.filePath}`
 
                     setPictureArr([...pictureArr, obj])
                 }

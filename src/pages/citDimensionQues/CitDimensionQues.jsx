@@ -37,7 +37,7 @@ const CitDimensionQues = (props) => {
   );
   const [addCitDimensionQuesData, setaddCitDimensionQuesData] = useState({});
   const [updateMessage, setUpdateMessage] = useState("");
-  const api = "https://kamo-api.herokuapp.com/api/cit-dimension-question";
+  const api = "https://tafteesh-staging-node.herokuapp.com/api/cit-dimension-question";
   const token = localStorage.getItem("accessToken");
   let axiosConfig = {
     headers: {

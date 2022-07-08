@@ -62,7 +62,7 @@ const SurvivorVictimCompensation = (props) => {
   const [pictureData, setPictureData] = useState({});
   const [updateMessage, setUpdateMessage] = useState("");
   const [addVcData, setAddVcData] = useState({});
-  const api = "https://kamo-api.herokuapp.com/api";
+  const api = "https://tafteesh-staging-node.herokuapp.com/api";
   const token = localStorage.getItem("accessToken");
   let axiosConfig = {
     headers: {
@@ -495,7 +495,7 @@ const handleCloseAlert = () =>{
     formData.append("file", file);
     axios
       .post(
-        "https://kamo-api.herokuapp.com/api/file/upload",
+        "https://tafteesh-staging-node.herokuapp.com/api/file/upload",
         formData,
         axiosConfig
       )
@@ -507,12 +507,12 @@ const handleCloseAlert = () =>{
           setAddVcData({
             ...addVcData,
             vc_application:
-              "https://kamo-api.herokuapp.com/" + data.data.filePath,
+              "https://tafteesh-staging-node.herokuapp.com/" + data.data.filePath,
           });
           setAddVcEscalationData({
             ...addVcEscalationData,
             vc_application:
-              "https://kamo-api.herokuapp.com/" + data.data.filePath,
+              "https://tafteesh-staging-node.herokuapp.com/" + data.data.filePath,
           });
           setPictureData(data.data.filePath);
           console.log(pictureData);

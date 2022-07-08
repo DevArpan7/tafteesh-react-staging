@@ -15,7 +15,7 @@ const KamoUserDetails = (props) => {
 
 
     const [userData, setUserDetail] = useState({});
-    const api = "https://kamo-api.herokuapp.com/api";
+    const api = "https://tafteesh-staging-node.herokuapp.com/api";
     const token = localStorage.getItem("accessToken");
     let axiosConfig = {
       headers: {

@@ -12,7 +12,7 @@ let axiosConfig = {
     headers: token ? headers1 : headers2
 }
 const instance = axios.create({
-    baseURL: 'https://kamo-api.herokuapp.com/api/',
+    baseURL: 'https://tafteesh-staging-node.herokuapp.com/api/',
     axiosConfig
 });
 

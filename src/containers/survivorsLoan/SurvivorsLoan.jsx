@@ -61,7 +61,7 @@ const SurvivorsLoan = (props) => {
 
   const [selected, setSelected] = useState([]);
 
-  const api = "https://kamo-api.herokuapp.com/api";
+  const api = "https://tafteesh-staging-node.herokuapp.com/api";
   const token = localStorage.getItem("accessToken");
   let axiosConfig = {
     headers: {
@@ -197,7 +197,7 @@ const SurvivorsLoan = (props) => {
     formData.append("file", file);
     axios
       .post(
-        "https://kamo-api.herokuapp.com/api/file/upload",
+        "https://tafteesh-staging-node.herokuapp.com/api/file/upload",
         formData,
         axiosConfig
       )
@@ -210,7 +210,7 @@ const SurvivorsLoan = (props) => {
             ...addLoanData,
             reference_document: {
               name: file && file.name,
-              file: "https://kamo-api.herokuapp.com/" + data.data.filePath,
+              file: "https://tafteesh-staging-node.herokuapp.com/" + data.data.filePath,
             },
           });
           // setPictureData(data.data.filePath)

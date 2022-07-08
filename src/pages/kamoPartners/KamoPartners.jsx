@@ -29,7 +29,7 @@ const KamoPartners = (props) => {
 
   const [addPartnerData, setAddPartnerData] = useState({});
   const [updateMessage, setUpdateMessage] = useState("");
-  const api = "https://kamo-api.herokuapp.com/api/partner";
+  const api = "https://tafteesh-staging-node.herokuapp.com/api/partner";
   const token = localStorage.getItem("accessToken");
   let axiosConfig = {
     headers: {

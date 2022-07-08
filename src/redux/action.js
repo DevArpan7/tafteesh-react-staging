@@ -1,5 +1,5 @@
 import axios from "../utils/axios";
-const api = "https://kamo-api.herokuapp.com/api/";
+const api = "https://tafteesh-staging-node.herokuapp.com/api/";
 
 const token = localStorage.getItem("accessToken");
 let axiosConfig = {

@@ -11,7 +11,7 @@ import { useDispatch, useSelector } from "react-redux";
 const Dashboard = (props) => {
   const organizationName = localStorage.getItem('organizationName');
     const dispatch = useDispatch();
-    const api = "https://kamo-api.herokuapp.com/api/";
+    const api = "https://tafteesh-staging-node.herokuapp.com/api/";
     const token = localStorage.getItem("accessToken");
     let axiosConfig = {
       headers: {
