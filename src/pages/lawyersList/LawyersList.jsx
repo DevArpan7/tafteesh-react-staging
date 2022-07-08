@@ -37,7 +37,7 @@ const LawyersList = (props) => {
 
   const [addLawyerData, setAddLawyerData] = useState({});
   const [updateMessage, setUpdateMessage] = useState("");
-  const api = "https://tafteesh-staging-node.herokuapp.com/api/lawyer";
+  const api = "https://kamo-api.herokuapp.com/api/lawyer";
   const token = localStorage.getItem("accessToken");
   let axiosConfig = {
     headers: {
@@ -80,7 +80,7 @@ const LawyersList = (props) => {
     e.preventDefault();
     setModalAddShow(false);
     setAddLawyerData({});
-    setSelectedData({});
+    // setSelectedData({});
   };
 
   const ongotoEdit = () => {
@@ -458,7 +458,7 @@ const LawyersList = (props) => {
         >
           <Modal.Header closeButton>
             <Modal.Title id="contained-modal-title-vcenter">
-              Add Lawyer
+            {addLawyerData && addLawyerData._id ? "Update Lawyer" : " Add Lawyer"}  
             </Modal.Title>
           </Modal.Header>
           <Modal.Body>

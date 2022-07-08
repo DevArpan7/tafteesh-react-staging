@@ -292,16 +292,16 @@ const SupplimentaryChargesheetDataTable = (props) => {
 
   const sectionBodyTemplate = (rowData) => {
     return (
-      <span className={`customer-badge status-${rowData.section._id}`}>
-        {rowData.section.number}
+      <span className={`customer-badge status-${rowData.section}`}>
+        {rowData.section}
       </span>
     );
   };
 
   const ActBodyTemplate = (rowData) => {
     return (
-      <span className={`customer-badge status-${rowData.act._id}`}>
-        {rowData.act.name}
+      <span className={`customer-badge status-${rowData.act}`}>
+        {rowData.act}
       </span>
     );
   };

@@ -25,7 +25,7 @@ const KamoSHG = (props) => {
     const shgList = useSelector((state) => state.shgList);
     const [addShgData, setAddShgData] = useState({});
     const [updateMessage, setUpdateMessage] = useState("");
-    const api = "https://tafteesh-staging-node.herokuapp.com/api/shg";
+    const api = "https://kamo-api.herokuapp.com/api/shg";
     const token = localStorage.getItem("accessToken");
     let axiosConfig = {
         headers: {
@@ -79,7 +79,7 @@ const onDeleteChangeFunc=()=>{
     const onCancel = () => {
         setModalAddShow(false)
         setAddShgData({})
-        setSelectedData({})
+        // setSelectedData({})
     }
 
 
@@ -122,7 +122,7 @@ const onDeleteChangeFunc=()=>{
                         setModalAddShow(false);
                         setAddShgData({})
 
-                        setSelectedData({});
+                        // setSelectedData({});
                         setActiveClass(false);
 
 
@@ -371,7 +371,7 @@ const onDeleteChangeFunc=()=>{
                 <Modal className="addFormModal" show={modalAddShow} onHide={setModalAddShow} size="lg" aria-labelledby="reason-modal" centered>
                     <Modal.Header closeButton>
                         <Modal.Title id="contained-modal-title-vcenter">
-                            Add SHG
+                        {addShgData && addShgData._id ? "Update SHG" : "Add SHG"}
                         </Modal.Title>
                     </Modal.Header>
                     <Modal.Body>

@@ -8,3 +8,11 @@ export function sectionList(state = [], action) {
     }
   }
   
+export function sectionByActId(state = [], action) {
+  switch (action.type) {
+    case "SECTION_LIST_BY_ACT":
+      return action.data;
+    default:
+      return state;
+  }
+}

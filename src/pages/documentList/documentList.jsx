@@ -25,7 +25,7 @@ const DocumentList = (props) => {
 
     const [addShgData, setAddShgData] = useState({});
     const [updateMessage, setUpdateMessage] = useState("");
-    const api = "https://tafteesh-staging-node.herokuapp.com/api/document";
+    const api = "https://kamo-api.herokuapp.com/api/document";
     const token = localStorage.getItem("accessToken");
     let axiosConfig = {
         headers: {
@@ -104,7 +104,7 @@ const DocumentList = (props) => {
     const onCancel = () => {
         setModalAddShow(false)
         setAddShgData({})
-        setSelectedData({})
+        // setSelectedData({})
     }
 
 
@@ -175,7 +175,7 @@ const DocumentList = (props) => {
                         setModalAddShow(false);
                         setAddShgData({})
 
-                        setSelectedData({});
+                        // setSelectedData({});
                         setActiveClass(false);
 
 

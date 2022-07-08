@@ -52,7 +52,7 @@ import {authorityListByAuthType} from "./reducers/authorityListByAuthType";
 import {vcEscalation2List} from "./reducers/vcEscalation2List";
 import {survivorLawyersList} from "./reducers/survivorLawyersList";
 import { actList } from "./reducers/actList";
-import { sectionList } from "./reducers/sectionList";
+import { sectionList,sectionByActId } from "./reducers/sectionList";
 import { SupplimentarychargeSheetList } from "./reducers/supplimentaryChargesheet";
 
 import {lawyersListByCatId} from "./reducers/lawyersListByCatId";
@@ -127,6 +127,7 @@ const rootReducer = combineReducers({
   survivorPcList,
   actList,
   sectionList,
+  sectionByActId,
   SupplimentarychargeSheetList
 });
 

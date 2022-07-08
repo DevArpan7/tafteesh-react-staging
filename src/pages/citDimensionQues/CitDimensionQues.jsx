@@ -37,7 +37,7 @@ const CitDimensionQues = (props) => {
   );
   const [addCitDimensionQuesData, setaddCitDimensionQuesData] = useState({});
   const [updateMessage, setUpdateMessage] = useState("");
-  const api = "https://tafteesh-staging-node.herokuapp.com/api/cit-dimension-question";
+  const api = "https://kamo-api.herokuapp.com/api/cit-dimension-question";
   const token = localStorage.getItem("accessToken");
   let axiosConfig = {
     headers: {
@@ -56,6 +56,9 @@ const CitDimensionQues = (props) => {
   const [selectedItem, setSelectedItem] = React.useState([]);
 
   const [selectedValue, setSelectedValue] = React.useState(false);
+  
+  const trueArr = [true, 'true'];
+
 const[openCheckfrom,setOpenCheckfrom] = useState()
   const handleChangeRadio = (event) => {
     setSelectedValue(event.target.value);
@@ -103,6 +106,7 @@ useEffect(() => {
   };
 
   const onSelectRow = (item) => {
+    console.log(item,"itemmm")
     setSelectedData(item);
     setActiveClass(true);
   };
@@ -115,7 +119,7 @@ useEffect(() => {
   const onCancel = () => {
     setModalAddShow(false);
     setaddCitDimensionQuesData({});
-    setSelectedData({});
+    // setSelectedData({});
   };
 
   const ongotoEdit = () => {
@@ -137,14 +141,12 @@ useEffect(() => {
 const onOptionChange=(e)=>{
   
   let data = e.target.value
-  var option = data.split(',');
+  var options = data.split(',');
   setaddCitDimensionQuesData({
     ...addCitDimensionQuesData,
-    option: option,
+    options: options,
   })
 }
-
-
 
   ///// add shg api cll function /////
   console.log(addCitDimensionQuesData, "addCitDimensionQuesData");
@@ -171,7 +173,7 @@ const onOptionChange=(e)=>{
             setModalAddShow(false);
             setaddCitDimensionQuesData({});
 
-            setSelectedData({});
+            // setSelectedData({});
             setActiveClass(false);
           }
         })
@@ -498,7 +500,7 @@ const onOptionChange=(e)=>{
         >
           <Modal.Header closeButton>
             <Modal.Title id="contained-modal-title-vcenter">
-              Add CIT Dimension Question
+            {addCitDimensionQuesData && addCitDimensionQuesData._id ? "Update CIT Dimension Question" : "Add CIT Dimension Question"}
             </Modal.Title>
           </Modal.Header>
           <Modal.Body>
@@ -512,7 +514,7 @@ const onOptionChange=(e)=>{
                       value={
                         addCitDimensionQuesData &&
                         addCitDimensionQuesData.cit_dimension &&
-                        addCitDimensionQuesData.cit_dimension
+                        addCitDimensionQuesData.cit_dimension._id
                       }
                       onChange={(e) =>
                         setaddCitDimensionQuesData({
@@ -538,8 +540,8 @@ const onOptionChange=(e)=>{
                     <Form.Control
                       defaultValue={
                         addCitDimensionQuesData &&
-                        addCitDimensionQuesData.question &&
-                        addCitDimensionQuesData.question
+                        addCitDimensionQuesData.data &&
+                        addCitDimensionQuesData.data
                       }
                       type="text"
                       placeholder=""
@@ -584,12 +586,12 @@ const onOptionChange=(e)=>{
                         <Form.Control
                       defaultValue={
                         addCitDimensionQuesData &&
-                        addCitDimensionQuesData.question &&
-                        addCitDimensionQuesData.question
+                        addCitDimensionQuesData.options &&
+                        addCitDimensionQuesData.options.map(x=> x)
                       }
                       type="text"
                       placeholder="yes,no,other"
-                      name="option"
+                      name="options"
                       onChange={(e) => onOptionChange(e) }
                     />
                       </Form.Group>
@@ -602,8 +604,16 @@ const onOptionChange=(e)=>{
                       row
                       aria-labelledby="demo-form-control-label-placement"
                       name="data_existance_check"
-                      defaultValue={false}
-                      onChange={handleChangeRadio}
+                      defaultValue={addCitDimensionQuesData &&
+                        addCitDimensionQuesData.data_existance_check &&
+                        addCitDimensionQuesData.data_existance_check}
+                      // onChange={handleChangeRadio}
+                      onChange={(e) =>
+                        setaddCitDimensionQuesData({
+                          ...addCitDimensionQuesData,
+                          [e.target.name]: e.target.value,
+                        })
+                      }
                     >
                       <FormControlLabel
                         value={true}
@@ -619,7 +629,9 @@ const onOptionChange=(e)=>{
                       />
                     </RadioGroup>
                   </Form.Group>
-                  { openCheckfrom !== 'true' &&
+                  {addCitDimensionQuesData &&
+                        addCitDimensionQuesData.data_existance_check &&
+                        String(addCitDimensionQuesData.data_existance_check) == 'true' &&
                   <Form.Group className="form-group" as={Col} md="6">
                     <Form.Label>Data Existance Check From </Form.Label>
                     <Form.Select

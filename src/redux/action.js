@@ -1,5 +1,5 @@
 import axios from "../utils/axios";
-const api = "https://tafteesh-staging-node.herokuapp.com/api/";
+const api = "https://kamo-api.herokuapp.com/api/";
 
 const token = localStorage.getItem("accessToken");
 let axiosConfig = {
@@ -1684,6 +1684,30 @@ return (dispatch) => {
       });
   };
 };
+
+const sectionByActId = (data) => {
+  //console.log(data, "state reducers");
+  return {
+    type: "SECTION_LIST_BY_ACT",
+    data: data,
+  };
+};
+export const getSectionByActId = (id) => {
+  return (dispatch) => {
+      axios
+        .get(api + "section/list-by-act-name/"+id,axiosConfig)
+        .then((response) => {
+          console.log(response,'sectionnnnnnnnnnnnnnnnnnnn');
+          if (response.data && response.data.error == false) {
+            const { data } = response;
+            dispatch(sectionByActId(data.data));
+          }
+        })
+        .catch((error) => {
+          console.log(error, "sectionByActId error");
+        });
+    };
+  };
 /////// API CALL FOR DISTRICT LIST /////////
 
 // const districtList = (data) => {

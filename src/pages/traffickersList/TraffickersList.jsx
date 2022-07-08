@@ -50,7 +50,7 @@ const TraffickersList = (props) => {
   const [erorMessage, setErorMessage] = useState("");
   const loguserId = localStorage.getItem("userId");
 
-  const api = "https://tafteesh-staging-node.herokuapp.com/api";
+  const api = "https://kamo-api.herokuapp.com/api";
   const token = localStorage.getItem("accessToken");
   let axiosConfig = {
     headers: {
@@ -138,7 +138,7 @@ const TraffickersList = (props) => {
     formData.append("file", file);
     axios
       .post(
-        "https://tafteesh-staging-node.herokuapp.com/api/file/upload",
+        "https://kamo-api.herokuapp.com/api/file/upload",
         formData,
         axiosConfig
       )
@@ -148,7 +148,7 @@ const TraffickersList = (props) => {
           const { data } = response;
           setPictureData(data.data);
           let obj = "";
-          obj = `https://tafteesh-staging-node.herokuapp.com/${
+          obj = `https://kamo-api.herokuapp.com/${
             data.data && data.data.filePath
           }`;
 
@@ -641,7 +641,8 @@ const TraffickersList = (props) => {
         >
           <Modal.Header closeButton>
             <Modal.Title id="contained-modal-title-vcenter">
-              Add Traffickers
+             { addTraffickerData &&
+                        addTraffickerData._id ? "Update Traffickers" :  "Add Traffickers"} 
             </Modal.Title>
           </Modal.Header>
           <Modal.Body>

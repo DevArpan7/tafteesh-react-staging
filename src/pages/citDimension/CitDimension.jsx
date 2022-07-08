@@ -24,7 +24,7 @@ const CitDimension = (props) => {
     const citDimensionList = useSelector((state) => state.citDimensionList);
     const [addShgData, setAddShgData] = useState({});
     const [updateMessage, setUpdateMessage] = useState("");
-    const api = "https://tafteesh-staging-node.herokuapp.com/api/cit-dimension";
+    const api = "https://kamo-api.herokuapp.com/api/cit-dimension";
     const token = localStorage.getItem("accessToken");
     let axiosConfig = {
         headers: {
@@ -78,7 +78,7 @@ const onDeleteChangeFunc=()=>{
     const onCancel = () => {
         setModalAddShow(false)
         setAddShgData({})
-        setSelectedData({})
+        // setSelectedData({})
     }
 
 
@@ -121,7 +121,7 @@ const onDeleteChangeFunc=()=>{
                         setModalAddShow(false);
                         setAddShgData({})
 
-                        setSelectedData({});
+                        // setSelectedData({});
                         setActiveClass(false);
 
 
@@ -372,7 +372,7 @@ const onDeleteChangeFunc=()=>{
                 <Modal className="addFormModal" show={modalAddShow} onHide={setModalAddShow} size="lg" aria-labelledby="reason-modal" centered>
                     <Modal.Header closeButton>
                         <Modal.Title id="contained-modal-title-vcenter">
-                            Add CIT Dimension
+                        {addShgData && addShgData._id ? "Update CIT Dimension" : "Add CIT Dimension"}
                         </Modal.Title>
                     </Modal.Header>
                     <Modal.Body>

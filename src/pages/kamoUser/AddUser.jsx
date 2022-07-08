@@ -33,7 +33,7 @@ const AddUser = (props) => {
         <div className="bodyright">
           <div className="row justify-content-between">
             <div className="col-auto">
-              <h2 className="page_title">Add User</h2>
+              <h2 className="page_title"> {getId && getId._id ? "Update User" : "Add User"}</h2>
             </div>
           </div>
 

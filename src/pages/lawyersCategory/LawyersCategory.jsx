@@ -29,7 +29,7 @@ const LawyersCategory = (props) => {
   
     const [addLawyerData, setAddLawyerData] = useState({});
     const [updateMessage, setUpdateMessage] = useState("");
-    const api = "https://tafteesh-staging-node.herokuapp.com/api/lawyer-category";
+    const api = "https://kamo-api.herokuapp.com/api/lawyer-category";
     const token = localStorage.getItem("accessToken");
     let axiosConfig = {
         headers: {
@@ -101,7 +101,7 @@ const LawyersCategory = (props) => {
         e.preventDefault()
         setModalAddShow(false)
         setAddLawyerData({})
-        setSelectedData({})
+        // setSelectedData({})
     }
 
 
@@ -146,7 +146,7 @@ const LawyersCategory = (props) => {
                         const { data } = response;
                         dispatch(getLawyersCategoryList())
                         setAddLawyerData({})
-                        setSelectedData({});
+                        // setSelectedData({});
                         setActiveClass(false);
                         setModalAddShow(false);
 
@@ -402,7 +402,7 @@ const LawyersCategory = (props) => {
                 <Modal className="addFormModal" show={modalAddShow} onHide={setModalAddShow} size="lg" aria-labelledby="reason-modal" centered>
                     <Modal.Header closeButton>
                         <Modal.Title id="contained-modal-title-vcenter">
-                            Add Lawyers Category
+                        {addLawyerData && addLawyerData._id ? "Update Lawyer Category" : " Add Lawyer Category"}
                         </Modal.Title>
                     </Modal.Header>
                     <Modal.Body>

@@ -467,6 +467,7 @@ const DistrictDataTable = (props) => {
           responsiveLayout="scroll"
           globalFilterFields={[
             "name",
+            "stateId",
             "createdAt"         
           ]}
           header={header1}

@@ -27,7 +27,7 @@ const AddUserForm = (props) => {
   const [fileSelect, setFileSelect] = useState("");
 
   const [erorMessage, setErorMessage] = useState("");
-  const api = "https://tafteesh-staging-node.herokuapp.com/api";
+  const api = "https://kamo-api.herokuapp.com/api";
   const token = localStorage.getItem("accessToken");
   let axiosConfig = {
     headers: {
@@ -38,7 +38,7 @@ const AddUserForm = (props) => {
   const [messagType, setMessagType] = useState("");
 
   const { userId, data } = props;
-
+const[rolArr,setRolArr] =useState([])
   console.log(userId, data, "userId");
 
   const handleClick = () => {
@@ -49,6 +49,16 @@ const AddUserForm = (props) => {
     setOpen(false);
   };
 
+
+  useEffect(()=>{
+     let arr = roleList &&
+      roleList.length > 0 &&
+      roleList.filter((data) => data.name != 'Admin')
+      setRolArr(arr)
+
+  },[roleList])
+
+  console.log(rolArr,"rolArr");
   const getDistrictListByState = (e) => {
     setAddUserData({
       ...addUserData,
@@ -85,7 +95,7 @@ const handleFileInput = (e) => {
     formData.append("file", file);
     axios
       .post(
-        "https://tafteesh-staging-node.herokuapp.com/api/file/upload",
+        "https://kamo-api.herokuapp.com/api/file/upload",
         formData,
         axiosConfig
       )
@@ -95,7 +105,7 @@ const handleFileInput = (e) => {
           const { data } = response;
           setPictureData(data.data);
           let obj = "";
-          obj = `https://tafteesh-staging-node.herokuapp.com/${
+          obj = `https://kamo-api.herokuapp.com/${
             data.data && data.data.filePath
           }`;
 
@@ -623,12 +633,12 @@ const handleFileInput = (e) => {
                 <option value={""} hidden="true">
                   Open this select menu
                 </option>
-                {roleList &&
-                  roleList.length > 0 &&
-                  roleList.map((data) => {
+                {rolArr &&
+                  rolArr.length > 0 &&
+                  rolArr.map((data) => {
                     return (
-                      <option value={data.name !== "Admin" && data._id}>
-                        {data.name !== "Admin" && data.name}
+                      <option value={data._id}>
+                        {data.name}
                       </option>
                     );
                   })}

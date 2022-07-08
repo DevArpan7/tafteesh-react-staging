@@ -26,7 +26,7 @@ import { findAncestor,goToUserAdd,goToUserDetail} from "../../utils/helper";
 const UserList = (props) => {
   const [modalAddShow, setModalAddShow] = useState(false);
 
-  const api = "https://tafteesh-staging-node.herokuapp.com/api";
+  const api = "https://kamo-api.herokuapp.com/api";
   const token = localStorage.getItem("accessToken");
   let axiosConfig = {
     headers: {

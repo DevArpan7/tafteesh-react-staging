@@ -48,7 +48,7 @@ const SurvivorsRescue = (props) => {
   const [updateMessage, setUpdateMessage] = useState("");
   const dispatch = useDispatch();
   const [survivorId, setSurvivorId] = useState("");
-  const api = "https://tafteesh-staging-node.herokuapp.com/api/survival-rescue";
+  const api = "https://kamo-api.herokuapp.com/api/survival-rescue";
   const token = localStorage.getItem("accessToken");
   let axiosConfig = {
     headers: {

@@ -79,7 +79,7 @@ const SurvivorCIT = (props) => {
   const [defaultData,setDefaultData]= useState({version: 1, status: "ongoing"})
   const [addCitData, setAddCitData] = useState({});
   const [updateMessage, setUpdateMessage] = useState("");
-  const api = "https://tafteesh-staging-node.herokuapp.com/api";
+  const api = "https://kamo-api.herokuapp.com/api";
   const token = localStorage.getItem("accessToken");
   let axiosConfig = {
     headers: {
@@ -370,14 +370,14 @@ const SurvivorCIT = (props) => {
         formData.append("file", addDimnsionData.file);
         axios
           .post(
-            "https://tafteesh-staging-node.herokuapp.com/api/file/upload",
+            "https://kamo-api.herokuapp.com/api/file/upload",
             formData,
             axiosConfig
           )
           .then(function (response) {
             if (response && response.data.error === false) {
               const { data } = response;
-              const obj = `https://tafteesh-staging-node.herokuapp.com/${
+              const obj = `https://kamo-api.herokuapp.com/${
                 data.data && data.data.filePath
               }`;
               toSendObj.reference_documents = obj;
@@ -435,7 +435,7 @@ const SurvivorCIT = (props) => {
       case "select":
         return (
           <Form.Select required>
-            <option value="">Default select</option>
+            <option value="" hidden={true}>Default select</option>
             {ques.options?.map((opt, index) => {
               return (
                 <option key={index} value={opt}>
@@ -445,6 +445,23 @@ const SurvivorCIT = (props) => {
             })}
           </Form.Select>
         );
+        case "radio":
+          return (
+            <>
+              {ques.options?.map((opt, index) => {
+                return (
+                  <Form.Check
+                    inline
+                    name={`radio_${ques._id}`}
+                    className="Radio"
+                    key={index}
+                    type="radio"
+                    label={opt}
+                  />
+                );
+              })}
+            </>
+          );
       case "checkbox":
         return (
           <>
@@ -478,7 +495,7 @@ const SurvivorCIT = (props) => {
       (t) => t._id === dimensionId
     );
     questionsObj.questions.forEach((item, index) => {
-      if (item.answer_type !== "checkbox") {
+      if (item.answer_type !== "checkbox" && item.answer_type !== "radio") {
         if (item.answer_type === "select") {
           let toCheckElems = [];
 
@@ -497,9 +514,26 @@ const SurvivorCIT = (props) => {
             action_needed: actionListToSend.find((t)=> t.dimension_queston === item._id) ? true: false,
           });
         }
-      } else {
+      } else if (item.answer_type === "checkbox") {
         let answer = "";
         e.target.elements.group1?.forEach((groupItem, index1) => {
+          if (groupItem.checked) {
+            answer = answer
+              ? answer + "," + item.options[index1]
+              : item.options[index1];
+          }
+        });
+        data.dimension_detail.push({
+          question_id: item._id,
+          answer,
+          action_needed:  actionListToSend.find((t)=> t.dimension_queston === item._id) ? true: false,
+        });
+      }
+      else if (item.answer_type === "radio") {
+        let answer = "";
+        let radioItem = `radio_${item._id}`;
+        console.log(e.target.elements[radioItem])
+        e.target.elements[radioItem]?.forEach((groupItem, index1) => {
           if (groupItem.checked) {
             answer = answer
               ? answer + "," + item.options[index1]

@@ -97,7 +97,7 @@ const LoginForm = (props) => {
     setLoading2(true);
     setConditionCheck(true);
     axios
-      .post("https://tafteesh-staging-node.herokuapp.com/api/user/login", {
+      .post("https://kamo-api.herokuapp.com/api/user/login", {
         user: userLogin.email,
         password: userLogin.password,
       })

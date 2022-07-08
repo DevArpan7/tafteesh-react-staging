@@ -27,7 +27,7 @@ const AddSurvivorsForm = (props) => {
   const [validated, setValidated] = useState(false);
   const [survivorData, setSurvivorData] = useState({});
   const userId = localStorage.getItem("userId");
-  const api = "https://tafteesh-staging-node.herokuapp.com/api/survival-profile";
+  const api = "https://kamo-api.herokuapp.com/api/survival-profile";
   const token = localStorage.getItem("accessToken");
   let axiosConfig = {
     headers: {
@@ -161,7 +161,7 @@ const AddSurvivorsForm = (props) => {
     formData.append("file", file);
     axios
       .post(
-        "https://tafteesh-staging-node.herokuapp.com/api/file/upload",
+        "https://kamo-api.herokuapp.com/api/file/upload",
         formData,
         axiosConfig
       )
@@ -357,8 +357,8 @@ const AddSurvivorsForm = (props) => {
       ...survivorData,
       "organization": organizationId,
       "user_id": userId
-      // "picture": `https://tafteesh-staging-node.herokuapp.com/${pictureData && pictureData.filePath}`,
-      // "consent_form" :  `https://tafteesh-staging-node.herokuapp.com/${contentDocs && contentDocs.filePath}`
+      // "picture": `https://kamo-api.herokuapp.com/${pictureData && pictureData.filePath}`,
+      // "consent_form" :  `https://kamo-api.herokuapp.com/${contentDocs && contentDocs.filePath}`
     }
     var body = tempData;
     console.log(survivorData,"body")

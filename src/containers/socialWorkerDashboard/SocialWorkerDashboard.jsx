@@ -11,7 +11,7 @@ import { useDispatch, useSelector } from "react-redux";
 const Dashboard = (props) => {
   const organizationName = localStorage.getItem('organizationName');
     const dispatch = useDispatch();
-    const api = "https://tafteesh-staging-node.herokuapp.com/api/";
+    const api = "https://kamo-api.herokuapp.com/api/";
     const token = localStorage.getItem("accessToken");
     const role = localStorage.getItem("role");
 
@@ -31,8 +31,7 @@ const [loader , setLoader] = useState(false);
     if (!token) {
       props.history.push("/")
 
-    }
-    else if(token && role && role== "Admin"){
+    } else if(token && role && role== "Admin"){
       props.history.push("/admin")
 
     }else{

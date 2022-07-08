@@ -91,7 +91,7 @@ history.push("/dashboard")
   setLoading2(true);
     setConditionCheck(true);
     axios
-      .post("https://tafteesh-staging-node.herokuapp.com/api/admin/login", {
+      .post("https://kamo-api.herokuapp.com/api/admin/login", {
         user: userLogin.email,
         password: userLogin.password,
       })

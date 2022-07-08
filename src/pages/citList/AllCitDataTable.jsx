@@ -492,10 +492,12 @@ const AllCitDataTable = (props) => {
           loading={isLoading}
           responsiveLayout="scroll"
           globalFilterFields={[
+            "name",
             "unique_id",
             "assessment_date",
-            "cit_status",
-            "overall_score"
+            "overall_score",
+            "approval",
+
           ]}
           header={header1}
           emptyMessage="No Data found."

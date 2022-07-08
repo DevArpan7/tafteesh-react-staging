@@ -32,7 +32,7 @@ const KamoBlocks = (props) => {
 
     const [addBlockData, setAddBlockData] = useState({});
     const [updateMessage, setUpdateMessage] = useState("");
-    const api = "https://tafteesh-staging-node.herokuapp.com/api/block";
+    const api = "https://kamo-api.herokuapp.com/api/block";
     const token = localStorage.getItem("accessToken");
     let axiosConfig = {
         headers: {
@@ -84,7 +84,7 @@ const KamoBlocks = (props) => {
     const onCancel = () => {
         setModalAddShow(false)
         setAddBlockData({})
-        setSelectedData({})
+        // setSelectedData({})
     }
 
 
@@ -152,7 +152,7 @@ const KamoBlocks = (props) => {
                         const { data } = response;
                         dispatch(getMasterBlockList())
                         setAddBlockData({})
-                        setSelectedData({});
+                        // setSelectedData({});
                         setActiveClass(false);
                         setModalAddShow(false);
 

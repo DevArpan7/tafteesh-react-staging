@@ -31,7 +31,7 @@ const SurvivorsParticipation = (props) => {
   const dispatch = useDispatch();
   const [survivorId, setSurvivorId] = useState('')
   const [selectedData, setSelectedData] = useState({});
-  const api = "https://tafteesh-staging-node.herokuapp.com/api/survival-participation";
+  const api = "https://kamo-api.herokuapp.com/api/survival-participation";
   const token = localStorage.getItem("accessToken");
   let axiosConfig = {
     headers: {

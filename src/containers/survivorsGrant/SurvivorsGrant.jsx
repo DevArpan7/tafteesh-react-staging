@@ -68,7 +68,7 @@ const [validatedInstl,setValidatedInstl] = useState(false)
   
   const [open, setOpen] = useState(false);
   const [updateMessage, setUpdateMessage] = useState("");
-  const api = "https://tafteesh-staging-node.herokuapp.com/api";
+  const api = "https://kamo-api.herokuapp.com/api";
   const token = localStorage.getItem("accessToken");
   let axiosConfig = {
     headers: {
@@ -254,7 +254,7 @@ const [validatedInstl,setValidatedInstl] = useState(false)
     formData.append("file", file);
     axios
       .post(
-        "https://tafteesh-staging-node.herokuapp.com/api/file/upload",
+        "https://kamo-api.herokuapp.com/api/file/upload",
         formData,
         axiosConfig
       )
@@ -266,13 +266,13 @@ const [validatedInstl,setValidatedInstl] = useState(false)
             setAddEscalationData({
               ...addEscalationData,
               reference_document:
-                "https://tafteesh-staging-node.herokuapp.com/" + data.data.filePath,
+                "https://kamo-api.herokuapp.com/" + data.data.filePath,
             });
           } else {
             setAddGrantData({
               ...addGrantData,
               reference_document:
-                "https://tafteesh-staging-node.herokuapp.com/" + data.data.filePath,
+                "https://kamo-api.herokuapp.com/" + data.data.filePath,
             });
             setPictureData(data.data.filePath);
             console.log(addGrantData, pictureData);
@@ -512,8 +512,8 @@ const downloadFile = ({ data, fileName, fileType }) => {
   a.remove()
 }
 let exportData=[];
-survivalGrantList.map((x)=>{
-  exportData.push({id:x._id,amountRequested:x.amount_requested,applicationNumber:x.application_number,appliedOn:formatDate(x.applied_on),approvedAmount:x.approved_amount,createdAt:formatDate(x.createdAt),installment_number:x.installment_number,reason_for_escalation:x.reason_for_escalation,received_on:formatDate(x.received_on),refDoc:x.reference_document,refResultDoc:x.reference_result_document,status:x.status,grantCompensationAmount:x.name_of_grant_compensation.amount,
+survivalGrantList && survivalGrantList.length > 0 && survivalGrantList.map((x)=>{
+  exportData.push({amountRequested:x.amount_requested && x.amount_requested,applicationNumber:x.application_number,appliedOn:formatDate(x.applied_on),approvedAmount:x && x.approved_amount,createdAt:formatDate(x.createdAt),installment_number:x.installment_number,reason_for_escalation:x.reason_for_escalation,received_on:formatDate(x.received_on),refDoc:x.reference_document,refResultDoc:x.reference_result_document,status:x.status,grantCompensationAmount:x.name_of_grant_compensation.amount,
     grantCompensationName:x.name_of_grant_compensation.name,purposeOfGrant:x.name_of_grant_compensation.purpose_of_grant,grantCompensationInstallment:x.name_of_grant_compensation.installment_number,
   utilizationPlanAmount:x.utilization_plans?.map((y)=>{return y.amount}),utilizationPlanDesc:x.utilization_plans?.map((y)=>{return y.description}),installMentAmount:x.installments?.map((y)=>{return y.amount}),installMentDate:x.installments?.map((y)=>{return formatDate(y.estimated_date)}),escalationAmountRequested:x.escalations?.map((y)=>{return y.amount_requested}),escalatedOn:x.escalations?.map((y)=>{return formatDate(y.escalated_on)}),escalationAmountreceived:x.escalations?.map((y)=>{return formatDate(y.received_on)}),escalationAmountRefDoc:x.escalations?.map((y)=>{return y.reference_document}),createdAt:formatDate(x.createdAt)})
 })
@@ -522,12 +522,12 @@ const exportToCsv = e => {
   e.preventDefault()
 
   // Headers for each column
-  let headers = [' Id,Amount Requested,Application Number,Applied On,Amount Approved,Installment Number,Name Of Grant Compensation,Purpose Of Grant,Grant Compensation Amount,Compensation Installment Number,Reason For Escalation,Reference Doc,Reference Result Doc,Status,Survivor,Utilization Amount,Utilization Desc,Escalation Amount Requested,Escalated On,Escalation Received On,Escalation Ref Doc,Installment Amount,Installment Date,createdAt']
+  let headers = ['Amount Requested,Application Number,Applied On,Amount Approved,Installment Number,Name Of Grant Compensation,Purpose Of Grant,Grant Compensation Amount,Compensation Installment Number,Reason For Escalation,Reference Doc,Reference Result Doc,Status,Survivor,Utilization Amount,Utilization Desc,Escalation Amount Requested,Escalated On,Escalation Received On,Escalation Ref Doc,Installment Amount,Installment Date,createdAt']
 
   // Convert users data to a csv
   let usersCsv = exportData.reduce((acc, user) => {
-    const { id,amountRequested,applicationNumber,appliedOn,approvedAmount,installment_number,grantCompensationName,grantCompensationAmount,grantCompensationInstallment,reason_for_escalation,refDoc,reference_result_document,status,survivor,utilizationPlanAmount,utilizationPlanDesc,escalationAmountRequested,escalatedOn,escalationAmountreceived,escalationAmountRefDoc,installMentAmount,installMentDate,createdAt} = user
-    acc.push([ id,amountRequested,applicationNumber,appliedOn,approvedAmount,installment_number,grantCompensationName,grantCompensationAmount,grantCompensationInstallment,reason_for_escalation,refDoc,reference_result_document,status,survivor,utilizationPlanAmount,utilizationPlanDesc,escalationAmountRequested,escalatedOn,escalationAmountreceived,escalationAmountRefDoc,installMentAmount,installMentDate,createdAt].join(','))
+    const {amountRequested,applicationNumber,appliedOn,approvedAmount,installment_number,grantCompensationName,grantCompensationAmount,grantCompensationInstallment,reason_for_escalation,refDoc,reference_result_document,status,survivor,utilizationPlanAmount,utilizationPlanDesc,escalationAmountRequested,escalatedOn,escalationAmountreceived,escalationAmountRefDoc,installMentAmount,installMentDate,createdAt} = user
+    acc.push([amountRequested,applicationNumber,appliedOn,approvedAmount,installment_number,grantCompensationName,grantCompensationAmount,grantCompensationInstallment,reason_for_escalation,refDoc,reference_result_document,status,survivor,utilizationPlanAmount,utilizationPlanDesc,escalationAmountRequested,escalatedOn,escalationAmountreceived,escalationAmountRefDoc,installMentAmount,installMentDate,createdAt].join(','))
     return acc
   }, [])
 
@@ -559,13 +559,13 @@ const downloadPdf = () => {
   doc.text("SURVIVOR GRANT LIST", 22, 60);
   doc.setFontSize(10);
   const survivorColumns = [
-    'Id','Amount Requested','Application Number','Applied On','Amount Approved','Installment Number','Name Of Grant Compensation','Purpose Of Grant','Grant Compensation Amount','Compensation Installment Number','Reason For Escalation','Reference Doc','Reference Result Doc','Status','Survivor','Utilization Amount','Utilization Desc','Escalation Amount Requested','Escalated On','Escalation Received On','Escalation Ref Doc','Installment Amount','Installment Date','createdAt'
+    'Amount Requested','Application Number','Applied On','Amount Approved','Installment Number','Name Of Grant Compensation','Purpose Of Grant','Grant Compensation Amount','Compensation Installment Number','Reason For Escalation','Reference Doc','Reference Result Doc','Status','Survivor','Utilization Amount','Utilization Desc','Escalation Amount Requested','Escalated On','Escalation Received On','Escalation Ref Doc','Installment Amount','Installment Date','createdAt'
   ];
   const name = "survivor-lawyer-list" + new Date().toISOString() + ".pdf";
   let goalsRows = [];
   exportData?.forEach((item) => {
     const temp = [
-      item.id,item.amountRequested,item.applicationNumber,item.appliedOn,item.approvedAmount,item.installment_number,item.grantCompensationName,item.grantCompensationAmount,item.grantCompensationInstallment,item.reason_for_escalation,item.refDoc,item.reference_result_document,item.status,item.survivor,item.utilizationPlanAmount,item.utilizationPlanDesc,item.escalationAmountRequested,item.escalatedOn,item.escalationAmountreceived,item.escalationAmountRefDoc,item.installMentAmount,item.installMentDate,item.createdAt    ];
+      item.amountRequested,item.applicationNumber,item.appliedOn,item.approvedAmount,item.installment_number,item.grantCompensationName,item.grantCompensationAmount,item.grantCompensationInstallment,item.reason_for_escalation,item.refDoc,item.reference_result_document,item.status,item.survivor,item.utilizationPlanAmount,item.utilizationPlanDesc,item.escalationAmountRequested,item.escalatedOn,item.escalationAmountreceived,item.escalationAmountRefDoc,item.installMentAmount,item.installMentDate,item.createdAt    ];
     goalsRows.push(temp);
   });
   doc.autoTable(survivorColumns, goalsRows, { startY: 75, startX: 22 });
@@ -609,9 +609,9 @@ const downloadPdf = () => {
                 </Dropdown.Toggle>
 
                 <Dropdown.Menu>
-                  <Dropdown.Item onClick={()=>getChangeLog()}>Change Log</Dropdown.Item>
-                  <Dropdown.Item onClick={exportToCsv}>Export CSV</Dropdown.Item>
-                  <Dropdown.Item onClick={downloadPdf}>Download PDF</Dropdown.Item>
+                  <Dropdown.Item onClick={()=>changeLogFunc()}>Change Log</Dropdown.Item>
+                  <Dropdown.Item onClick={()=>exportToCsv()}>Export CSV</Dropdown.Item>
+                  <Dropdown.Item onClick={()=>downloadPdf()}>Download PDF</Dropdown.Item>
 
                   <Dropdown.Item onClick={() => gotoAddUtilize()}>
                     Utilization Plan

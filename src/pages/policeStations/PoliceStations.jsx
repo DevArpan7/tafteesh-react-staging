@@ -35,7 +35,7 @@ const PoliceStations = (props) => {
 
     const [addBlockData, setAddBlockData] = useState({});
     const [updateMessage, setUpdateMessage] = useState("");
-    const api = "https://tafteesh-staging-node.herokuapp.com/api/police-station";
+    const api = "https://kamo-api.herokuapp.com/api/police-station";
     const token = localStorage.getItem("accessToken");
     let axiosConfig = {
         headers: {
@@ -100,7 +100,7 @@ const PoliceStations = (props) => {
     const onCancel = () => {
         setModalAddShow(false)
         setAddBlockData({})
-        setSelectedData({})
+        // setSelectedData({})
     }
 
 
@@ -168,7 +168,7 @@ const PoliceStations = (props) => {
                         const { data } = response;
                         dispatch(getPoliceStationList())
                         setAddBlockData({})
-                        setSelectedData({});
+                        // setSelectedData({});
                         setActiveClass(false);
                         setModalAddShow(false);
 
@@ -421,7 +421,7 @@ const PoliceStations = (props) => {
                 <Modal className="addFormModal" show={modalAddShow} onHide={setModalAddShow} size="lg" aria-labelledby="reason-modal" centered>
                     <Modal.Header closeButton>
                         <Modal.Title id="contained-modal-title-vcenter">
-                            Add Police Station 
+                          {addBlockData && addBlockData._id ? "Update Police Station" : "Add Police Station"}  
                         </Modal.Title>
                     </Modal.Header>
                     <Modal.Body>

@@ -33,7 +33,7 @@ const KamoDistrict = (props) => {
 
     const [addDistData, setAddDistData] = useState({});
     const [updateMessage, setUpdateMessage] = useState("");
-    const api = "https://tafteesh-staging-node.herokuapp.com/api/district";
+    const api = "https://kamo-api.herokuapp.com/api/district";
     const token = localStorage.getItem("accessToken");
     let axiosConfig = {
         headers: {
@@ -76,7 +76,7 @@ const KamoDistrict = (props) => {
     const onCancel = () => {
         setModalAddShow(false)
         setAddDistData({})
-        setSelectedData({})
+        // setSelectedData({})
     }
 
 
@@ -144,7 +144,7 @@ const KamoDistrict = (props) => {
                         const { data } = response;
                         dispatch(getMasterDistrictList())
                         setModalAddShow(false);
-                        setSelectedData({});
+                        // setSelectedData({});
                         setActiveClass(false);
                         setAddDistData({})
 

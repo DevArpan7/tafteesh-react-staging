@@ -24,6 +24,8 @@ import {
   getTraffickerList,
   getFirList,
   getChangeLog,
+  getActList,
+  getSectionByActId
 } from "../../redux/action";
 import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
@@ -40,7 +42,9 @@ const SurvivorFir = (props) => {
   const [addFirData, setAddFirData] = useState({});
   const [accusedObj, setAccusedObj] = useState({});
   const dispatch = useDispatch();
+  const actList = useSelector((state) => state.actList);
   const traffickerList = useSelector((state) => state.traffickerList);
+  const sectionByActId = useSelector((state) => state.sectionByActId);
   const firList = useSelector((state) => state.firList);
   const [firObj, setFirObj] = useState({});
   const [accusedArr, setAccusedArr] = useState([]);
@@ -51,7 +55,7 @@ const SurvivorFir = (props) => {
   const [sectionObj, setSectionObj] = useState({});
   const [open, setOpen] = useState(false);
   const [updateMessage, setUpdateMessage] = useState("");
-  const api = "https://tafteesh-staging-node.herokuapp.com/api";
+  const api = "https://kamo-api.herokuapp.com/api";
   const token = localStorage.getItem("accessToken");
   let axiosConfig = {
     headers: {
@@ -245,7 +249,7 @@ const[bodyAccuseObj,setbodyAccuseObj] =useState({})
   useEffect(() => {
     dispatch(getPoliceStationList());
     dispatch(getTraffickerList());
-
+dispatch(getActList())
     dispatch(getFirList(getId.survivorId));
     dispatch(getSurvivorDetails(getId.survivorId));
   }, [getId.survivorId]);
@@ -431,7 +435,16 @@ const[bodyAccuseObj,setbodyAccuseObj] =useState({})
       ...sectionObj,
       [e.target.name]: e.target.value,
     });
+    dispatch(getSectionByActId(e.target.value))
   };
+  const onSectionNumberChange = (e) => {
+    setSectionObj({
+      ...sectionObj,
+      [e.target.name]: e.target.value,
+    });
+    // dispatch(getSectionByActId(e.target.value))
+  };
+
 
 
 
@@ -595,10 +608,10 @@ const onDeleteSection=(value)=>{
 
   console.log(firList.data, "firrrrrrrrrrrrrr");
   let exportData = [];
-
+  firList&& firList.data && firList.data.length > 0 &&
   firList.data.map((x, index) => {
     exportData.push({
-      date: moment(x.fir.date).format("DD-MMM-YYYY"),
+      date: x && x.fir && x.fir.date && moment(x.fir.date).format("DD-MMM-YYYY"),
       firNumber: x.fir.number,
       gd_number: x.gd_number,
       issue_mention_in_gd: x.issue_mention_in_gd,
@@ -1401,8 +1414,13 @@ return (
                           <option hidden={true} value="">
                             Please select
                           </option>
-                          <option value="ipc">IPC </option>
-                          <option value="itpc">ITPC </option>
+                          {actList && actList.length>0 && actList.map((item)=>{
+                            return(
+
+                              <option value={item && item.name}>{item && item.name} </option>
+                              )
+                          })}
+                          {/* <option value="itpc">ITPC </option> */}
                         </Form.Select>
                         <Form.Control.Feedback type="invalid">
                           Please select Type of section
@@ -1412,18 +1430,25 @@ return (
                         <Form.Label>Section</Form.Label>
                         <Form.Select
                           required
-                          onChange={onSectionChange}
+                          onChange={onSectionNumberChange}
                           name="section_number"
                         >
                           <option value="" hidden={true}>
                             Please select
                           </option>
-                          <option value="366A">366A</option>
+                          {sectionByActId && sectionByActId.length > 0 && sectionByActId.map((item)=>{
+                            return(
+                              <option value={item && item.number}>{item && item.number}</option>
+
+                            )
+                          })}
+
+{/*                           
                           <option value="366B">366B</option>
                           <option value="370">370</option>
                           <option value="370A">370A</option>
                           <option value="372">372</option>
-                          <option value="373">373</option>
+                          <option value="373">373</option> */}
                         </Form.Select>
                         <Form.Control.Feedback type="invalid">
                           Please select Section number

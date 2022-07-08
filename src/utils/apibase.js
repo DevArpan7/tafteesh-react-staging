@@ -1,5 +1,5 @@
 const baseUrl = {
-    baseURL: 'https://tafteesh-staging-node.herokuapp.com/api/'
+    baseURL: 'https://kamo-api.herokuapp.com/api/'
 };
 
 export default baseUrl;

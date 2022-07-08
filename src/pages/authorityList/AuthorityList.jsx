@@ -26,7 +26,7 @@ const AuthorityList = (props) => {
 
     const [addShgData, setAddShgData] = useState({});
     const [updateMessage, setUpdateMessage] = useState("");
-    const api = "https://tafteesh-staging-node.herokuapp.com/api/authority";
+    const api = "https://kamo-api.herokuapp.com/api/authority";
     const token = localStorage.getItem("accessToken");
     let axiosConfig = {
         headers: {
@@ -73,7 +73,7 @@ const AuthorityList = (props) => {
     const onCancel = () => {
         setModalAddShow(false)
         setAddShgData({})
-        setSelectedData({})
+        // setSelectedData({})
     }
 
 
@@ -144,7 +144,7 @@ const AuthorityList = (props) => {
                         setModalAddShow(false);
                         setAddShgData({})
 
-                        setSelectedData({});
+                        // setSelectedData({});
                         setActiveClass(false);
 
 
@@ -403,7 +403,7 @@ const AuthorityList = (props) => {
                 <Modal className="addFormModal" show={modalAddShow} onHide={setModalAddShow} size="lg" aria-labelledby="reason-modal" centered>
                     <Modal.Header closeButton>
                         <Modal.Title id="contained-modal-title-vcenter">
-                            Add Authority
+                        {addShgData && addShgData._id ? "Update Authority" : "Add Authority"} 
                         </Modal.Title>
                     </Modal.Header>
                     <Modal.Body>

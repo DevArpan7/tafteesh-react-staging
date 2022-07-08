@@ -26,7 +26,7 @@ const KamoOrganizations = (props) => {
 
     const [addOrgData, setAddOrgData] = useState({});
     const [updateMessage, setUpdateMessage] = useState("");
-    const api = "https://tafteesh-staging-node.herokuapp.com/api/organization";
+    const api = "https://kamo-api.herokuapp.com/api/organization";
     const token = localStorage.getItem("accessToken");
     let axiosConfig = {
         headers: {
@@ -84,7 +84,7 @@ const onDeleteChangeFunc=()=>{
     const onCancel = () => {
         setModalAddShow(false)
         setAddOrgData({})
-        setSelectedData({})
+        // setSelectedData({})
     }
 
     const ongotoEdit = () => {
@@ -136,7 +136,7 @@ const onDeleteChangeFunc=()=>{
                         const { data } = response;
                         dispatch(getOrganizationList())
                         setModalAddShow(false);
-                        setSelectedData({});
+                        // setSelectedData({});
                         setActiveClass(false);
                         setAddOrgData({})
 
@@ -404,7 +404,7 @@ const exportToCsv = e => {
                 <Modal className="addFormModal" show={modalAddShow} onHide={setModalAddShow} size="lg" aria-labelledby="reason-modal" centered>
                     <Modal.Header closeButton>
                         <Modal.Title id="contained-modal-title-vcenter">
-                            Add Organisation
+                        {addOrgData && addOrgData._id ? "Update Organisation" : "Add Organisation"}
                         </Modal.Title>
                     </Modal.Header>
                     <Modal.Body>

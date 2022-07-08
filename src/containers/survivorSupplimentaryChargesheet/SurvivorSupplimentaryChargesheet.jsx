@@ -36,7 +36,7 @@ import DatePicker from "../../components/DatePicker";
 const SurvivorSupplimentaryChargesheet = (props) => {
   console.log(props,'props]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]')
   const [modalChargesheetShow, setModalChargesheetShow] = useState(false);
-  const api = "https://tafteesh-staging-node.herokuapp.com/api";
+  const api = "https://kamo-api.herokuapp.com/api";
   const token = localStorage.getItem("accessToken");
   let axiosConfig = {
     headers: {
@@ -115,7 +115,7 @@ console.log(actList,'acttttttttttttttttttt')
 
     var config = {
       method: 'get',
-      url: `${api}/section/list/${id}`,
+      url: `${api}/section/list-by-act-name/${id}`,
       headers: {}
     };
     axios(config)
@@ -240,12 +240,13 @@ console.log(actList,'acttttttttttttttttttt')
  useEffect(()=>{
   //  console.log(updateChargeSheetData && updateChargeSheetData.act._id,"updateChargeSheetData")
    if(updateChargeSheetData && updateChargeSheetData.act){
-    fetchAllSectionListById(updateChargeSheetData && updateChargeSheetData.act && updateChargeSheetData.act_id)
-    setSelectedSection(updateChargeSheetData && updateChargeSheetData.section && updateChargeSheetData.section._id)
+    fetchAllSectionListById(updateChargeSheetData && updateChargeSheetData.act && updateChargeSheetData.act)
+    setSelectedSection(updateChargeSheetData && updateChargeSheetData.section && updateChargeSheetData.section)
 
    }
  },[updateChargeSheetData])
 const [selectedSection,setSelectedSection] = useState()
+
   const onSectionChange = (e) => {
    
     setSelectedSection(e.target.value)
@@ -331,9 +332,9 @@ console.log(survivorDetails)
 
   let exportData = []
   supplimentaryChargeSheetList  && supplimentaryChargeSheetList.length > 0 && supplimentaryChargeSheetList.map((x, index) => {
-    exportData = [...exportData,{survivor:survivorDetails && survivorDetails.survivor_name,chargesheet:props.location.state, supplimentarychargesheetDate: moment(x.date).format("DD-MMM-YYYYY"), supplimentarychargesheetNumber: x.supplimentary_chargesheet_number, section: x.section.number, act: x.act.name,createdAt: moment(x.createdAt).format("DD-MMM-YYYY")}]
+    exportData = [...exportData,{survivor:survivorDetails && survivorDetails.survivor_name,chargesheet:props.location.state, supplimentarychargesheetDate: moment(x.date).format("DD-MMM-YYYYY"), supplimentarychargesheetNumber: x.supplimentary_chargesheet_number, section: x.section, act: x.act,createdAt: moment(x.createdAt).format("DD-MMM-YYYY")}]
   })
-   console.log(exportData,'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa')
+  //  console.log(exportData,'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa')
   const downloadFile = ({ data, fileName, fileType }) => {
     const blob = new Blob([data], { type: fileType })
 
@@ -552,14 +553,14 @@ console.log(survivorDetails)
                     name="act"
                     onChange={onActChange}
                     // value={firObj && firObj._id && firObj._id}
-                    value={selectedAct ? selectedAct  : updateChargeSheetData && updateChargeSheetData.act && updateChargeSheetData.act._id}
+                    value={selectedAct ? selectedAct  : updateChargeSheetData && updateChargeSheetData.act && updateChargeSheetData.act}
                   >
                     <option hidden={true}>Select Act</option>
                     {actList &&
                       actList.length > 0 &&
                       actList.map((data) => {
                         return (
-                          <option value={data && data._id}>
+                          <option value={data && data.name}>
                             {data && data.name}{" "}
                           </option>
                         );
@@ -580,7 +581,7 @@ console.log(survivorDetails)
                       sectionList.length > 0 &&
                       sectionList.map((data) => {
                         return (
-                          <option value={data && data._id}>
+                          <option value={data && data.number}>
                             {data && data.number}{" "}
                           </option>
                         );

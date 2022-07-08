@@ -34,7 +34,7 @@ const SectionList = (props) => {
 
     const [addShgData, setAddShgData] = useState({});
     const [updateMessage, setUpdateMessage] = useState("");
-    const api = "https://tafteesh-staging-node.herokuapp.com/api/section";
+    const api = "https://kamo-api.herokuapp.com/api/section";
     const token = localStorage.getItem("accessToken");
     let axiosConfig = {
         headers: {
@@ -80,7 +80,7 @@ const SectionList = (props) => {
     const onCancel = () => {
         setModalAddShow(false)
         setAddShgData({})
-        setSelectedData({})
+        // setSelectedData({})
     }
 
 
@@ -151,7 +151,7 @@ const SectionList = (props) => {
                         setModalAddShow(false);
                         setAddShgData({})
 
-                        setSelectedData({});
+                        // setSelectedData({});
                         setActiveClass(false);
 
 

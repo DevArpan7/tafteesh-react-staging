@@ -10,7 +10,7 @@
         "path": "/partners"
     },
     {
-        "title": "CIT List",
+        "title": "CIT Approval",
         "icon": "fal fa-home-heart",
         "path": "/all-cit"
     },
@@ -40,7 +40,7 @@
         "path": "/collectives"
     },
     {
-        "title": "All Survivors",
+        "title": "Survivor Status",
         "icon": "fal fa-hands-helping",
         "path": "/all-survivor"
     },
@@ -120,7 +120,7 @@
         "path": "/section_list"
     },
     {
-        "title": "Document List",
+        "title": "Document Type Mgmt",
         "icon": "fal fa-gavel",
         "path": "/document_list"
     }

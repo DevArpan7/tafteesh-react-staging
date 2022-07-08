@@ -30,7 +30,7 @@ const stateList = useSelector((state) => state.stateList);
 
 const [addStateData, setAddStateData] = useState({});
 const [updateMessage, setUpdateMessage] = useState("");
-const api = "https://tafteesh-staging-node.herokuapp.com/api/state";
+const api = "https://kamo-api.herokuapp.com/api/state";
 const token = localStorage.getItem("accessToken");
 let axiosConfig = {
     headers: {
@@ -72,7 +72,7 @@ useEffect(() => {
     const onCancel = () => {
         setModalAddShow(false)
         setAddStateData({})
-        setSelectedData({})
+        // setSelectedData({})
     }
 
 
@@ -145,7 +145,7 @@ useEffect(() => {
                         const { data } = response;
                         dispatch(getStateList())
                         setAddStateData({})
-                        setSelectedData({});
+                        // setSelectedData({});
                         setActiveClass(false);
                         setModalAddShow(false);
 

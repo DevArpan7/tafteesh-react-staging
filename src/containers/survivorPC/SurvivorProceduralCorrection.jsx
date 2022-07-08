@@ -116,7 +116,7 @@ const [alertMessage,setAlertMessage]= useState('')
   }, [props]);
   const [pictureData, setPictureData] = useState({});
   const [updateMessage, setUpdateMessage] = useState("");
-  const api = "https://tafteesh-staging-node.herokuapp.com/api";
+  const api = "https://kamo-api.herokuapp.com/api";
   const token = localStorage.getItem("accessToken");
   let axiosConfig = {
     headers: {
@@ -332,7 +332,7 @@ console.log(survivorPcList,'pcccccccccccccccccccc')
     formData.append("file", file);
     axios
       .post(
-        "https://tafteesh-staging-node.herokuapp.com/api/file/upload",
+        "https://kamo-api.herokuapp.com/api/file/upload",
         formData,
         axiosConfig
       )
@@ -346,12 +346,12 @@ console.log(survivorPcList,'pcccccccccccccccccccc')
           setAddPcData({
             ...addPcData,
             document_url:
-              "https://tafteesh-staging-node.herokuapp.com/" + data.data.filePath,
+              "https://kamo-api.herokuapp.com/" + data.data.filePath,
           });
           setAddPcEscalationData({
             ...addPcEscalationData,
             document_url:
-              "https://tafteesh-staging-node.herokuapp.com/" + data.data.filePath,
+              "https://kamo-api.herokuapp.com/" + data.data.filePath,
           });
           setPictureData(data.data.filePath);
           //console.log(pictureData);
@@ -415,6 +415,8 @@ console.log(addPcData,"url")
           //console.log(response);
           handleClick();
           setUpdateMessage(response && response.data.message);
+          setMessagType("success");
+
           setValidated(false);
           if (response.data && response.data.error === false) {
             const { data } = response;
@@ -435,6 +437,8 @@ console.log(addPcData,"url")
           console.log(res);
           handleClick();
           setValidated(false);
+          setMessagType("success");
+
           setUpdateMessage(res && res.data.message);
           if (res && res.data && res.data.error == false) {
             const { data } = res;
@@ -1201,7 +1205,7 @@ console.log(addPcData,"url")
       >
         <Modal.Header closeButton>
           <Modal.Title id="contained-modal-title-vcenter">
-            Add Procedural Correction
+           {addPcData && addPcData._id ? "Update Procedural Correction" :"Add Procedural Correction"} 
           </Modal.Title>
         </Modal.Header>
         <Modal.Body>
@@ -1458,6 +1462,8 @@ console.log(addPcData,"url")
                     <option value={""} hidden={true}>Please select</option>
                     <option value={"success"}>Success</option>
                     <option value={"rejected"}>Rejected</option>
+                    <option value={"awaiting"}>Awaiting</option>
+
                   </Form.Select>  
                   <Form.Control.Feedback type="invalid">
               Please select Result of PC
@@ -1772,7 +1778,7 @@ console.log(addPcData,"url")
       >
         <Modal.Header closeButton>
           <Modal.Title id="contained-modal-title-vcenter">
-            Add Escalation
+          {addPcEscalationData && addPcEscalationData._id ? "Update Escalation" :"Add Escalation"}
           </Modal.Title>
         </Modal.Header>
         <Modal.Body>
@@ -1956,10 +1962,32 @@ console.log(addPcData,"url")
                 </Form.Group>
                 <Form.Group as={Col} md="6" className="mb-3">
                   <Form.Label>
-                    Reason for WRIT/Appeal/Contempt{" "}
+                    Reason for 
                     <span className="requiredStar">*</span>
                   </Form.Label>
-                  <Form.Control
+
+                  <Form.Select
+                    required
+                    defaultValue={
+                      addPcEscalationData &&
+                      addPcEscalationData.reason_for_writ_appeal_contemt &&
+                      addPcEscalationData.reason_for_writ_appeal_contemt
+                    }
+                    onChange={(e) =>
+                      setAddPcEscalationData({
+                        ...addPcEscalationData,
+                        [e.target.name]: e.target.value,
+                      })
+                    }
+                    name="reason_for_writ_appeal_contemt"
+                  >
+                    <option hidden={true}>Please select</option>
+                    <option value="WRIT">WRIT</option>
+                    <option value="Appeal">Appeal</option>
+                    <option value="Contempt">Contempt</option>
+
+                  </Form.Select>
+                  {/* <Form.Control
                   required
                     defaultValue={
                       addPcEscalationData &&
@@ -1973,14 +2001,18 @@ console.log(addPcData,"url")
                       })
                     }
                     name="reason_for_writ_appeal_contemt"
-                  />
+                  /> */}
                   <Form.Control.Feedback type="invalid">
               Please enter Reason for WRIT/Appeal/Contempt
             </Form.Control.Feedback>
                 </Form.Group>
                 <Form.Group as={Col} md="6" className="mb-3">
-                  <Form.Label>Status of WRIT/Appeal/Contempt</Form.Label>
-                  <Form.Control
+                  <Form.Label>Status of {
+                      addPcEscalationData &&
+                      addPcEscalationData.reason_for_writ_appeal_contemt &&
+                      addPcEscalationData.reason_for_writ_appeal_contemt
+                    }</Form.Label>
+                  <Form.Select
                     defaultValue={
                       addPcEscalationData &&
                       addPcEscalationData.status_of_writ_appeal_contempt &&
@@ -1993,7 +2025,27 @@ console.log(addPcData,"url")
                       })
                     }
                     name="status_of_writ_appeal_contempt"
-                  />
+                  >
+                    <option hidden={true}>Please select</option>
+                    <option value="Completed">Completed</option>
+                    <option value="Ongoing">Ongoing</option>
+                    <option value="Rejected">Rejected</option>
+
+                  </Form.Select>
+                  {/* <Form.Control
+                    defaultValue={
+                      addPcEscalationData &&
+                      addPcEscalationData.status_of_writ_appeal_contempt &&
+                      addPcEscalationData.status_of_writ_appeal_contempt
+                    }
+                    onChange={(e) =>
+                      setAddPcEscalationData({
+                        ...addPcEscalationData,
+                        [e.target.name]: e.target.value,
+                      })
+                    }
+                    name="status_of_writ_appeal_contempt"
+                  /> */}
                 </Form.Group>
                 <Form.Group as={Col} md="6" className="mb-3">
                   <Form.Label>

@@ -175,23 +175,22 @@ const CitDimensionQuesDataTable = (props) => {
   //     )
   // }
 
-  const survivorIdBodyTemplate = (rowData) => {
+  const genderWithBodyTemplate = (rowData) => {
     return (
       <React.Fragment>
-        {/* <img
-          alt="flag"
-          src="showcase/demo/images/flag_placeholder.png"
-          onError={(e) =>
-            (e.target.src =
-              "https://www.primefaces.org/wp-content/uploads/2020/05/placeholder.png")
-          }
-          className={`flag flag-${rowData.country.code}`}
-          width={30}
-        /> */}
-        <span className="image-text">{rowData.survivor_id}</span>
+        
+        <span className="image-text">{rowData.data}</span>
       </React.Fragment>
     );
   };
+
+  // const genderWithBodyTemplate = (rowData) => {
+  //   return (
+  //     <span className={`customer-badge status-${rowData.data}`}>
+  //       {rowData.data}
+  //     </span>
+  //   );
+  // };
 
   const filterClearTemplate = (options) => {
     return (
@@ -262,13 +261,6 @@ const CitDimensionQuesDataTable = (props) => {
     );
   };
 
-  const genderWithBodyTemplate = (rowData) => {
-    return (
-      <span className={`customer-badge status-${rowData.data}`}>
-        {rowData.data}
-      </span>
-    );
-  };
 
   const traffickerNameBodyTemplate = (rowData) => {
     // return formatDate(rowData.rescue_from_city);
@@ -477,9 +469,10 @@ const CitDimensionQuesDataTable = (props) => {
           responsiveLayout="scroll"
           globalFilterFields={[
             "cit_dimension",
-            "data_existance_check_from",
+            "data",
             "data_existance_check",
-            "data"
+            "data_existance_check_from",
+
           ]}
           header={header1}
           emptyMessage="No Data found."

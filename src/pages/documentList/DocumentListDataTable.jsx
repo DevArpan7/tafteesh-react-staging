@@ -464,8 +464,8 @@ const DocumentListDataTable = (props) => {
           responsiveLayout="scroll"
           globalFilterFields={[
             "name",
+            "is_required",
             "createdAt",
-            "is_required"         
           ]}
           header={header1}
           emptyMessage="No Data found."

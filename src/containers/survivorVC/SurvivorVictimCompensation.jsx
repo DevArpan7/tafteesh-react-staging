@@ -62,7 +62,7 @@ const SurvivorVictimCompensation = (props) => {
   const [pictureData, setPictureData] = useState({});
   const [updateMessage, setUpdateMessage] = useState("");
   const [addVcData, setAddVcData] = useState({});
-  const api = "https://tafteesh-staging-node.herokuapp.com/api";
+  const api = "https://kamo-api.herokuapp.com/api";
   const token = localStorage.getItem("accessToken");
   let axiosConfig = {
     headers: {
@@ -495,7 +495,7 @@ const handleCloseAlert = () =>{
     formData.append("file", file);
     axios
       .post(
-        "https://tafteesh-staging-node.herokuapp.com/api/file/upload",
+        "https://kamo-api.herokuapp.com/api/file/upload",
         formData,
         axiosConfig
       )
@@ -507,12 +507,12 @@ const handleCloseAlert = () =>{
           setAddVcData({
             ...addVcData,
             vc_application:
-              "https://tafteesh-staging-node.herokuapp.com/" + data.data.filePath,
+              "https://kamo-api.herokuapp.com/" + data.data.filePath,
           });
           setAddVcEscalationData({
             ...addVcEscalationData,
             vc_application:
-              "https://tafteesh-staging-node.herokuapp.com/" + data.data.filePath,
+              "https://kamo-api.herokuapp.com/" + data.data.filePath,
           });
           setPictureData(data.data.filePath);
           console.log(pictureData);
@@ -1617,6 +1617,8 @@ const downloadPdf = () => {
                     <option value={""} hidden={true}>Please select</option>
                     <option value="awarded">Awarded</option>
                     <option value="rejected">Rejected</option>
+                    <option value="awaiting">Awaiting</option>
+
                   </Form.Select>
                   <Form.Control.Feedback type="invalid">
               Please select Result
@@ -2164,6 +2166,8 @@ const downloadPdf = () => {
                     <option hidden={true}>Please Select</option>
                     <option value="awarded">Awarded</option>
                     <option value="rejected">Rejected</option>
+                    <option value="awaiting">Awaiting</option>
+
                   </Form.Select>
                   <Form.Control.Feedback type="invalid">
               Please select Result 
@@ -2725,6 +2729,8 @@ const downloadPdf = () => {
                     <option value={""} hidden={true}>Please Select</option>
                     <option value="awarded">Awarded</option>
                     <option value="rejected">Rejected</option>
+                    <option value="awaiting">Awaiting</option>
+
                   </Form.Select>
                   <Form.Control.Feedback type="invalid">
               Please select Result

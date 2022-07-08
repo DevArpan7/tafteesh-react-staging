@@ -26,6 +26,9 @@ import {
   getChargeSheetList,
   getChargeSheetListByFirIdandInvestId,
   getChangeLog,
+  getSectionByActId,
+  getActList
+
 } from "../../redux/action";
 import moment from "moment";
 import AlertComponent from "../../components/AlertComponent";
@@ -35,7 +38,7 @@ import { NavLink, useHistory, useLocation } from "react-router-dom";
 
 const SurvivorChargesheet = (props) => {
   const [modalChargesheetShow, setModalChargesheetShow] = useState(false);
-  const api = "https://tafteesh-staging-node.herokuapp.com/api";
+  const api = "https://kamo-api.herokuapp.com/api";
   const token = localStorage.getItem("accessToken");
   let axiosConfig = {
     headers: {
@@ -93,6 +96,10 @@ const SurvivorChargesheet = (props) => {
   const firId = new URLSearchParams(search).get("firId");
   const investId = new URLSearchParams(search).get("investigationId");
   const [firArr, setFirArr] = useState([]);
+
+  const actList = useSelector((state) => state.actList);
+  const sectionByActId = useSelector((state) => state.sectionByActId);
+
   console.log(survivorId, firId, investId, "investIdinvestId");
 
   useEffect(() => {
@@ -120,6 +127,8 @@ const SurvivorChargesheet = (props) => {
     console.log(props.location, "location");
     dispatch(getSurvivorDetails(survivorId));
     dispatch(getTraffickerList());
+dispatch(getActList())
+
    
     if (investId) {
       dispatch(
@@ -523,6 +532,15 @@ const SurvivorChargesheet = (props) => {
       ...addSectionObj,
       [e.target.name]: e.target.value,
     });
+    dispatch(getSectionByActId(e.target.value))
+  };
+
+  const onSectionNumberChange = (e) => {
+    setAddSectionObj({
+      ...addSectionObj,
+      [e.target.name]: e.target.value,
+    });
+    // dispatch(getSectionByActId(e.target.value))
   };
   ///////section submit button function ////
   const onSubmitASection = (e) => {
@@ -1075,7 +1093,8 @@ const downloadPdf = () => {
       >
         <Modal.Header closeButton>
           <Modal.Title id="contained-modal-title-vcenter">
-            Add Chargesheet
+            {addChargeSheetData &&
+                      addChargeSheetData._id ? "Update Chargesheet" : "Add Chargesheet"}
           </Modal.Title>
         </Modal.Header>
         <Modal.Body>
@@ -1389,8 +1408,14 @@ const downloadPdf = () => {
                           onChange={onSectionChange}
                         >
                           <option hidden={true}>Select section type</option>
-                          <option value="ipc">IPC </option>
-                          <option value="itpc">ITPC </option>
+                          {actList && actList.length > 0 && actList.map((item)=>{
+                            return(
+                          <option value={item && item.name}>{item && item.name} </option>
+
+                            )
+                          })}
+                          {/* <option value="ipc">IPC </option>
+                          <option value="itpc">ITPC </option> */}
                         </Form.Select>
                       </Form.Group>
                       <Form.Group as={Col} md="6" className="mb-3">
@@ -1400,15 +1425,21 @@ const downloadPdf = () => {
                         </Form.Label>
                         <Form.Select
                           name="section_number"
-                          onChange={onSectionChange}
+                          onChange={onSectionNumberChange}
                         >
                           <option hidden={true}>Default select</option>
-                          <option value="366A">366A</option>
+                          {sectionByActId && sectionByActId.length > 0 && sectionByActId.map((item)=>{
+                            return(
+                          <option value={item && item.number}>{item && item.number} </option>
+
+                            )
+                          })}
+                          {/* <option value="366A">366A</option>
                           <option value="366B">366B</option>
                           <option value="370">370</option>
                           <option value="370A">370A</option>
                           <option value="372">372</option>
-                          <option value="373">373</option>
+                          <option value="373">373</option> */}
                         </Form.Select>
                       </Form.Group>
                       <Form.Group as={Col} md="6" className="mb-3">
@@ -1489,7 +1520,7 @@ const downloadPdf = () => {
                                           </td>
                                           <td>
                                             {item &&
-                                              item.date_of_section_when_added_to_fir}
+                                              moment(item.date_of_section_when_added_to_fir).format("DD-MMM-YYYY")}
                                           </td>
                                           <td>{item && item.notes}</td>
                                         </>

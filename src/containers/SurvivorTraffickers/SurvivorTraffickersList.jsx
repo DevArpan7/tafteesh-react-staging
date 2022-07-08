@@ -21,7 +21,7 @@ const SurvivorTraffickersList = (props) => {
     const [updateMessage, setUpdateMessage] = useState("");
     const [addTraffickerData, setAddTraffickerData] = useState({});
     const traffickerList = useSelector((state) => state.traffickerList);
-    const api = "https://tafteesh-staging-node.herokuapp.com/api";
+    const api = "https://kamo-api.herokuapp.com/api";
     const token = localStorage.getItem("accessToken");
     let axiosConfig = {
         headers: {
@@ -97,7 +97,7 @@ useEffect(() => {
         formData.append("file", file);
         axios
             .post(
-                "https://tafteesh-staging-node.herokuapp.com/api/file/upload",
+                "https://kamo-api.herokuapp.com/api/file/upload",
                 formData,
                 axiosConfig
             )
@@ -107,7 +107,7 @@ useEffect(() => {
                     const { data } = response
                     setPictureData(data.data)
                     let obj = ""
-                    obj = `https://tafteesh-staging-node.herokuapp.com/${data.data && data.data.filePath}`
+                    obj = `https://kamo-api.herokuapp.com/${data.data && data.data.filePath}`
 
                     setPictureArr([...pictureArr, obj])
                 }
@@ -211,7 +211,7 @@ useEffect(() => {
                         </div>
                     </div>
                     <div className="white_box_shadow_20 survivors_table_wrap vieweditdeleteMargin40 position-relative">
-                        <div className="vieweditdelete">
+                        {/* <div className="vieweditdelete">
                             <MDBTooltip tag="button" wrapperProps={{ className: "view_btn add_btn" }} title='Add'>
                                 <span onClick={() => { setModalAddShow(true); removeSelection() }}>
                                     <i className="fal fa-plus-circle"></i>
@@ -233,7 +233,7 @@ useEffect(() => {
                                     <i className="fal fa-trash-alt"></i>
                                 </span>
                             </MDBTooltip>
-                        </div>
+                        </div> */}
 
                         <TraffickersDataTableList 
                             traffickerList={traffickerList && traffickerList.length > 0 && traffickerList}
