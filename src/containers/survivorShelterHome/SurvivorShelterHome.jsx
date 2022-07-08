@@ -36,7 +36,7 @@ const SurvivorShelterHome = (props) => {
   const shelterQuestionList = useSelector((state) => state.shelterQuestionList);
   const [journeyObj, setJourneyObj] = useState({});
   const [journeyArr, setJourneyArr] = useState([]);
-  const api = "https://kamo-api.herokuapp.com/api/shelter-home";
+  const api = "https://tafteesh-staging-node.herokuapp.com/api/shelter-home";
   const token = localStorage.getItem("accessToken");
   let axiosConfig = {
     headers: {

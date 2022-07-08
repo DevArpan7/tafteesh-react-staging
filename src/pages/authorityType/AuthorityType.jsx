@@ -27,7 +27,7 @@ const AuthorityType = (props) => {
     const authorityTypeList = useSelector((state) => state.authorityTypeList);
     const [addShgData, setAddShgData] = useState({});
     const [updateMessage, setUpdateMessage] = useState("");
-    const api = "https://kamo-api.herokuapp.com/api/authority_type";
+    const api = "https://tafteesh-staging-node.herokuapp.com/api/authority_type";
     const token = localStorage.getItem("accessToken");
     let axiosConfig = {
         headers: {

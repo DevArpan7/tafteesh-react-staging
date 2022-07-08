@@ -36,7 +36,7 @@ import DatePicker from "../../components/DatePicker";
 const SurvivorSupplimentaryChargesheet = (props) => {
   console.log(props,'props]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]')
   const [modalChargesheetShow, setModalChargesheetShow] = useState(false);
-  const api = "https://kamo-api.herokuapp.com/api";
+  const api = "https://tafteesh-staging-node.herokuapp.com/api";
   const token = localStorage.getItem("accessToken");
   let axiosConfig = {
     headers: {

@@ -25,7 +25,7 @@ const KamoSHG = (props) => {
     const shgList = useSelector((state) => state.shgList);
     const [addShgData, setAddShgData] = useState({});
     const [updateMessage, setUpdateMessage] = useState("");
-    const api = "https://kamo-api.herokuapp.com/api/shg";
+    const api = "https://tafteesh-staging-node.herokuapp.com/api/shg";
     const token = localStorage.getItem("accessToken");
     let axiosConfig = {
         headers: {

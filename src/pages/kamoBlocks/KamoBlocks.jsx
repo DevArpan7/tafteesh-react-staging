@@ -32,7 +32,7 @@ const KamoBlocks = (props) => {
 
     const [addBlockData, setAddBlockData] = useState({});
     const [updateMessage, setUpdateMessage] = useState("");
-    const api = "https://kamo-api.herokuapp.com/api/block";
+    const api = "https://tafteesh-staging-node.herokuapp.com/api/block";
     const token = localStorage.getItem("accessToken");
     let axiosConfig = {
         headers: {

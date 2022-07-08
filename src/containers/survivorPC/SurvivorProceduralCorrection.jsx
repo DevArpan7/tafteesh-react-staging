@@ -116,7 +116,7 @@ const [alertMessage,setAlertMessage]= useState('')
   }, [props]);
   const [pictureData, setPictureData] = useState({});
   const [updateMessage, setUpdateMessage] = useState("");
-  const api = "https://kamo-api.herokuapp.com/api";
+  const api = "https://tafteesh-staging-node.herokuapp.com/api";
   const token = localStorage.getItem("accessToken");
   let axiosConfig = {
     headers: {
@@ -332,7 +332,7 @@ console.log(survivorPcList,'pcccccccccccccccccccc')
     formData.append("file", file);
     axios
       .post(
-        "https://kamo-api.herokuapp.com/api/file/upload",
+        "https://tafteesh-staging-node.herokuapp.com/api/file/upload",
         formData,
         axiosConfig
       )
@@ -346,12 +346,12 @@ console.log(survivorPcList,'pcccccccccccccccccccc')
           setAddPcData({
             ...addPcData,
             document_url:
-              "https://kamo-api.herokuapp.com/" + data.data.filePath,
+              "https://tafteesh-staging-node.herokuapp.com/" + data.data.filePath,
           });
           setAddPcEscalationData({
             ...addPcEscalationData,
             document_url:
-              "https://kamo-api.herokuapp.com/" + data.data.filePath,
+              "https://tafteesh-staging-node.herokuapp.com/" + data.data.filePath,
           });
           setPictureData(data.data.filePath);
           //console.log(pictureData);

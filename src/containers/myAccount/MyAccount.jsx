@@ -27,7 +27,7 @@ const MyAccount = (props) => {
   const profile = localStorage.getItem("image");
   const [userName, setUserName] = useState({})
   const [userDetails, setUserDetails] = useState({});
-  const api = "https://kamo-api.herokuapp.com/api/user/";
+  const api = "https://tafteesh-staging-node.herokuapp.com/api/user/";
   const token = localStorage.getItem("accessToken");
   let axiosConfig = {
     headers: {
@@ -113,7 +113,7 @@ const MyAccount = (props) => {
     formData.append("file", file);
     axios
       .post(
-        "https://kamo-api.herokuapp.com/api/file/upload",
+        "https://tafteesh-staging-node.herokuapp.com/api/file/upload",
         formData,
         axiosConfig
       )
@@ -123,7 +123,7 @@ const MyAccount = (props) => {
           const {data} = response
           setUserDetails({
             ...userDetails,
-            "image": "https://kamo-api.herokuapp.com/"+data.data.filePath,
+            "image": "https://tafteesh-staging-node.herokuapp.com/"+data.data.filePath,
           })
           setPictureData(data.data.filePath)
           console.log(userDetails, pictureData);

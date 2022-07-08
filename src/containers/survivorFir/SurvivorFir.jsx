@@ -55,7 +55,7 @@ const SurvivorFir = (props) => {
   const [sectionObj, setSectionObj] = useState({});
   const [open, setOpen] = useState(false);
   const [updateMessage, setUpdateMessage] = useState("");
-  const api = "https://kamo-api.herokuapp.com/api";
+  const api = "https://tafteesh-staging-node.herokuapp.com/api";
   const token = localStorage.getItem("accessToken");
   let axiosConfig = {
     headers: {

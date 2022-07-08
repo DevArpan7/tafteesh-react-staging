@@ -44,7 +44,7 @@ const SurvivorProfileDetails = (props) => {
     const [userDetails, setUserDetails] = useState({});
 
 
-    const api = "https://kamo-api.herokuapp.com/api";
+    const api = "https://tafteesh-staging-node.herokuapp.com/api";
     const token = localStorage.getItem("accessToken");
     let axiosConfig = {
         headers: {
@@ -203,7 +203,7 @@ const SurvivorProfileDetails = (props) => {
                                     // src={profileImage}
                                     src={
                                         survivorDetails && survivorDetails.picture ?
-                                            'https://kamo-api.herokuapp.com/' + userDetails.picture
+                                            'https://tafteesh-staging-node.herokuapp.com/' + userDetails.picture
                                             : user
                                     }
                                     alt="" />

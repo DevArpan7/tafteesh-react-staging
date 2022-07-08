@@ -26,7 +26,7 @@ const KamoOrganizations = (props) => {
 
     const [addOrgData, setAddOrgData] = useState({});
     const [updateMessage, setUpdateMessage] = useState("");
-    const api = "https://kamo-api.herokuapp.com/api/organization";
+    const api = "https://tafteesh-staging-node.herokuapp.com/api/organization";
     const token = localStorage.getItem("accessToken");
     let axiosConfig = {
         headers: {
