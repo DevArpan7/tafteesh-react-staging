@@ -444,6 +444,8 @@ const DataTableFilter = (props) => {
           className="dataTableFilter-customers"
           showGridlines
           rows={10}
+          pageLinkSize={3}
+          // paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink"
           selection={selectedProduct5}
           onSelectionChange={(e) => onSelectRowFunc(e.value)}
           dataKey="_id"

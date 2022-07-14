@@ -30,17 +30,17 @@ const ActListDataTable = (props) => {
   const [representatives, setrepresentatives] = useState([]);
 
   useEffect(() => {
-    console.log(props, "props");
+    // console.log(props, "props");
     let obj = {};
     let arr = [];
     authorityList &&
       authorityList.length > 0 &&
       authorityList.map((item) => {
-        console.log(item, "itemitemitem");
+        // // console.log(item, "itemitemitem");
         return (
           (obj = { survivor_name: item.survivor_name, image: "amyelsner.png" }),
-          arr.push(obj),
-          console.log(representatives, obj, "representatives")
+          arr.push(obj)
+          // // console.log(representatives, obj, "representatives")
         );
       });
     setrepresentatives(arr);
@@ -50,7 +50,7 @@ const ActListDataTable = (props) => {
   const customerService =
     authorityList && authorityList.length > 0 && authorityList;
 
-  console.log(customerService, "customer servicessssss");
+  // console.log(customerService, "customer servicessssss");
 
   useEffect(() => {
     setCustomers1(customerService);
@@ -59,12 +59,12 @@ const ActListDataTable = (props) => {
   }, [customerService]);
 
   useEffect(() => {
-    console.log(representatives, "representatives");
+    // console.log(representatives, "representatives");
   }, [representatives]);
 
 
   const formatDate = (value) => {
-    console.log(value, "value");
+    // // console.log(value, "value");
     return moment(value).format("DD-MMM-YYYY");
   };
 
@@ -74,16 +74,16 @@ const ActListDataTable = (props) => {
 
   const onGlobalFilterChange1 = (e) => {
     const value = e.target.value;
-    console.log(value, "value");
+    // console.log(value, "value");
     let _filters1 = { ...filters1 };
 
     _filters1["global"].value = value;
-    console.log(_filters1, " _filters1");
+    // console.log(_filters1, " _filters1");
     setFilters1(_filters1);
     setGlobalFilterValue1(value);
   };
 
-  console.log(filters1, "filters1");
+  // console.log(filters1, "filters1");
 
 
   const initFilters1 = () => {
@@ -142,7 +142,7 @@ const ActListDataTable = (props) => {
 
 
   const representativesItemTemplate = (option) => {
-    console.log(option, "option");
+    // console.log(option, "option");
     return (
       <div className="p-multiselect-representative-option">
         <img
@@ -299,7 +299,7 @@ const ActListDataTable = (props) => {
   const header1 = renderHeader1();
   // const header2 = renderHeader2();
 
-  console.log(selectedProduct5, "selectedProduct5");
+  // console.log(selectedProduct5, "selectedProduct5");
 
   const onSelectRowFunc = (value) => {
     setSelectedProduct5(value);

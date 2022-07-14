@@ -26,7 +26,7 @@ import {
   getVcEscalationList,
   getAuthorityByAuthorityType,
   getVcEscalation2List,
-  getChangeLog
+  getChangeLog,
 } from "../../redux/action";
 import alertImg from "../../assets/img/alertPopupimg.png";
 import DataTableVcFilter from "./DataTableVcFilter";
@@ -34,7 +34,6 @@ import AlertComponent from "../../components/AlertComponent";
 import DatePicker from "../../components/DatePicker";
 import { jsPDF } from "jspdf";
 import "jspdf-autotable";
-
 
 const SurvivorVictimCompensation = (props) => {
   // console.log(props, "props");
@@ -78,40 +77,40 @@ const SurvivorVictimCompensation = (props) => {
   //   const handleShow = () => setShowAlert(true);
   const [open, setOpen] = useState(false);
   const [appliedAtId, setAppliedAtId] = useState("");
-const [escalActive2Class,setEscalActive2Class] = useState(false)
-const [escalSelected2Data,setEscalSelected2Data] = useState({})
+  const [escalActive2Class, setEscalActive2Class] = useState(false);
+  const [escalSelected2Data, setEscalSelected2Data] = useState({});
 
-const deletedById= localStorage.getItem("userId");
-const deletedByRef = localStorage.getItem("role");
+  const deletedById = localStorage.getItem("userId");
+  const deletedByRef = localStorage.getItem("role");
 
-const [validated, setValidated] = useState(false);
-const [validatedEscal1,setValidatedEscal1] = useState(false)
-const [validatedEscal2,setValidatedEscal2] = useState(false)
-const [alertFlag,setAlertFlag] = useState('')
-const [alertMessage,setAlertMessage]= useState('')
+  const [validated, setValidated] = useState(false);
+  const [validatedEscal1, setValidatedEscal1] = useState(false);
+  const [validatedEscal2, setValidatedEscal2] = useState(false);
+  const [alertFlag, setAlertFlag] = useState("");
+  const [alertMessage, setAlertMessage] = useState("");
 
-const [erorMessage, setErorMessage] = useState("");
-const[esclFlag,setEsclFlag] = useState("")
-const [errText,setErrText] = useState('');
+  const [erorMessage, setErorMessage] = useState("");
+  const [esclFlag, setEsclFlag] = useState("");
+  const [errText, setErrText] = useState("");
 
-const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(true);
 
-useEffect(() => {
-  setTimeout(() => {
-    setIsLoading(false);
-  }, 1000);
-}, [survivalVcList]);
+  useEffect(() => {
+    setTimeout(() => {
+      setIsLoading(false);
+    }, 1000);
+  }, [survivalVcList]);
 
-const handleShow = () => {
-  console.log("select")
-  setShowAlert(true);
-}
+  const handleShow = () => {
+    console.log("select");
+    setShowAlert(true);
+  };
 
-const handleCloseAlert = () =>{ 
-  setAlertMessage('')
-  setAlertFlag('')
-  setShowAlert(false);
-}
+  const handleCloseAlert = () => {
+    setAlertMessage("");
+    setAlertFlag("");
+    setShowAlert(false);
+  };
 
   const handleClick = () => {
     setOpen(true);
@@ -125,12 +124,16 @@ const handleCloseAlert = () =>{
     setSelectedData(item);
     setActiveClass(true);
 
-    if(item && item.escalation  && item.escalation === true && item.totalEscalation ===0){
+    if (
+      item &&
+      item.escalation &&
+      item.escalation === true &&
+      item.totalEscalation === 0
+    ) {
       setAlertFlag("add");
-      setAlertMessage("Escalation marked YES, Would you like add ?")
-      handleShow()
-    }
-    else{
+      setAlertMessage("Escalation marked YES, Would you like add ?");
+      handleShow();
+    } else {
       setShowAlert(false);
     }
   };
@@ -158,10 +161,10 @@ const handleCloseAlert = () =>{
     setParamFlag("");
   };
 
-  const changeLogFunc=(flag)=>{
-    dispatch(getChangeLog(flag,deletedById))
-    props.history.push("/change-log")
-  }
+  const changeLogFunc = (flag) => {
+    dispatch(getChangeLog(flag, deletedById));
+    props.history.push("/change-log");
+  };
 
   //////// delete function call //////////
   const onDeleteChangeFunc = () => {
@@ -173,7 +176,7 @@ const handleCloseAlert = () =>{
   };
   //////// delete function call //////////
   const onDeleteChangeEscalFunc = (flag) => {
-    setEsclFlag(flag)
+    setEsclFlag(flag);
     if (escalSelectedData && !escalSelectedData._id) {
       alert("Please select one VC escalation");
     } else {
@@ -181,49 +184,52 @@ const handleCloseAlert = () =>{
     }
   };
   const onDeleteFunction = () => {
-    
-  let body ={
-    deleted_by : deletedById && deletedById,
-    deleted_by_ref: deletedByRef && deletedByRef
-  }
-    if(esclFlag==="escal"){
+    let body = {
+      deleted_by: deletedById && deletedById,
+      deleted_by_ref: deletedByRef && deletedByRef,
+    };
+    if (esclFlag === "escal") {
       axios
-      .patch(api + "/vc-escalation/delete/" + escalSelectedData._id,body)
-      .then((response) => {
-        handleClick();
-        setUpdateMessage(response && response.data.message);
-        setEscalSelectedData({})
-        if (response.data && response.data.error === false) {
-          const { data } = response;
-          setEsclFlag("");
-          dispatch(getVcEscalation2List(selectedData && selectedData._id,escalSelectedData && escalSelectedData._id))
-          setShowAlert(false);
-          setErorMessage("");
-        }
-      })
-      .catch((error) => {
-        //console.log(error, "partner error");
-      });
-    } else{
-    axios
-      .patch(api + "/survival-vc/delete/" + selectedData._id,body)
-      .then((response) => {
-        handleClick();
-        setUpdateMessage(response && response.data.message);
-        if (response.data && response.data.error === false) {
-          const { data } = response;
-          setSelectedData({})
-          dispatch(getSurvivalVcList(props.location && props.location.state));
-          setShowAlert(false);
-          setErorMessage("");
-        }
-      })
-      .catch((error) => {
-        //console.log(error, "partner error");
-      });
+        .patch(api + "/vc-escalation/delete/" + escalSelectedData._id, body)
+        .then((response) => {
+          handleClick();
+          setUpdateMessage(response && response.data.message);
+          setEscalSelectedData({});
+          if (response.data && response.data.error === false) {
+            const { data } = response;
+            setEsclFlag("");
+            dispatch(
+              getVcEscalation2List(
+                selectedData && selectedData._id,
+                escalSelectedData && escalSelectedData._id
+              )
+            );
+            setShowAlert(false);
+            setErorMessage("");
+          }
+        })
+        .catch((error) => {
+          //console.log(error, "partner error");
+        });
+    } else {
+      axios
+        .patch(api + "/survival-vc/delete/" + selectedData._id, body)
+        .then((response) => {
+          handleClick();
+          setUpdateMessage(response && response.data.message);
+          if (response.data && response.data.error === false) {
+            const { data } = response;
+            setSelectedData({});
+            dispatch(getSurvivalVcList(props.location && props.location.state));
+            setShowAlert(false);
+            setErorMessage("");
+          }
+        })
+        .catch((error) => {
+          //console.log(error, "partner error");
+        });
     }
   };
-
 
   const onVcEscalationCancel = () => {
     setModalVCEscalationFShow(false);
@@ -238,18 +244,15 @@ const handleCloseAlert = () =>{
     setEscalSelectedData(data);
     setEscalActiveClass(true);
     dispatch(getVcEscalation2List(data && data.survivor_vc, data._id));
-    if(data && data.escalation === true){
+    if (data && data.escalation === true) {
       setAlertFlag("alert");
-      setAlertMessage("Need to Add Escalation 2 for this VC")
-      handleShow()
-    }
-    else{
+      setAlertMessage("Need to Add Escalation 2 for this VC");
+      handleShow();
+    } else {
       setShowAlert(false);
     }
   };
 
-  
-  
   //// for escalation 1 ///////////
   const onAddVcEscalation = (e) => {
     console.log(e, "eeeeeeeeee");
@@ -258,15 +261,16 @@ const handleCloseAlert = () =>{
     } else if (selectedData && selectedData.status === "Conculded") {
       // alert("You are not allowed to add Escalation for this VC!!");
       setAlertFlag("concluded");
-      setAlertMessage("Can not Add Escalation 2 for Concluded VC Escalation")
-      handleShow()
-    }
-     else {
-      handleCloseAlert()
+      setAlertMessage("Can not Add Escalation 2 for Concluded VC Escalation");
+      handleShow();
+    } else {
+      handleCloseAlert();
       setModalVCEscalationFShow(true);
       setAddVcEscalationData({
         lawyer: selectedData && selectedData.lawyer && selectedData.lawyer._id,
-        source: selectedData && selectedData.source 
+        source: selectedData && selectedData.source,
+        status : selectedData && selectedData.status,
+        escalated_at: selectedData && selectedData.applied_at && selectedData.applied_at
       });
       setEscalActiveClass(false);
     }
@@ -280,8 +284,8 @@ const handleCloseAlert = () =>{
     } else if (escalSelectedData.status === "Conculded") {
       // alert("You are not allowed to edit this Escalation !!");
       setAlertFlag("concluded");
-      setAlertMessage("Can not Add Escalation for Concluded VC")
-      handleShow()
+      setAlertMessage("Can not Add Escalation for Concluded VC");
+      handleShow();
     } else {
       setModalVCEscalationFShow(true);
       setAddVcEscalationData(escalSelectedData);
@@ -303,20 +307,23 @@ const handleCloseAlert = () =>{
     } else {
       setModalVCEscalation2FShow(true);
       setAddVcEscalation2Data({
-        lawyer: escalSelectedData && escalSelectedData.lawyer && escalSelectedData.lawyer,
-        source: escalSelectedData && escalSelectedData.source 
+        lawyer:
+          escalSelectedData &&
+          escalSelectedData.lawyer &&
+          escalSelectedData.lawyer,
+        source: escalSelectedData && escalSelectedData.source,
       });
       setEscalActiveClass(false);
     }
   };
 
-  console.log(addVcEscalationData,"setAddVcEscalationData");
+  console.log(addVcEscalationData, "setAddVcEscalationData");
 
   //// for escalation 2 ///////////
 
   const onVcEscalation2Cancel = () => {
     setModalVCEscalation2FShow(false);
-    setAddVcEscalation2Data({})
+    setAddVcEscalation2Data({});
   };
 
   useEffect(() => {
@@ -374,12 +381,15 @@ const handleCloseAlert = () =>{
   }, [appliedAtId]);
 
   useEffect(() => {
-    if(addVcEscalationData && addVcEscalationData.escalated_at && addVcEscalationData.escalated_at._id){
-
-      dispatch(getAuthorityByAuthorityType(addVcEscalationData.escalated_at._id));
-    }
-
-   else if (addVcEscalationData && addVcEscalationData.escalated_at) {
+    if (
+      addVcEscalationData &&
+      addVcEscalationData.escalated_at &&
+      addVcEscalationData.escalated_at._id
+    ) {
+      dispatch(
+        getAuthorityByAuthorityType(addVcEscalationData.escalated_at._id)
+      );
+    } else if (addVcEscalationData && addVcEscalationData.escalated_at) {
       dispatch(getAuthorityByAuthorityType(addVcEscalationData.escalated_at));
     }
   }, [addVcEscalationData.escalated_at]);
@@ -429,7 +439,6 @@ const handleCloseAlert = () =>{
     addVcEscalationData.amount_claimed && addVcEscalationData.amount_awarded,
   ]);
 
-
   useEffect(() => {
     let firstAmount = addVcEscalation2Data.amount_claimed;
     let awardedAmout = addVcEscalation2Data.amount_awarded;
@@ -443,42 +452,35 @@ const handleCloseAlert = () =>{
   ]);
 
   useEffect(() => {
-    if( addVcData.amount_received_in_bank > addVcData.amount_awarded){
-
+    if (addVcData.amount_received_in_bank > addVcData.amount_awarded) {
       setErrText("Please enter correct Amount");
-    }
-    else{
+    } else {
       setErrText("");
     }
     console.log(addVcData, "addVcData");
   }, [addVcData.amount_received_in_bank]);
 
-
-
-  useEffect(()=>{
-
-    if( addVcEscalationData.amount_received_in_bank > addVcEscalationData.amount_awarded){
-
+  useEffect(() => {
+    if (
+      addVcEscalationData.amount_received_in_bank >
+      addVcEscalationData.amount_awarded
+    ) {
       setErrText("Please enter correct Amount");
-    }
-    else{
+    } else {
       setErrText("");
     }
-    
-  },[addVcEscalationData.amount_received_in_bank])
+  }, [addVcEscalationData.amount_received_in_bank]);
 
-  useEffect(()=>{
-
-    if( addVcEscalation2Data.amount_received_in_bank > addVcEscalation2Data.amount_awarded){
-
+  useEffect(() => {
+    if (
+      addVcEscalation2Data.amount_received_in_bank >
+      addVcEscalation2Data.amount_awarded
+    ) {
       setErrText("Please enter correct Amount");
-    }
-    else{
+    } else {
       setErrText("");
     }
-    
-  },[addVcEscalation2Data.amount_received_in_bank])
-
+  }, [addVcEscalation2Data.amount_received_in_bank]);
 
   /////////////////////file upload function/////////////////////////
   const handleFileInput = (e) => {
@@ -525,33 +527,31 @@ const handleCloseAlert = () =>{
 
   //   console.log(addVcData, "addVcData");
 
-//   function currencyFormat(num) {
-//     return '$' + num.toFixed(2).replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')
-//  }
- const currencyFormat = (value) =>
-    new Intl.NumberFormat('en-IN', {
-      style: 'currency',
-      currency: 'INR'
+  //   function currencyFormat(num) {
+  //     return '$' + num.toFixed(2).replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')
+  //  }
+  const currencyFormat = (value) =>
+    new Intl.NumberFormat("en-IN", {
+      style: "currency",
+      currency: "INR",
     }).format(value);
 
-
   const handleSubmit = (event) => {
-    console.log(event,"habdleSubmit")
+    console.log(event, "habdleSubmit");
     // const {form}= event.target
     const form = event.currentTarget;
     if (form.checkValidity() === false) {
-      if(addVcData && addVcData._id){
+      if (addVcData && addVcData._id) {
         addVcFunc(event);
-      }else{
-      event.preventDefault();
-      event.stopPropagation();
-    } 
-  }else{
+      } else {
+        event.preventDefault();
+        event.stopPropagation();
+      }
+    } else {
       addVcFunc(event);
     }
     setValidated(true);
-
-  }
+  };
 
   ///////////// add vc api call function /////////
 
@@ -562,21 +562,24 @@ const handleCloseAlert = () =>{
       ...addVcData,
       survivor: props.location.state,
     };
-   var updateData={
-    ...addVcData,
-    survivor: props.location.state,
-    user_id: deletedById && deletedById,
-
-    }
+    var updateData = {
+      ...addVcData,
+      survivor: props.location.state,
+      user_id: deletedById && deletedById,
+    };
     console.log("body", body);
     if (addVcData && addVcData._id) {
       axios
-        .patch(api + "/survival-vc/update/" + addVcData._id, updateData, axiosConfig)
+        .patch(
+          api + "/survival-vc/update/" + addVcData._id,
+          updateData,
+          axiosConfig
+        )
         .then((response) => {
           console.log(response);
           handleClick();
           setUpdateMessage(response && response.data.message);
-          setValidated(false)
+          setValidated(false);
           if (response.data && response.data.error === false) {
             const { data } = response;
             dispatch(getSurvivalVcList(props.location.state));
@@ -597,7 +600,7 @@ const handleCloseAlert = () =>{
         .then((res) => {
           console.log(res);
           handleClick();
-          setValidated(false)
+          setValidated(false);
           setUpdateMessage(res && res.data.message);
           if (res && res.data && res.data.error == false) {
             const { data } = res;
@@ -620,40 +623,37 @@ const handleCloseAlert = () =>{
 
   console.log(selectedData, "selectedData");
 
-  
   const handleSubmitEscal1 = (event) => {
-    console.log(event,"habdleSubmit")
+    console.log(event, "habdleSubmit");
     // const {form}= event.target
     const form = event.currentTarget;
     if (form.checkValidity() === false) {
-      if(addVcEscalationData && addVcEscalationData._id){
+      if (addVcEscalationData && addVcEscalationData._id) {
         addVcEscalationFunc(event);
-      }else{
-      event.preventDefault();
-      event.stopPropagation();
-    }
-    }
-     else{
+      } else {
+        event.preventDefault();
+        event.stopPropagation();
+      }
+    } else {
       addVcEscalationFunc(event);
     }
     setValidatedEscal1(true);
+  };
 
-  }
-  
   ////////////// API CALL FUCTION FOR ADD AND UPDATE VC ESCALATION ////////
   const addVcEscalationFunc = (e) => {
     e.preventDefault();
     // console.warn(pictureData, profile);
     var updateData = {
-      ...addVcEscalationData,  
-      "flag": true,
+      ...addVcEscalationData,
+      flag: true,
       survivor: props.location.state,
       survivor_vc: selectedData && selectedData._id,
-      user_id: deletedById && deletedById
+      user_id: deletedById && deletedById,
     };
     var addData = {
-      ...addVcEscalationData,  
-      "flag": true,
+      ...addVcEscalationData,
+      flag: true,
       survivor: props.location.state,
       survivor_vc: selectedData && selectedData._id,
     };
@@ -668,7 +668,7 @@ const handleCloseAlert = () =>{
           console.log(response);
           handleClick();
           setUpdateMessage(response && response.data.message);
-          setValidatedEscal1(false)
+          setValidatedEscal1(false);
           dispatch(getVcEscalationList(selectedData && selectedData._id));
           if (response.data && response.data.error === false) {
             const { data } = response;
@@ -693,7 +693,7 @@ const handleCloseAlert = () =>{
           console.log(res);
           handleClick();
           setUpdateMessage(res && res.data.message);
-          setValidatedEscal1(false)
+          setValidatedEscal1(false);
           dispatch(getVcEscalationList(selectedData && selectedData._id));
           if (res && res.data && res.data.error === false) {
             const { data } = res;
@@ -716,32 +716,31 @@ const handleCloseAlert = () =>{
     }
   };
 
-const onescalation2DateHandel =(e)=>{
-  setAddVcEscalation2Data({
-    ...addVcEscalation2Data,
-    [e.target.name]: e.target.value,
-  })
-}
+  const onescalation2DateHandel = (e) => {
+    setAddVcEscalation2Data({
+      ...addVcEscalation2Data,
+      [e.target.name]: e.target.value,
+    });
+  };
 
   const handleSubmitEscal2 = (event) => {
-    console.log(event,"habdleSubmit")
+    console.log(event, "habdleSubmit");
     // const {form}= event.target
     const form = event.currentTarget;
     if (form.checkValidity() === false) {
       event.preventDefault();
       event.stopPropagation();
-    } else{
+    } else {
       addVcEscalation2Func(event);
     }
     setValidatedEscal2(true);
-
-  }
+  };
   ////////////// API CALL FUCTION FOR ADD AND UPDATE VC ESCALATION ////////
   const addVcEscalation2Func = (e) => {
     e.preventDefault();
     var body = {
       ...addVcEscalation2Data,
-      "flag": false,
+      flag: false,
       survivor: props.location.state,
       survivor_vc: selectedData && selectedData._id,
       survivor_vc_escalation: escalSelectedData && escalSelectedData._id,
@@ -791,7 +790,7 @@ const onescalation2DateHandel =(e)=>{
     a.dispatchEvent(clickEvt);
     a.remove();
   };
-  console.log(survivalVcList,'survivalVc')
+  console.log(survivalVcList, "survivalVc");
 
   const exportToCsv = (e) => {
     console.log(e, "e");
@@ -799,31 +798,38 @@ const onescalation2DateHandel =(e)=>{
     let headers = [
       "Id,AmountAwarded,AmountClaimed,AmountReceivedInBank,Amount Received at Bank Date,ApplicationNumber,AppliedAt,Applied Date,Authority,DateOfOrder,Difference Betwwen aount claim and reward,Escalation,Lawyer,Reason For Escalation,Result,Source,Status,Survivor,Total Escalation,Unique Id,VideoConferencing,Created At",
     ];
-    let exportData=[];
-    {survivalVcList.map((x)=>{
-      exportData.push({_id:x._id,
-        AmountAwarded:x.amount_awarded,
-        AmountClaimed:x.amount_claimed,
-        AmountReceivedInBank:x.amount_received_in_bank,
-        amount_received_in_bank_date:moment(x.amount_received_in_bank_date).format('DD-MMM-YYYY'),
-        application_number:x.application_number,
-        applied_at:x.applied_at.name,
-        applied_date:moment(x.applied_date).format('DD-MMM-YYYY'),
-        authority:x.authority,
-        date_of_order : moment(x.date_of_order).format('DD-MMM-YYYY'),
-        difference_between_amount_claim_reward:x.difference_between_amount_claim_reward,
-        escalation:x.escalation,
-        lawyer:x.lawyer.name,
-        reason_for_escalation:x.reason_for_escalation,
-        result:x.result,
-        source:x.source,
-        status:x.status,
-        survivor:x.survivor,
-        totalEscalation:x.totalEscalation,
-        uniqueid:x.unique_id,
-        videoCon:x.video_conferencing,
-        createdAt:moment(x.createdAt).format('DD-MMM-YYYY')})
-    })}
+    let exportData = [];
+    {
+      survivalVcList.map((x) => {
+        exportData.push({
+          _id: x._id,
+          AmountAwarded: x.amount_awarded,
+          AmountClaimed: x.amount_claimed,
+          AmountReceivedInBank: x.amount_received_in_bank,
+          amount_received_in_bank_date: moment(
+            x.amount_received_in_bank_date
+          ).format("DD-MMM-YYYY"),
+          application_number: x.application_number,
+          applied_at: x.applied_at.name,
+          applied_date: moment(x.applied_date).format("DD-MMM-YYYY"),
+          authority: x.authority,
+          date_of_order: moment(x.date_of_order).format("DD-MMM-YYYY"),
+          difference_between_amount_claim_reward:
+            x.difference_between_amount_claim_reward,
+          escalation: x.escalation,
+          lawyer: x.lawyer.name,
+          reason_for_escalation: x.reason_for_escalation,
+          result: x.result,
+          source: x.source,
+          status: x.status,
+          survivor: x.survivor,
+          totalEscalation: x.totalEscalation,
+          uniqueid: x.unique_id,
+          videoCon: x.video_conferencing,
+          createdAt: moment(x.createdAt).format("DD-MMM-YYYY"),
+        });
+      });
+    }
     // Convert users data to a csv
     let usersCsv = exportData.reduce((acc, user) => {
       const {
@@ -848,32 +854,32 @@ const onescalation2DateHandel =(e)=>{
         totalEscalation,
         uniqueid,
         videoCon,
-        createdAt
+        createdAt,
       } = user;
       acc.push(
         [
-                 _id,
-        AmountAwarded,
-        AmountClaimed,
-        AmountReceivedInBank,
-        amount_received_in_bank_date,
-        application_number,
-        applied_at,
-        applied_date,
-        authority,
-        date_of_order,
-        difference_between_amount_claim_reward,
-        escalation,
-        lawyer,
-        reason_for_escalation,
-        result,
-        source,
-        status,
-        survivor,
-        totalEscalation,
-        uniqueid,
-        videoCon,
-        createdAt
+          _id,
+          AmountAwarded,
+          AmountClaimed,
+          AmountReceivedInBank,
+          amount_received_in_bank_date,
+          application_number,
+          applied_at,
+          applied_date,
+          authority,
+          date_of_order,
+          difference_between_amount_claim_reward,
+          escalation,
+          lawyer,
+          reason_for_escalation,
+          result,
+          source,
+          status,
+          survivor,
+          totalEscalation,
+          uniqueid,
+          videoCon,
+          createdAt,
         ].join(",")
       );
       return acc;
@@ -886,117 +892,114 @@ const onescalation2DateHandel =(e)=>{
     });
   };
 
-  const applicationDateHandel =(e)=>{
+  const applicationDateHandel = (e) => {
     setAddVcData({
       ...addVcData,
       [e.target.name]: e.target.value,
-    })
-  }
+    });
+  };
 
-  const dateOfOrderHandel = (e) =>{
+  const dateOfOrderHandel = (e) => {
     setAddVcData({
       ...addVcData,
       [e.target.name]: e.target.value,
-    })
-  }
+    });
+  };
 
-  const amountReceivedHandler = (e)=>{
+  const amountReceivedHandler = (e) => {
     setAddVcData({
       ...addVcData,
       [e.target.name]: e.target.value,
-    })
-  }
+    });
+  };
 
-  const escalaApplicationDateHandel =(e)=>{
+  const escalaApplicationDateHandel = (e) => {
     setAddVcEscalationData({
       ...addVcEscalationData,
       [e.target.name]: e.target.value,
-    })
-  }
-  const escalDateFirstHandel =(e)=>{
+    });
+  };
+  const escalDateFirstHandel = (e) => {
     setAddVcEscalationData({
       ...addVcEscalationData,
       [e.target.name]: e.target.value,
-    })
-  }
+    });
+  };
 
-  const escalAmountReceivedDateHandel = (e)=>{
+  const escalAmountReceivedDateHandel = (e) => {
     setAddVcEscalationData({
       ...addVcEscalationData,
       [e.target.name]: e.target.value,
-    })
-  }
+    });
+  };
 
+  ////////////// for PDF ////////////
 
-////////////// for PDF ////////////
+  const downloadPdf = () => {
+    const doc = new jsPDF({
+      orientation: "landscape",
+    });
 
-const downloadPdf = () => {
-  const doc = new jsPDF({
-    orientation: "landscape",
-  });
+    doc.setFontSize(20);
+    doc.setTextColor(40);
+    doc.text("SURVIVOR DETAILS", 22, 10);
 
-  doc.setFontSize(20);
-  doc.setTextColor(40);
-  doc.text("SURVIVOR DETAILS", 22, 10);
+    //  // add content
+    doc.setFontSize(10);
+    doc.text("SURVIVOR NAME:", 22, 20);
+    doc.text(survivorDetails?.survivor_name, 60, 20);
+    doc.text("SURVIVOR ID", 22, 40);
+    doc.text(survivorDetails?.survivor_id, 60, 40);
 
-  //  // add content
-  doc.setFontSize(10);
-  doc.text("SURVIVOR NAME:", 22, 20);
-  doc.text(survivorDetails?.survivor_name, 60, 20);
-  doc.text("SURVIVOR ID", 22, 40);
-  doc.text(survivorDetails?.survivor_id, 60, 40);
-
-  doc.setFontSize(20);
-  doc.text("SURVIVOR VICTIM COMPENSATION LIST", 22, 60);
-  doc.setFontSize(10);
-  const survivorColumns = [
-    "SOURCE",
-    "APPLIED DATE",
-    "APPLIED AT",
-    "VC STATUS",
-    "FIRST AWARDED",
-    "AWARDED DATE",
-    "AMOUNT CLAIMED",
-    "AMOUNT RECIEVD IN BANK",
-    "RECIEVED BANK DATE",
-    "ORDER DATE",
-    "AMOUNT DIFFERENCE",
-    "IS ESCALATION",
-    "ESCALATION REASON",
-    "RESULT",
-    "IS VIDEO",
-    "ESCALATION COUNT",
-    "LAWYER",
-    "CREATED AT",
-  ];
-  const name = "survivor-vc-list" + new Date().toISOString() + ".pdf";
-  let goalsRows = [];
-  survivalVcList?.forEach((item) => {
-    const temp = [
-      item.source.toUpperCase(),
-      moment(item.applied_date).format("DD-MMM-YYYY"),
-      item.status,
-      item.amount_awarded,
-      moment(item.amount_received_in_bank_date).format("DD-MMM-YYYY"),
-      item.amount_claimed,
-      item.amount_received_in_bank,
-      moment(item.date_of_order).format("DD-MMM-YYYY"),
-      item.difference_between_amount_claim_reward,
-      item.escalation,
-      item.reason_for_escalation,
-      item.result,
-      item.video_conferencing,
-      item.totalEscalation,
-      item.lawyer?.name,
-      moment(item.createdAt).format("DD-MMM-YYYY"),
+    doc.setFontSize(20);
+    doc.text("SURVIVOR VICTIM COMPENSATION LIST", 22, 60);
+    doc.setFontSize(10);
+    const survivorColumns = [
+      "SOURCE",
+      "APPLIED DATE",
+      "APPLIED AT",
+      "VC STATUS",
+      "FIRST AWARDED",
+      "AWARDED DATE",
+      "AMOUNT CLAIMED",
+      "AMOUNT RECIEVD IN BANK",
+      "RECIEVED BANK DATE",
+      "ORDER DATE",
+      "AMOUNT DIFFERENCE",
+      "IS ESCALATION",
+      "ESCALATION REASON",
+      "RESULT",
+      "IS VIDEO",
+      "ESCALATION COUNT",
+      "LAWYER",
+      "CREATED AT",
     ];
-    goalsRows.push(temp);
-  });
-  doc.autoTable(survivorColumns, goalsRows, { startY: 75, startX: 22,
-   });
-  doc.save(name);
-};
-
+    const name = "survivor-vc-list" + new Date().toISOString() + ".pdf";
+    let goalsRows = [];
+    survivalVcList?.forEach((item) => {
+      const temp = [
+        item.source.toUpperCase(),
+        moment(item.applied_date).format("DD-MMM-YYYY"),
+        item.status,
+        item.amount_awarded,
+        moment(item.amount_received_in_bank_date).format("DD-MMM-YYYY"),
+        item.amount_claimed,
+        item.amount_received_in_bank,
+        moment(item.date_of_order).format("DD-MMM-YYYY"),
+        item.difference_between_amount_claim_reward,
+        item.escalation,
+        item.reason_for_escalation,
+        item.result,
+        item.video_conferencing,
+        item.totalEscalation,
+        item.lawyer?.name,
+        moment(item.createdAt).format("DD-MMM-YYYY"),
+      ];
+      goalsRows.push(temp);
+    });
+    doc.autoTable(survivorColumns, goalsRows, { startY: 75, startX: 22 });
+    doc.save(name);
+  };
 
   return (
     <>
@@ -1047,8 +1050,9 @@ const downloadPdf = () => {
                   >
                     Add Escalation
                   </Dropdown.Item>
-                  <Dropdown.Item onClick={()=>changeLogFunc("vc")}>Change Log</Dropdown.Item>
-
+                  <Dropdown.Item onClick={() => changeLogFunc("vc")}>
+                    Change Log
+                  </Dropdown.Item>
                 </Dropdown.Menu>
               </Dropdown>
               <MDBTooltip
@@ -1092,7 +1096,6 @@ const downloadPdf = () => {
                 isLoading={isLoading}
                 onSelectRow={onSelectRow}
               />
-             
             </div>
           </div>
           {vcEscalationList && vcEscalationList.length > 0 && (
@@ -1122,18 +1125,20 @@ const downloadPdf = () => {
                     wrapperProps={{ className: "delete_btn" }}
                     title="Delete"
                   >
-                   <span onClick={() => onDeleteChangeEscalFunc("escal")}>
-                  <i className="fal fa-trash-alt"></i>
-                </span>
+                    <span onClick={() => onDeleteChangeEscalFunc("escal")}>
+                      <i className="fal fa-trash-alt"></i>
+                    </span>
                   </MDBTooltip>
                 </div>
 
-                <h4 className="mb-4 small_heading">Escalation Of {selectedData && selectedData.unique_id}</h4>
+                <h4 className="mb-4 small_heading">
+                  Escalation Of {selectedData && selectedData.unique_id}
+                </h4>
                 <div className="table-responsive big-mobile-responsive">
                   <table className="table table-borderless mb-0">
                     <thead>
                       <tr>
-                      <th width="16.66%">Id</th>
+                        <th width="16.66%">Id</th>
                         <th width="16.66%">Source</th>
                         <th width="16.66%">Applied date</th>
                         <th width="16.66%">application number</th>
@@ -1152,10 +1157,8 @@ const downloadPdf = () => {
                               ]}
                               onClick={() => onSelectVcEscal(item)}
                             >
-                               <td>
-                                {item &&
-                                  item.unique_id &&
-                                  item.unique_id}
+                              <td>
+                                {item && item.unique_id && item.unique_id}
                               </td>
                               <td>
                                 {item &&
@@ -1165,7 +1168,9 @@ const downloadPdf = () => {
                               <td>
                                 {item &&
                                   item.applied_date &&
-                                  moment(item.applied_date).format("DD-MMM-YYYY")}
+                                  moment(item.applied_date).format(
+                                    "DD-MMM-YYYY"
+                                  )}
                               </td>
                               <td>
                                 {item &&
@@ -1196,7 +1201,10 @@ const downloadPdf = () => {
           {vcEscalation2List && vcEscalation2List.length > 0 && (
             <>
               <div className="white_box_shadow_20 vieweditdeleteMargin survivors_table_wrap position-relative">
-                <h4 className="mb-4 small_heading">Escalation 2 Of {escalSelectedData && escalSelectedData.unique_id}</h4>
+                <h4 className="mb-4 small_heading">
+                  Escalation 2 Of{" "}
+                  {escalSelectedData && escalSelectedData.unique_id}
+                </h4>
                 <div className="table-responsive big-mobile-responsive">
                   <table className="table table-borderless mb-0">
                     <thead>
@@ -1214,7 +1222,7 @@ const downloadPdf = () => {
                             <tr
                               className={[
                                 item._id === escalSelected2Data._id &&
-                                escalActive2Class === true &&
+                                  escalActive2Class === true &&
                                   "current",
                               ]}
                               onClick={() => onSelectVcEscal2(item)}
@@ -1227,7 +1235,9 @@ const downloadPdf = () => {
                               <td>
                                 {item &&
                                   item.applied_date &&
-                                  moment(item.applied_date).format("DD-MMM-YYYY")}
+                                  moment(item.applied_date).format(
+                                    "DD-MMM-YYYY"
+                                  )}
                               </td>
                               <td>
                                 {item &&
@@ -1276,12 +1286,12 @@ const downloadPdf = () => {
           <div className="site_form_wraper">
             <Form noValidate validated={validated} onSubmit={handleSubmit}>
               <Row>
-              <Form.Group as={Col} md="6" className="mb-3">
+                <Form.Group as={Col} md="6" className="mb-3">
                   <Form.Label>
                     Status <span className="requiredStar">*</span>
                   </Form.Label>
                   <Form.Select
-                  required
+                    required
                     name="status"
                     value={addVcData && addVcData.status && addVcData.status}
                     onChange={(e) =>
@@ -1291,7 +1301,9 @@ const downloadPdf = () => {
                       })
                     }
                   >
-                    <option value={""} hidden={true}>Please select</option>
+                    <option value={""} hidden={true}>
+                      Please select
+                    </option>
                     <option value={"Applied"}>Applied</option>
                     <option value={"Awarded"}>Awarded</option>
                     <option value={"Rejected"}>Rejected</option>
@@ -1299,15 +1311,15 @@ const downloadPdf = () => {
                     <option value={"Conculded"}>Concluded</option>
                   </Form.Select>
                   <Form.Control.Feedback type="invalid">
-              Please select Status
-            </Form.Control.Feedback>
+                    Please select Status
+                  </Form.Control.Feedback>
                 </Form.Group>
                 <Form.Group as={Col} md="6" className="mb-3">
                   <Form.Label>
                     Source <span className="requiredStar">*</span>
                   </Form.Label>
                   <Form.Select
-                  required
+                    required
                     value={addVcData && addVcData.source && addVcData.source}
                     onChange={(e) =>
                       setAddVcData({
@@ -1317,22 +1329,26 @@ const downloadPdf = () => {
                     }
                     name="source"
                   >
-                    <option value={""} hidden={true}>Please select</option>
+                    <option value={""} hidden={true}>
+                      Please select
+                    </option>
                     <option value="da">DA</option>
                     <option value="sa">SA</option>
                   </Form.Select>
                   <Form.Control.Feedback type="invalid">
-              Please select Source
-            </Form.Control.Feedback>
+                    Please select Source
+                  </Form.Control.Feedback>
                 </Form.Group>
                 <Form.Group as={Col} md="6" className="mb-3">
                   <Form.Label>
                     Lawyer <span className="requiredStar">*</span>
                   </Form.Label>
                   <Form.Select
-                  required
+                    required
                     name="lawyer"
-                    value={addVcData && addVcData.lawyer && addVcData.lawyer._id}
+                    value={
+                      addVcData && addVcData.lawyer && addVcData.lawyer._id
+                    }
                     onChange={(e) =>
                       setAddVcData({
                         ...addVcData,
@@ -1340,7 +1356,9 @@ const downloadPdf = () => {
                       })
                     }
                   >
-                    <option value={""} hidden={true}>Please select</option>
+                    <option value={""} hidden={true}>
+                      Please select
+                    </option>
                     {lawyersList &&
                       lawyersList.length > 0 &&
                       lawyersList.map((item) => {
@@ -1352,15 +1370,15 @@ const downloadPdf = () => {
                       })}
                   </Form.Select>
                   <Form.Control.Feedback type="invalid">
-              Please select Lawyer
-            </Form.Control.Feedback>
+                    Please select Lawyer
+                  </Form.Control.Feedback>
                 </Form.Group>
                 <Form.Group as={Col} md="6" className="mb-3">
                   <Form.Label>
                     Applied At <span className="requiredStar">*</span>
                   </Form.Label>
                   <Form.Select
-                  required
+                    required
                     name="applied_at"
                     value={
                       addVcData &&
@@ -1374,7 +1392,9 @@ const downloadPdf = () => {
                       })
                     }
                   >
-                    <option value={""} hidden={true}>Please select</option>
+                    <option value={""} hidden={true}>
+                      Please select
+                    </option>
                     {authorityTypeList &&
                       authorityTypeList.length > 0 &&
                       authorityTypeList.map((item) => {
@@ -1386,15 +1406,15 @@ const downloadPdf = () => {
                       })}
                   </Form.Select>
                   <Form.Control.Feedback type="invalid">
-              Please select  Applied At
-            </Form.Control.Feedback>
+                    Please select Applied At
+                  </Form.Control.Feedback>
                 </Form.Group>
                 <Form.Group as={Col} md="6" className="mb-3">
                   <Form.Label>
                     Authority <span className="requiredStar">*</span>
                   </Form.Label>
                   <Form.Select
-                  required
+                    required
                     name="authority"
                     value={addVcData && addVcData.authority}
                     onChange={(e) =>
@@ -1404,7 +1424,9 @@ const downloadPdf = () => {
                       })
                     }
                   >
-                    <option value={""} hidden={true}>Please select</option>
+                    <option value={""} hidden={true}>
+                      Please select
+                    </option>
                     {authorityListByAuthType &&
                       authorityListByAuthType.length > 0 &&
                       authorityListByAuthType.map((item) => {
@@ -1417,14 +1439,14 @@ const downloadPdf = () => {
                       })}
                   </Form.Select>
                   <Form.Control.Feedback type="invalid">
-              Please select  Authority
-            </Form.Control.Feedback>
+                    Please select Authority
+                  </Form.Control.Feedback>
                 </Form.Group>
                 <Form.Group as={Col} md="6" className="mb-3">
                   <Form.Label>
                     Application Date <span className="requiredStar">*</span>
                   </Form.Label>
-                  <DatePicker 
+                  <DatePicker
                     required
                     name="applied_date"
                     datePickerChange={applicationDateHandel}
@@ -1457,7 +1479,7 @@ const downloadPdf = () => {
                     Application Number <span className="requiredStar">*</span>
                   </Form.Label>
                   <Form.Control
-                  required
+                    required
                     name="application_number"
                     defaultValue={
                       addVcData &&
@@ -1472,11 +1494,11 @@ const downloadPdf = () => {
                       })
                     }
                   />
-                   <Form.Control.Feedback type="invalid">
-              Please enter  Application Number 
-            </Form.Control.Feedback>
+                  <Form.Control.Feedback type="invalid">
+                    Please enter Application Number
+                  </Form.Control.Feedback>
                 </Form.Group>
-                
+
                 <Form.Group as={Col} md="6" className="mb-3">
                   <Form.Label>Video Conferncing</Form.Label>
                   <Form.Select
@@ -1506,9 +1528,7 @@ const downloadPdf = () => {
                     Amount Claimed <span className="requiredStar">*</span>
                   </Form.Label>
                   <InputGroup>
-                    <InputGroup.Text>
-                    ₹
-                    </InputGroup.Text>
+                    <InputGroup.Text>₹</InputGroup.Text>
                     <Form.Control
                       required
                       name="amount_claimed"
@@ -1525,35 +1545,36 @@ const downloadPdf = () => {
                         })
                       }
                     />
-                  </InputGroup>                  
+                  </InputGroup>
                   <Form.Control.Feedback type="invalid">
                     Please enter Amount Claimed
                   </Form.Control.Feedback>
                 </Form.Group>
-                <Form.Group as={Col} md="6" className="mb-3">
-                  <Form.Label>Amount Awarded</Form.Label>
-                  <InputGroup>
-                    <InputGroup.Text>
-                    ₹
-                    </InputGroup.Text>
-                    <Form.Control
-                      type="number"
-                      defaultValue={
-                        addVcData &&
-                        addVcData.amount_awarded &&
-                        addVcData.amount_awarded
-                      }
-                      onChange={(e) =>
-                        setAddVcData({
-                          ...addVcData,
-                          [e.target.name]: e.target.value,
-                        })
-                      }
-                      name="amount_awarded"
-                    />
-                  </InputGroup> 
-                  
-                </Form.Group>
+                {addVcData &&
+                  addVcData.status &&
+                  addVcData.status != "Applied" && (
+                    <Form.Group as={Col} md="6" className="mb-3">
+                      <Form.Label>Amount Awarded</Form.Label>
+                      <InputGroup>
+                        <InputGroup.Text>₹</InputGroup.Text>
+                        <Form.Control
+                          type="number"
+                          defaultValue={
+                            addVcData &&
+                            addVcData.amount_awarded &&
+                            addVcData.amount_awarded
+                          }
+                          onChange={(e) =>
+                            setAddVcData({
+                              ...addVcData,
+                              [e.target.name]: e.target.value,
+                            })
+                          }
+                          name="amount_awarded"
+                        />
+                      </InputGroup>
+                    </Form.Group>
+                  )}
 
                 <Form.Group as={Col} md="6" className="mb-3">
                   <Form.Label>VC Application</Form.Label>
@@ -1564,45 +1585,27 @@ const downloadPdf = () => {
                     size="lg"
                     // value={addVcData && addVcData.vc_application && addVcData.vc_application.split('/').pop()}
                   />
-                  {/* <img
-                                        src={
-                                            fileSelect
-                                            && URL.createObjectURL(fileSelect)
-
-                                        }
-                                        alt=""
-                                    /> */}
+                 
                 </Form.Group>
+                {addVcData &&
+                  addVcData.status &&
+                  addVcData.status != "Applied" &&
                 <Form.Group as={Col} md="6" className="mb-3">
                   <Form.Label>Date of Order</Form.Label>
-                  <DatePicker 
+                  <DatePicker
                     name="date_of_order"
-                    data={ addVcData && addVcData.date_of_order }
+                    data={addVcData && addVcData.date_of_order}
                     datePickerChange={dateOfOrderHandel}
                   />
-                  {/* <Form.Control
-                    type="date"
-                    value={
-                      addVcData &&
-                      addVcData.date_of_order &&
-                      moment(addVcData.date_of_order).format("YYYY-MM-DD")
-                    }
-                    onChange={(e) =>
-                      setAddVcData({
-                        ...addVcData,
-                        [e.target.name]: e.target.value,
-                      })
-                    }
-                    name="date_of_order"
-                    placeholder="PC Started Date"
-                  /> */}
+                 
                 </Form.Group>
+}
                 <Form.Group as={Col} md="6" className="mb-3">
                   <Form.Label>
                     Result <span className="requiredStar">*</span>
                   </Form.Label>
                   <Form.Select
-                  required
+                    required
                     name="result"
                     defaultValue={
                       addVcData && addVcData.result && addVcData.result
@@ -1614,53 +1617,59 @@ const downloadPdf = () => {
                       })
                     }
                   >
-                    <option value={""} hidden={true}>Please select</option>
+                    <option value={""} hidden={true}>
+                      Please select
+                    </option>
                     <option value="awarded">Awarded</option>
                     <option value="rejected">Rejected</option>
                     <option value="awaiting">Awaiting</option>
-
                   </Form.Select>
                   <Form.Control.Feedback type="invalid">
-              Please select Result
-            </Form.Control.Feedback>
+                    Please select Result
+                  </Form.Control.Feedback>
                 </Form.Group>
-               
+                {addVcData &&
+                  addVcData.status &&
+                  addVcData.status != "Applied" &&
                 <Form.Group as={Col} md="6" className="mb-3">
                   <Form.Label>Amount received in bank A/C</Form.Label>
                   <InputGroup>
-                    <InputGroup.Text>
-                    ₹
-                    </InputGroup.Text>
+                    <InputGroup.Text>₹</InputGroup.Text>
                     <Form.Control
-                    type="number"
-                    defaultValue={
-                      addVcData &&
-                      addVcData.amount_received_in_bank &&
-                      addVcData.amount_received_in_bank
-                    }
-                    onChange={(e) =>
-                      setAddVcData({
-                        ...addVcData,
-                        [e.target.name]: e.target.value,
-                      })
-                    }
-                    name="amount_received_in_bank"
-                  />
-                  </InputGroup> 
-                  
- <p style={{color: "red", fontSize: 12}}>
-            {errText && errText}
-            </p>
+                      type="number"
+                      defaultValue={
+                        addVcData &&
+                        addVcData.amount_received_in_bank &&
+                        addVcData.amount_received_in_bank
+                      }
+                      onChange={(e) =>
+                        setAddVcData({
+                          ...addVcData,
+                          [e.target.name]: e.target.value,
+                        })
+                      }
+                      name="amount_received_in_bank"
+                    />
+                  </InputGroup>
 
+                  <p style={{ color: "red", fontSize: 12 }}>
+                    {errText && errText}
+                  </p>
                 </Form.Group>
-                <Form.Group as={Col} md="6" className="mb-3">
-                  <Form.Label> Amount recevied in bank date </Form.Label>
-                  <DatePicker 
-                    name="amount_received_in_bank_date"
-                    data={addVcData && addVcData.amount_received_in_bank_date}
-                    datePickerChange={amountReceivedHandler}
-                  />
-                  {/* <Form.Control
+}
+                {addVcData &&
+                  addVcData.status &&
+                  addVcData.status != "Applied" && (
+                    <Form.Group as={Col} md="6" className="mb-3">
+                      <Form.Label> Amount recevied in bank date </Form.Label>
+                      <DatePicker
+                        name="amount_received_in_bank_date"
+                        data={
+                          addVcData && addVcData.amount_received_in_bank_date
+                        }
+                        datePickerChange={amountReceivedHandler}
+                      />
+                      {/* <Form.Control
                     name="amount_received_in_bank_date"
                     value={
                       addVcData &&
@@ -1677,30 +1686,31 @@ const downloadPdf = () => {
                       })
                     }
                   /> */}
-                </Form.Group>
-                <Form.Group as={Col} md="6" className="mb-3">
-                  <Form.Label>
-                    Difference Between Amount Claimed And Rewarded(₹):
-                  </Form.Label>
-                  <InputGroup>
-                    <InputGroup.Text>
-                    ₹
-                    </InputGroup.Text>
-                    <Form.Control
-                      name="difference_between_amount_claim_reward"
-                      value={
-                        addVcData && addVcData.amount_awarded
-                          ? addVcData.difference_between_amount_claim_reward
-                          : addVcData.amount_awarded !== "" && null
-                      }
-                      type="number"
-                      disabled={true}
-                    />
-                  </InputGroup>
-                  
-                </Form.Group>
+                    </Form.Group>
+                  )}
+                {addVcData &&
+                  addVcData.status &&
+                  addVcData.status != "Applied" && (
+                    <Form.Group as={Col} md="6" className="mb-3">
+                      <Form.Label>
+                        Difference Between Amount Claimed And Rewarded(₹):
+                      </Form.Label>
+                      <InputGroup>
+                        <InputGroup.Text>₹</InputGroup.Text>
+                        <Form.Control
+                          name="difference_between_amount_claim_reward"
+                          value={
+                            addVcData && addVcData.amount_awarded
+                              ? addVcData.difference_between_amount_claim_reward
+                              : addVcData.amount_awarded !== "" && null
+                          }
+                          type="number"
+                          disabled={true}
+                        />
+                      </InputGroup>
+                    </Form.Group>
+                  )}
 
-              
                 <Form.Group as={Col} md="6" className="mb-3">
                   <Form.Label>Escalation</Form.Label>
                   <Form.Select
@@ -1726,7 +1736,7 @@ const downloadPdf = () => {
                     <span className="requiredStar">*</span>
                   </Form.Label>
                   <Form.Control
-                  required
+                    required
                     name="reason_for_escalation"
                     defaultValue={
                       addVcData &&
@@ -1741,14 +1751,13 @@ const downloadPdf = () => {
                       })
                     }
                   />
-                   <Form.Control.Feedback type="invalid">
-              Please enter Reason for escalation (For Yes as well as No)
-            </Form.Control.Feedback>
+                  <Form.Control.Feedback type="invalid">
+                    Please enter Reason for escalation (For Yes as well as No)
+                  </Form.Control.Feedback>
                 </Form.Group>
-              
               </Row>
               <Row className="justify-content-between">
-                <Form.Group as={Col} md="auto">
+                <Form.Group as={Col} xs="auto">
                   <MDBBtn
                     type="button"
                     className="shadow-0 cancle_btn"
@@ -1758,7 +1767,7 @@ const downloadPdf = () => {
                     Cancel
                   </MDBBtn>
                 </Form.Group>
-                <Form.Group as={Col} md="auto">
+                <Form.Group as={Col} xs="auto">
                   <Button
                     type="submit"
                     // disabled={
@@ -1811,9 +1820,13 @@ const downloadPdf = () => {
         </Modal.Header>
         <Modal.Body>
           <div className="site_form_wraper">
-            <Form noValidate validated={validatedEscal1} onSubmit={handleSubmitEscal1}>
+            <Form
+              noValidate
+              validated={validatedEscal1}
+              onSubmit={handleSubmitEscal1}
+            >
               <Row>
-              <Form.Group as={Col} md="6" className="mb-3">
+                <Form.Group as={Col} md="6" className="mb-3">
                   <Form.Label>
                     Status <span className="requiredStar">*</span>
                   </Form.Label>
@@ -1832,7 +1845,9 @@ const downloadPdf = () => {
                       })
                     }
                   >
-                    <option value={""} hidden={true}>Please select</option>
+                    <option value={""} hidden={true}>
+                      Please select
+                    </option>
                     <option value={"Applied"}>Applied</option>
                     <option value={"Awarded"}>Awarded</option>
                     <option value={"Rejected"}>Rejected</option>
@@ -1840,21 +1855,17 @@ const downloadPdf = () => {
                     <option value={"Conculded"}>Conculded</option>
                   </Form.Select>
                   <Form.Control.Feedback type="invalid">
-              Please select Status
-            </Form.Control.Feedback>
+                    Please select Status
+                  </Form.Control.Feedback>
                 </Form.Group>
                 <Form.Group as={Col} md="6" className="mb-3">
                   <Form.Label>
-                  Source <span className="requiredStar">*</span>
+                    Source <span className="requiredStar">*</span>
                   </Form.Label>
                   <Form.Select
                     name="source"
                     required
-                    value={
-                      addVcEscalationData &&
-                      addVcEscalationData.source
-                      
-                    }
+                    value={addVcEscalationData && addVcEscalationData.source}
                     onChange={(e) =>
                       setAddVcEscalationData({
                         ...addVcEscalationData,
@@ -1862,13 +1873,15 @@ const downloadPdf = () => {
                       })
                     }
                   >
-                    <option value={""} hidden={true}>Please select</option>
+                    <option value={""} hidden={true}>
+                      Please select
+                    </option>
                     <option value="da">DA</option>
                     <option value="sa">SA</option>
                   </Form.Select>
                   <Form.Control.Feedback type="invalid">
-              Please select Source
-            </Form.Control.Feedback>
+                    Please select Source
+                  </Form.Control.Feedback>
                 </Form.Group>
                 <Form.Group as={Col} md="6" className="mb-3">
                   <Form.Label>
@@ -1889,7 +1902,9 @@ const downloadPdf = () => {
                       })
                     }
                   >
-                    <option value={""} hidden={true}>Please select</option>
+                    <option value={""} hidden={true}>
+                      Please select
+                    </option>
                     {lawyersList &&
                       lawyersList.length > 0 &&
                       lawyersList.map((item) => {
@@ -1901,15 +1916,15 @@ const downloadPdf = () => {
                       })}
                   </Form.Select>
                   <Form.Control.Feedback type="invalid">
-              Please select Lawyer
-            </Form.Control.Feedback>
+                    Please select Lawyer
+                  </Form.Control.Feedback>
                 </Form.Group>
                 <Form.Group as={Col} md="6" className="mb-3">
                   <Form.Label>
                     Escalated At <span className="requiredStar">*</span>
                   </Form.Label>
                   <Form.Select
-                  required
+                    required
                     name="escalated_at"
                     value={
                       addVcEscalationData &&
@@ -1923,7 +1938,9 @@ const downloadPdf = () => {
                       })
                     }
                   >
-                    <option value={""} hidden={true}>Please select</option>
+                    <option value={""} hidden={true}>
+                      Please select
+                    </option>
                     {authorityTypeList &&
                       authorityTypeList.length > 0 &&
                       authorityTypeList.map((item) => {
@@ -1935,15 +1952,15 @@ const downloadPdf = () => {
                       })}
                   </Form.Select>
                   <Form.Control.Feedback type="invalid">
-              Please select  Escalated At
-            </Form.Control.Feedback>
+                    Please select Escalated At
+                  </Form.Control.Feedback>
                 </Form.Group>
                 <Form.Group as={Col} md="6" className="mb-3">
                   <Form.Label>
                     Authority <span className="requiredStar">*</span>
                   </Form.Label>
                   <Form.Select
-                  required
+                    required
                     name="authority"
                     value={addVcEscalationData && addVcEscalationData.authority}
                     onChange={(e) =>
@@ -1953,7 +1970,9 @@ const downloadPdf = () => {
                       })
                     }
                   >
-                    <option value={""} hidden={true}>Please select</option>
+                    <option value={""} hidden={true}>
+                      Please select
+                    </option>
                     {authorityListByAuthType &&
                       authorityListByAuthType.length > 0 &&
                       authorityListByAuthType.map((item) => {
@@ -1966,17 +1985,19 @@ const downloadPdf = () => {
                       })}
                   </Form.Select>
                   <Form.Control.Feedback type="invalid">
-              Please select Authority
-            </Form.Control.Feedback>
+                    Please select Authority
+                  </Form.Control.Feedback>
                 </Form.Group>
                 <Form.Group as={Col} md="6" className="mb-3">
                   <Form.Label>
                     Application date <span className="requiredStar">*</span>
                   </Form.Label>
-                  <DatePicker 
+                  <DatePicker
                     name="applied_date"
                     required
-                    data={addVcEscalationData && addVcEscalationData.applied_date}
+                    data={
+                      addVcEscalationData && addVcEscalationData.applied_date
+                    }
                     message={"Please enter Application date"}
                     datePickerChange={escalaApplicationDateHandel}
                   />
@@ -2008,7 +2029,7 @@ const downloadPdf = () => {
                     Application number <span className="requiredStar">*</span>
                   </Form.Label>
                   <Form.Control
-                  required
+                    required
                     type="text"
                     name="application_number"
                     defaultValue={
@@ -2023,9 +2044,9 @@ const downloadPdf = () => {
                       })
                     }
                   />
-                   <Form.Control.Feedback type="invalid">
-              Please enter  Application number
-            </Form.Control.Feedback>
+                  <Form.Control.Feedback type="invalid">
+                    Please enter Application number
+                  </Form.Control.Feedback>
                 </Form.Group>
                 <Form.Group as={Col} md="6" className="mb-3">
                   <Form.Label>Video Conferncing</Form.Label>
@@ -2058,9 +2079,7 @@ const downloadPdf = () => {
                     Amount Claimed <span className="requiredStar">*</span>
                   </Form.Label>
                   <InputGroup>
-                    <InputGroup.Text>
-                    ₹
-                    </InputGroup.Text>
+                    <InputGroup.Text>₹</InputGroup.Text>
                     <Form.Control
                       type="number"
                       required
@@ -2078,16 +2097,17 @@ const downloadPdf = () => {
                       }
                     />
                   </InputGroup>
-                    <Form.Control.Feedback type="invalid">
-              Please enter Amount Claimed
-            </Form.Control.Feedback>
+                  <Form.Control.Feedback type="invalid">
+                    Please enter Amount Claimed
+                  </Form.Control.Feedback>
                 </Form.Group>
+                {addVcEscalationData &&
+                  addVcEscalationData.status &&
+                  addVcEscalationData.status != "Applied" &&
                 <Form.Group as={Col} md="6" className="mb-3">
                   <Form.Label>Amount Awarded </Form.Label>
                   <InputGroup>
-                    <InputGroup.Text>
-                    ₹
-                    </InputGroup.Text>
+                    <InputGroup.Text>₹</InputGroup.Text>
                     <Form.Control
                       type="number"
                       name="amount_awarded"
@@ -2103,53 +2123,40 @@ const downloadPdf = () => {
                         })
                       }
                     />
-                  </InputGroup>                  
+                  </InputGroup>
                 </Form.Group>
-               
+}
+
                 <Form.Group as={Col} md="6" className="mb-3">
                   <Form.Label>VC application</Form.Label>
                   <Form.Control
                     type="file"
-                    
                     name="file"
                     size="lg"
                     onChange={handleFileInput}
                   />
                 </Form.Group>
+                {addVcEscalationData &&
+                  addVcEscalationData.status &&
+                  addVcEscalationData.status != "Applied" &&
                 <Form.Group as={Col} md="6" className="mb-3">
                   <Form.Label>Date of first order</Form.Label>
-                  <DatePicker 
+                  <DatePicker
                     name="date_of_order"
                     datePickerChange={escalDateFirstHandel}
-                    data={addVcEscalationData &&
-                      addVcEscalationData.date_of_order}
+                    data={
+                      addVcEscalationData && addVcEscalationData.date_of_order
+                    }
                   />
-                  {/* <Form.Control
-                    type="date"
-                    name="date_of_order"
-                    placeholder="Date of first order"
-                    value={
-                      addVcEscalationData &&
-                      addVcEscalationData.date_of_order &&
-                      moment(addVcEscalationData.date_of_order).format(
-                        "YYYY-MM-DD"
-                      )
-                    }
-                    onChange={(e) =>
-                      setAddVcEscalationData({
-                        ...addVcEscalationData,
-                        [e.target.name]: e.target.value,
-                      })
-                    }
-                  /> */}
+                 
                 </Form.Group>
-
+}
                 <Form.Group as={Col} md="6" className="mb-3">
                   <Form.Label>
                     Result <span className="requiredStar">*</span>
                   </Form.Label>
                   <Form.Select
-                  required
+                    required
                     name="result"
                     value={
                       addVcEscalationData &&
@@ -2167,26 +2174,25 @@ const downloadPdf = () => {
                     <option value="awarded">Awarded</option>
                     <option value="rejected">Rejected</option>
                     <option value="awaiting">Awaiting</option>
-
                   </Form.Select>
                   <Form.Control.Feedback type="invalid">
-              Please select Result 
-            </Form.Control.Feedback>
+                    Please select Result
+                  </Form.Control.Feedback>
                 </Form.Group>
-              
+                {addVcEscalationData &&
+                  addVcEscalationData.status &&
+                  addVcEscalationData.status != "Applied" &&
                 <Form.Group as={Col} md="6" className="mb-3">
                   <Form.Label>Amount received in bank A/C</Form.Label>
                   <InputGroup>
-                    <InputGroup.Text>
-                    ₹
-                    </InputGroup.Text>
+                    <InputGroup.Text>₹</InputGroup.Text>
                     <Form.Control
                       type="number"
                       name="amount_received_in_bank"
                       defaultValue={
                         addVcEscalationData &&
                         addVcEscalationData.amount_received_in_bank &&
-                      addVcEscalationData.amount_received_in_bank
+                        addVcEscalationData.amount_received_in_bank
                       }
                       onChange={(e) =>
                         setAddVcEscalationData({
@@ -2196,19 +2202,25 @@ const downloadPdf = () => {
                       }
                     />
                   </InputGroup>
-                  
-                   <p style={{color: "red", fontSize: 12}}>
-            {errText && errText}
-            </p>
+
+                  <p style={{ color: "red", fontSize: 12 }}>
+                    {errText && errText}
+                  </p>
                 </Form.Group>
+}
+{addVcEscalationData &&
+                  addVcEscalationData.status &&
+                  addVcEscalationData.status != "Applied" &&
                 <Form.Group as={Col} md="6" className="mb-3">
                   <Form.Label>Amount received in Bank Date</Form.Label>
-                  <DatePicker 
+                  <DatePicker
                     name="amount_received_in_bank_date"
                     datePickerChange={escalAmountReceivedDateHandel}
-                    data={addVcEscalationData &&
+                    data={
+                      addVcEscalationData &&
                       addVcEscalationData.amount_received_in_bank_date &&
-                      addVcEscalationData.amount_received_in_bank_date}
+                      addVcEscalationData.amount_received_in_bank_date
+                    }
                   />
                   {/* <Form.Control
                     type="date"
@@ -2227,19 +2239,22 @@ const downloadPdf = () => {
                     placeholder="Date of first order"
                   /> */}
                 </Form.Group>
+}
+{addVcEscalationData &&
+                  addVcEscalationData.status &&
+                  addVcEscalationData.status != "Applied" &&
                 <Form.Group as={Col} md="6" className="mb-3">
                   <Form.Label>
                     Difference between amount claimed and rewarded
                   </Form.Label>
                   <InputGroup>
-                    <InputGroup.Text>
-                    ₹
-                    </InputGroup.Text>
+                    <InputGroup.Text>₹</InputGroup.Text>
                     <Form.Control
                       // type="text"
                       name="difference_between_amount_claim_reward"
                       value={
-                        addVcEscalationData && addVcEscalationData.amount_awarded
+                        addVcEscalationData &&
+                        addVcEscalationData.amount_awarded
                           ? addVcEscalationData.difference_between_amount_claim_reward
                           : addVcEscalationData.amount_awarded !== "" && null
                       }
@@ -2247,8 +2262,8 @@ const downloadPdf = () => {
                       disabled={true}
                     />
                   </InputGroup>
-                  
                 </Form.Group>
+}
                 <Form.Group as={Col} md="6" className="mb-3">
                   <Form.Label>Escalation</Form.Label>
                   <Form.Select
@@ -2276,7 +2291,7 @@ const downloadPdf = () => {
                     <span className="requiredStar">*</span>
                   </Form.Label>
                   <Form.Control
-                  required
+                    required
                     type="text"
                     name="reason_for_escalation"
                     defaultValue={
@@ -2291,14 +2306,13 @@ const downloadPdf = () => {
                       })
                     }
                   />
-                    <Form.Control.Feedback type="invalid">
-              Please enter Reason for escalation (For Yes as well as No)
-            </Form.Control.Feedback>
+                  <Form.Control.Feedback type="invalid">
+                    Please enter Reason for escalation (For Yes as well as No)
+                  </Form.Control.Feedback>
                 </Form.Group>
-              
               </Row>
               <Row className="justify-content-between">
-                <Form.Group as={Col} md="auto">
+                <Form.Group as={Col} xs="auto">
                   <MDBBtn
                     type="button"
                     className="shadow-0 cancle_btn"
@@ -2308,7 +2322,7 @@ const downloadPdf = () => {
                     Cancel
                   </MDBBtn>
                 </Form.Group>
-                <Form.Group as={Col} md="auto">
+                <Form.Group as={Col} xs="auto">
                   <Button
                     type="submit"
                     // disabled={
@@ -2381,9 +2395,13 @@ const downloadPdf = () => {
         </Modal.Header>
         <Modal.Body>
           <div className="site_form_wraper">
-            <Form noValidate validated={validatedEscal2} onSubmit={handleSubmitEscal2}>
+            <Form
+              noValidate
+              validated={validatedEscal2}
+              onSubmit={handleSubmitEscal2}
+            >
               <Row>
-              <Form.Group as={Col} md="6" className="mb-3">
+                <Form.Group as={Col} md="6" className="mb-3">
                   <Form.Label>
                     Status <span className="requiredStar">*</span>
                   </Form.Label>
@@ -2402,7 +2420,9 @@ const downloadPdf = () => {
                       })
                     }
                   >
-                    <option value={""} hidden={true}>Please select</option>
+                    <option value={""} hidden={true}>
+                      Please select
+                    </option>
                     <option value={"Applied"}>Applied</option>
                     <option value={"Awarded"}>Awarded</option>
                     <option value={"Rejected"}>Rejected</option>
@@ -2410,12 +2430,12 @@ const downloadPdf = () => {
                     <option value={"Conculded"}>Conculded</option>
                   </Form.Select>
                   <Form.Control.Feedback type="invalid">
-              Please select Result 
-            </Form.Control.Feedback>
+                    Please select Result
+                  </Form.Control.Feedback>
                 </Form.Group>
                 <Form.Group as={Col} md="6" className="mb-3">
                   <Form.Label>
-                  Source <span className="requiredStar">*</span>
+                    Source <span className="requiredStar">*</span>
                   </Form.Label>
                   <Form.Select
                     name="source"
@@ -2432,20 +2452,22 @@ const downloadPdf = () => {
                       })
                     }
                   >
-                    <option value={""} hidden={true}>Please select</option>
+                    <option value={""} hidden={true}>
+                      Please select
+                    </option>
                     <option value="da">DA</option>
                     <option value="sa">SA</option>
                   </Form.Select>
                   <Form.Control.Feedback type="invalid">
-              Please select Source 
-            </Form.Control.Feedback>
+                    Please select Source
+                  </Form.Control.Feedback>
                 </Form.Group>
                 <Form.Group as={Col} md="6" className="mb-3">
                   <Form.Label>
                     Lawyer <span className="requiredStar">*</span>
                   </Form.Label>
                   <Form.Select
-                  required
+                    required
                     name="lawyer"
                     value={
                       addVcEscalation2Data &&
@@ -2459,7 +2481,9 @@ const downloadPdf = () => {
                       })
                     }
                   >
-                    <option value hidden={true}>Please select</option>
+                    <option value hidden={true}>
+                      Please select
+                    </option>
                     {lawyersList &&
                       lawyersList.length > 0 &&
                       lawyersList.map((item) => {
@@ -2471,15 +2495,15 @@ const downloadPdf = () => {
                       })}
                   </Form.Select>
                   <Form.Control.Feedback type="invalid">
-              Please select Lawyer 
-            </Form.Control.Feedback>
+                    Please select Lawyer
+                  </Form.Control.Feedback>
                 </Form.Group>
                 <Form.Group as={Col} md="6" className="mb-3">
                   <Form.Label>
                     Escalated At <span className="requiredStar">*</span>
                   </Form.Label>
                   <Form.Select
-                  required
+                    required
                     name="escalated_at"
                     value={
                       addVcEscalation2Data &&
@@ -2493,7 +2517,9 @@ const downloadPdf = () => {
                       })
                     }
                   >
-                    <option value={""} hidden={true}>Please select</option>
+                    <option value={""} hidden={true}>
+                      Please select
+                    </option>
                     {authorityTypeList &&
                       authorityTypeList.length > 0 &&
                       authorityTypeList.map((item) => {
@@ -2505,15 +2531,15 @@ const downloadPdf = () => {
                       })}
                   </Form.Select>
                   <Form.Control.Feedback type="invalid">
-              Please select  Escalated At  
-            </Form.Control.Feedback>
+                    Please select Escalated At
+                  </Form.Control.Feedback>
                 </Form.Group>
                 <Form.Group as={Col} md="6" className="mb-3">
                   <Form.Label>
                     Authority <span className="requiredStar">*</span>
                   </Form.Label>
                   <Form.Select
-                  required
+                    required
                     name="authority"
                     value={
                       addVcEscalation2Data && addVcEscalation2Data.authority
@@ -2525,7 +2551,9 @@ const downloadPdf = () => {
                       })
                     }
                   >
-                    <option value={""} hidden={true}>Please select</option>
+                    <option value={""} hidden={true}>
+                      Please select
+                    </option>
                     {authorityListByAuthType &&
                       authorityListByAuthType.length > 0 &&
                       authorityListByAuthType.map((item) => {
@@ -2538,8 +2566,8 @@ const downloadPdf = () => {
                       })}
                   </Form.Select>
                   <Form.Control.Feedback type="invalid">
-              Please select Authority
-            </Form.Control.Feedback>
+                    Please select Authority
+                  </Form.Control.Feedback>
                 </Form.Group>
                 <Form.Group as={Col} md="6" className="mb-3">
                   <Form.Label>
@@ -2565,23 +2593,25 @@ const downloadPdf = () => {
                     }
                   /> */}
 
-<DatePicker 
+                  <DatePicker
                     required
                     name="applied_date"
                     datePickerChange={onescalation2DateHandel}
-                    data={addVcEscalation2Data && addVcEscalation2Data.applied_date}
+                    data={
+                      addVcEscalation2Data && addVcEscalation2Data.applied_date
+                    }
                     message={"Please select Application Date"}
                   />
-                   <Form.Control.Feedback type="invalid">
-              Please select Application date 
-            </Form.Control.Feedback>
+                  <Form.Control.Feedback type="invalid">
+                    Please select Application date
+                  </Form.Control.Feedback>
                 </Form.Group>
                 <Form.Group as={Col} md="6" className="mb-3">
                   <Form.Label>
                     Application number <span className="requiredStar">*</span>
                   </Form.Label>
                   <Form.Control
-                  required
+                    required
                     type="text"
                     name="application_number"
                     defaultValue={
@@ -2596,9 +2626,9 @@ const downloadPdf = () => {
                       })
                     }
                   />
-                   <Form.Control.Feedback type="invalid">
-              Please enter Application number 
-            </Form.Control.Feedback>
+                  <Form.Control.Feedback type="invalid">
+                    Please enter Application number
+                  </Form.Control.Feedback>
                 </Form.Group>
                 <Form.Group as={Col} md="6" className="mb-3">
                   <Form.Label>Video Conferncing</Form.Label>
@@ -2606,7 +2636,9 @@ const downloadPdf = () => {
                     name="video_conferencing"
                     value={
                       addVcEscalation2Data &&
-                      addVcEscalation2Data.video_conferencing === "true" ? true: false
+                      addVcEscalation2Data.video_conferencing === "true"
+                        ? true
+                        : false
                     }
                     disabled={
                       addVcEscalation2Data &&
@@ -2631,7 +2663,7 @@ const downloadPdf = () => {
                     Amount Claimed <span className="requiredStar">*</span>
                   </Form.Label>
                   <Form.Control
-                  required
+                    required
                     type="number"
                     name="amount_claimed"
                     defaultValue={
@@ -2646,10 +2678,13 @@ const downloadPdf = () => {
                       })
                     }
                   />
-                   <Form.Control.Feedback type="invalid">
-              Please enter Amount Claimed
-            </Form.Control.Feedback>
+                  <Form.Control.Feedback type="invalid">
+                    Please enter Amount Claimed
+                  </Form.Control.Feedback>
                 </Form.Group>
+                {addVcEscalation2Data &&
+                  addVcEscalation2Data.status &&
+                  addVcEscalation2Data.status != "Applied" &&
                 <Form.Group as={Col} md="6" className="mb-3">
                   <Form.Label>Amount Awarded </Form.Label>
                   <Form.Control
@@ -2658,7 +2693,7 @@ const downloadPdf = () => {
                     defaultValue={
                       addVcEscalation2Data &&
                       addVcEscalation2Data.amount_awarded &&
-                       addVcEscalation2Data.amount_awarded
+                      addVcEscalation2Data.amount_awarded
                     }
                     onChange={(e) =>
                       setAddVcEscalation2Data({
@@ -2668,7 +2703,7 @@ const downloadPdf = () => {
                     }
                   />
                 </Form.Group>
-               
+}
                 <Form.Group as={Col} md="6" className="mb-3">
                   <Form.Label>VC application</Form.Label>
                   <Form.Control
@@ -2679,40 +2714,26 @@ const downloadPdf = () => {
                     onChange={handleFileInput}
                   />
                 </Form.Group>
+                {addVcEscalation2Data &&
+                  addVcEscalation2Data.status &&
+                  addVcEscalation2Data.status != "Applied" &&
                 <Form.Group as={Col} md="6" className="mb-3">
                   <Form.Label>Date of first order</Form.Label>
-                  {/* <Form.Control
-                    type="date"
-                    name="date_of_order"
-                    placeholder="Date of first order"
-                    value={
-                      addVcEscalation2Data &&
-                      addVcEscalation2Data.date_of_order &&
-                      moment(addVcEscalation2Data.date_of_order).format(
-                        "YYYY-MM-DD"
-                      )
-                    }
-                    onChange={(e) =>
-                      setAddVcEscalation2Data({
-                        ...addVcEscalation2Data,
-                        [e.target.name]: e.target.value,
-                      })
-                    }
-                  />  */}
-
-                <DatePicker 
+                  <DatePicker
                     name="date_of_order"
                     datePickerChange={onescalation2DateHandel}
-                    data={addVcEscalation2Data && addVcEscalation2Data.date_of_order}
+                    data={
+                      addVcEscalation2Data && addVcEscalation2Data.date_of_order
+                    }
                   />
                 </Form.Group>
-
+}
                 <Form.Group as={Col} md="6" className="mb-3">
                   <Form.Label>
                     Result <span className="requiredStar">*</span>
                   </Form.Label>
                   <Form.Select
-                  required
+                    required
                     name="result"
                     value={
                       addVcEscalation2Data &&
@@ -2726,17 +2747,20 @@ const downloadPdf = () => {
                       })
                     }
                   >
-                    <option value={""} hidden={true}>Please Select</option>
+                    <option value={""} hidden={true}>
+                      Please Select
+                    </option>
                     <option value="awarded">Awarded</option>
                     <option value="rejected">Rejected</option>
                     <option value="awaiting">Awaiting</option>
-
                   </Form.Select>
                   <Form.Control.Feedback type="invalid">
-              Please select Result
-            </Form.Control.Feedback>
+                    Please select Result
+                  </Form.Control.Feedback>
                 </Form.Group>
-               
+                {addVcEscalation2Data &&
+                  addVcEscalation2Data.status &&
+                  addVcEscalation2Data.status != "Applied" &&
                 <Form.Group as={Col} md="6" className="mb-3">
                   <Form.Label>Amount received in bank A/C</Form.Label>
                   <Form.Control
@@ -2745,7 +2769,7 @@ const downloadPdf = () => {
                     defaultValue={
                       addVcEscalation2Data &&
                       addVcEscalation2Data.amount_received_in_bank &&
-                  addVcEscalation2Data.amount_received_in_bank
+                      addVcEscalation2Data.amount_received_in_bank
                     }
                     onChange={(e) =>
                       setAddVcEscalation2Data({
@@ -2754,10 +2778,14 @@ const downloadPdf = () => {
                       })
                     }
                   />
-                   <p style={{color: "red", fontSize: 12}}>
-            {errText && errText}
-            </p>
+                  <p style={{ color: "red", fontSize: 12 }}>
+                    {errText && errText}
+                  </p>
                 </Form.Group>
+}
+{addVcEscalation2Data &&
+                  addVcEscalation2Data.status &&
+                  addVcEscalation2Data.status != "Applied" &&
                 <Form.Group as={Col} md="6" className="mb-3">
                   <Form.Label>Amount received in Bank Date</Form.Label>
                   {/* <Form.Control
@@ -2776,12 +2804,19 @@ const downloadPdf = () => {
                     }
                     placeholder="Date of first order"
                   /> */}
-                   <DatePicker 
+                  <DatePicker
                     name="amount_received_in_bank_date"
                     datePickerChange={onescalation2DateHandel}
-                    data={addVcEscalation2Data && addVcEscalation2Data.amount_received_in_bank_date}
+                    data={
+                      addVcEscalation2Data &&
+                      addVcEscalation2Data.amount_received_in_bank_date
+                    }
                   />
                 </Form.Group>
+}
+{addVcEscalation2Data &&
+                  addVcEscalation2Data.status &&
+                  addVcEscalation2Data.status != "Applied" &&
                 <Form.Group as={Col} md="6" className="mb-3">
                   <Form.Label>
                     Difference between amount claimed and rewarded
@@ -2793,12 +2828,13 @@ const downloadPdf = () => {
                       addVcEscalation2Data &&
                       addVcEscalation2Data.amount_awarded
                         ? addVcEscalation2Data.difference_between_amount_claim_reward
-                        :addVcEscalation2Data.amount_awarded !== "" && null
+                        : addVcEscalation2Data.amount_awarded !== "" && null
                     }
                     type="number"
                     disabled={true}
                   />
                 </Form.Group>
+}
                 <Form.Group as={Col} md="6" className="mb-3">
                   <Form.Label>Escalation</Form.Label>
                   <Form.Select
@@ -2826,7 +2862,7 @@ const downloadPdf = () => {
                     <span className="requiredStar">*</span>
                   </Form.Label>
                   <Form.Control
-                  required
+                    required
                     type="text"
                     name="reason_for_escalation"
                     defaultValue={
@@ -2841,14 +2877,13 @@ const downloadPdf = () => {
                       })
                     }
                   />
-                   <Form.Control.Feedback type="invalid">
-              Please enter Reason For escalation
-            </Form.Control.Feedback>
+                  <Form.Control.Feedback type="invalid">
+                    Please enter Reason For escalation
+                  </Form.Control.Feedback>
                 </Form.Group>
-               
               </Row>
               <Row className="justify-content-between">
-                <Form.Group as={Col} md="auto">
+                <Form.Group as={Col} xs="auto">
                   <MDBBtn
                     type="button"
                     className="shadow-0 cancle_btn"
@@ -2858,12 +2893,8 @@ const downloadPdf = () => {
                     Cancel
                   </MDBBtn>
                 </Form.Group>
-                <Form.Group as={Col} md="auto">
-                  <Button
-                    type="submit"
-                   
-                    className="submit_btn shadow-0"
-                  >
+                <Form.Group as={Col} xs="auto">
+                  <Button type="submit" className="submit_btn shadow-0">
                     Submit
                   </Button>
                 </Form.Group>
@@ -2893,10 +2924,11 @@ const downloadPdf = () => {
           </Modal.Body>
         </Modal>
       )} */}
-            {showAlert === true && (
+      {showAlert === true && (
         <AlertComponent
-        alertFlag={alertFlag}alertMessage={alertMessage} 
-        goToAddEscal={onAddVcEscalation}
+          alertFlag={alertFlag}
+          alertMessage={alertMessage}
+          goToAddEscal={onAddVcEscalation}
           showAlert={showAlert}
           handleCloseAlert={handleCloseAlert}
           onDeleteFunction={onDeleteFunction}

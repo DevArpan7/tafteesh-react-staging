@@ -185,6 +185,10 @@
     .fileupload_buttoninner{
         width: 125px;
     }
+    .topbreadcrumb li{
+        letter-spacing: 0;
+        font-size: 12px;
+    }
 }
 
 @media (min-width:1441px) {

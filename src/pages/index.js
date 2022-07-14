@@ -16,6 +16,7 @@ export { default as DocumentList } from './documentList/documentList';
 export { default as SectionList } from './section/sectionList';
 export { default as CitDimension } from './citDimension/CitDimension';
 export { default as CitDimensionQues } from './citDimensionQues/CitDimensionQues';
+export { default as CitVersion } from './citVersion/CitVersion';
 
 export { default as KamoCollectives } from './kamoCollectives/KamoCollectives';
 export { default as KamoBlocks } from './kamoBlocks/KamoBlocks';

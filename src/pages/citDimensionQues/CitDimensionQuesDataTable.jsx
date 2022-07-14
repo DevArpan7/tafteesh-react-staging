@@ -299,8 +299,8 @@ const CitDimensionQuesDataTable = (props) => {
     // return formatDate(rowData.received_on);
     
     return (
-      <span className={`customer-badge status-${rowData.data_existance_check_from}`}>
-        {rowData.data_existance_check_from}
+      <span className={`customer-badge status-${rowData.data_existance_check_from && rowData.data_existance_check_from.toUpperCase()}`}>
+        {rowData.data_existance_check_from && rowData.data_existance_check_from.toUpperCase()}
       </span>
     );
   };

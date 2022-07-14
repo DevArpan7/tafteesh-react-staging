@@ -7,9 +7,9 @@ import "primeicons/primeicons.css";
 
 import { Login,AdminLogin } from "./components";
 import { Error } from './components';
-import { SocialWorkerDashboard, SurvivorsList, SurvivorTraffickersList,SurvivorsLawyers, AddSurvivors, SurvivorsDocument ,SurvivorFir, SurvivorsRescue, SurvivorsInvestigation, SurvivorsParticipation, SurvivorShelterHome, SurvivorsNextPlan, SurvivorsLoan, SurvivorsIncome, SurvivorsGrant, SurvivorCIT, MyAccount, SurvivorProceduralCorrection, SurvivorVictimCompensation, SurvivorChargesheet, SurvivorProfileDetails, ChangeLog, SurvivorSupplimentaryChargesheet } from "./containers";
+import { SocialWorkerDashboard, SurvivorsList, SurvivorTraffickersList,SurvivorsLawyers, AddSurvivors, SurvivorsDocument ,SurvivorFir, SurvivorsRescue, SurvivorsInvestigation, SurvivorsParticipation, SurvivorShelterHome, SurvivorsNextPlan, SurvivorsLoan, SurvivorsIncome, SurvivorsGrant, SurvivorCIT, MyAccount, SurvivorProceduralCorrection, SurvivorVictimCompensation, SurvivorChargesheet, SurvivorProfileDetails, ChangeLog, SurvivorSupplimentaryChargesheet ,Notification,PendingItems,SurvivorArchiveItems} from "./containers";
 import { KamoAdmin, AddUser, UserList, TraffickersList, LawyersList, KamoPartners, KamoOrganizations, KamoSHG, KamoCollectives,KamoStates
-,KamoBlocks ,KamoDistrict, LawyersCategory,PoliceStations,AuthorityType,AuthorityList, CitDimension,CitDimensionQues, ActList, SectionList, DocumentList ,AllCitList, AllSurvivorList,KamoUserDetails, TraffickersDetails} from "./pages";
+,KamoBlocks ,KamoDistrict, LawyersCategory,PoliceStations,AuthorityType,AuthorityList, CitDimension,CitDimensionQues, CitVersion,ActList, SectionList, DocumentList ,AllCitList, AllSurvivorList,KamoUserDetails, TraffickersDetails} from "./pages";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 
 import '../src/assets/css/fontawesome.css';
@@ -70,10 +70,18 @@ const App = () => {
             <Route exact path="/section_list" component={SectionList} />
             <Route exact path="/cit_dimension" component={CitDimension} />
             <Route exact path="/cit_dimension_ques" component={CitDimensionQues} />
+            <Route exact path="/cit_version" component={CitVersion} />
+
             
             <Route exact path="/shg-home" component={KamoSHG} />
             <Route exact path="/collectives" component={KamoCollectives} />
             <Route exact path="/change-log" component={ChangeLog} />
+            <Route exact path="/notification" component={Notification} />
+            <Route exact path="/pending-case" component={PendingItems} />
+            <Route exact path="/archive-list" component={SurvivorArchiveItems} />
+
+
+
             <Route component={Error} />
           </Switch>
         </Router>

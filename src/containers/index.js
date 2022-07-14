@@ -23,5 +23,10 @@ export { default as MyAccount } from './myAccount/MyAccount';
 export { default as SurvivorTraffickersList } from './SurvivorTraffickers/SurvivorTraffickersList';
 export { default as SurvivorsLawyers } from './survivorsLawyers/SurvivorsLawyers';
 export { default as ChangeLog } from './changeLog/ChangeLog';
+export {default as Notification} from './notification/Notification'
+export {default as PendingItems} from './pendingItems/PendingItems'
+
+export {default as SurvivorArchiveItems} from './survivorArchiveItems/SurvivorArchiveItems'
+
 
 

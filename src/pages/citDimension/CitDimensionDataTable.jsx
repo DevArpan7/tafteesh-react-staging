@@ -279,12 +279,12 @@ const CitDimensionDataTable = (props) => {
     );
   };
 
-  const emailBodyTemplate = (rowData) => {
+  const versionBodyTemplate = (rowData) => {
     // return formatDate(rowData.received_on);
     
     return (
-      <span className={`customer-badge status-${rowData.email}`}>
-        {rowData.email}
+      <span className={`customer-badge status-${rowData.cit_version && rowData.cit_version.name}`}>
+        {rowData.cit_version && rowData.cit_version.name}
       </span>
     );
   };
@@ -467,6 +467,7 @@ const CitDimensionDataTable = (props) => {
           responsiveLayout="scroll"
           globalFilterFields={[
             "name",
+            "cit_version",
             "createdAt"         
           ]}
           header={header1}
@@ -480,6 +481,15 @@ const CitDimensionDataTable = (props) => {
             filterField="name"
             style={{ minWidth: "15rem" }}
             body={nameBodyTemplate}
+            filter
+            filterElement={balanceFilterTemplate}
+        />
+         <Column
+            header="Version"
+            // dataType="date"
+            filterField="cit_version"
+            style={{ minWidth: "15rem" }}
+            body={versionBodyTemplate}
             filter
             filterElement={balanceFilterTemplate}
         />

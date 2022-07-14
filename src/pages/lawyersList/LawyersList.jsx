@@ -12,6 +12,7 @@ import {
   getLawyersCategoryList,
   getMasterBlockList,
   getStateList,
+  getCourtList,
 } from "../../redux/action";
 import Dropdown from "react-bootstrap/Dropdown";
 import DropdownButton from "react-bootstrap/DropdownButton";
@@ -21,6 +22,7 @@ import CsvImportPage from "../../components/CsvImportPage";
 import Papa from "papaparse";
 import LawyersListDataTable from "./LawyersListDataTable";
 import AlertComponent from "../../components/AlertComponent";
+import { MultiSelect } from "react-multi-select-component";
 
 const LawyersList = (props) => {
   const [modalAddShow, setModalAddShow] = useState(false);
@@ -28,12 +30,18 @@ const LawyersList = (props) => {
   const dispatch = useDispatch();
   const [open, setOpen] = useState(false);
   const lawyersList = useSelector((state) => state.lawyersList);
+  const courtList = useSelector((state) => state.courtList);
+
   const lawyersCategoryList = useSelector((state) => state.lawyersCategoryList);
   const masterBlockList = useSelector((state) => state.masterBlockList);
   const stateList = useSelector((state) => state.stateList);
   const [showAlert, setShowAlert] = useState(false);
   const handleCloseAlert = () => setShowAlert(false);
   const [erorMessage, setErorMessage] = useState("");
+  const [courtArr, setCourtArr] = useState([]);
+  const [selected, setSelected] = useState([]);
+  const [selectCat, setSelectCat] = useState([]);
+  const [categoryArr, setCategoryArr] = useState([]);
 
   const [addLawyerData, setAddLawyerData] = useState({});
   const [updateMessage, setUpdateMessage] = useState("");
@@ -47,7 +55,8 @@ const LawyersList = (props) => {
   };
   const [activeClass, setActiveClass] = useState(false);
   const [selectedData, setSelectedData] = useState({});
-
+  const [fieldData, setFieldData] = useState({ field: "", message: "" });
+  const [loader, setLoader] = useState(false);
   const handleClick = () => {
     setOpen(true);
   };
@@ -66,20 +75,111 @@ const LawyersList = (props) => {
     dispatch(getLawyersCategoryList());
     dispatch(getMasterBlockList());
     dispatch(getStateList());
+    dispatch(getCourtList());
   }, [props]);
-  const [isLoading,setIsLoading] = useState(true)
-
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-      setTimeout(() => {
-        setIsLoading(false);
-      }, 1000);
-    }, [lawyersList]);
+    setTimeout(() => {
+      setIsLoading(false);
+    }, 1000);
+  }, [lawyersList]);
+
+  useEffect(() => {
+    const options = [];
+    let obj = { label: "", value: "" };
+    courtList &&
+      courtList.length > 0 &&
+      courtList.map((court) => {
+        return (
+          (obj = { label: court.name, value: court._id }),
+          options.push(obj),
+          console.log(options, obj, "options, obj"),
+          setCourtArr(options)
+        );
+      });
+  }, [courtList]);
+
+  useEffect(() => {
+    const options = [];
+    let obj = { label: "", value: "" };
+    lawyersCategoryList &&
+      lawyersCategoryList.length > 0 &&
+      lawyersCategoryList.map((court) => {
+        return (
+          (obj = { label: court.name, value: court._id }),
+          options.push(obj),
+          console.log(options, obj, "options, obj"),
+          setCategoryArr(options)
+        );
+      });
+  }, [lawyersCategoryList]);
+
+  useEffect(() => {
+    let arr = [];
+    selected &&
+      selected.length > 0 &&
+      selected.map((data) => {
+        return (
+          arr.push(data.value),
+          console.log(arr, "arr"),
+          setAddLawyerData({
+            ...addLawyerData,
+            court: arr,
+          })
+        );
+      });
+  }, [selected]);
+  useEffect(() => {
+    let arr = [];
+    selectCat &&
+      selectCat.length > 0 &&
+      selectCat.map((data) => {
+        return (
+          arr.push(data.value),
+          console.log(arr, "arr"),
+          setAddLawyerData({
+            ...addLawyerData,
+            category: arr,
+          })
+        );
+      });
+  }, [selectCat]);
+
+  useEffect(() => {
+    let obj = {};
+    let arr = [...selected];
+    addLawyerData &&
+      addLawyerData.court &&
+      addLawyerData.court.length > 0 &&
+      addLawyerData.court.map((item) => {
+        return (obj = { label: item && item.name && item.name, value: item._id }), arr.push(obj);
+      });
+      setSelected(arr);
+      let catobj = {};
+      let catarr = [...selectCat];
+      addLawyerData &&
+        addLawyerData.category &&
+        addLawyerData.category.length > 0 &&
+        addLawyerData.category.map((item) => {
+          return (catobj = { label: item && item.name && item.name, value: item._id }), catarr.push(catobj);
+        });
+
+        console.log(catarr,"catarr")
+    setSelectCat(catarr);
+  }, [addLawyerData && addLawyerData._id]);
+
+
+console.log(selectCat,"selectCatselectCat")
+
   ////// on cancel button function ///
   const onCancel = (e) => {
     e.preventDefault();
     setModalAddShow(false);
     setAddLawyerData({});
+    setSelectCat([])
+    setSelected([])
+    setFieldData({ field: "", message: "" });
     // setSelectedData({});
   };
 
@@ -96,6 +196,8 @@ const LawyersList = (props) => {
     setModalAddShow(true);
     setAddLawyerData({});
     setSelectedData({});
+    setSelectCat([])
+    setSelected([])
   };
 
   useEffect(() => {
@@ -119,7 +221,7 @@ const LawyersList = (props) => {
         setUpdateMessage(response && response.data.message);
         if (response.data && response.data.error === false) {
           const { data } = response;
-          setSelectedData({})
+          setSelectedData({});
           dispatch(getLawyersList());
           setShowAlert(false);
           setErorMessage("");
@@ -129,13 +231,61 @@ const LawyersList = (props) => {
         //console.log(error, "partner error");
       });
   };
+
+  useEffect(() => {
+    if (addLawyerData && addLawyerData.name) {
+      setFieldData({ field: "name", message: "" });
+    }else if (addLawyerData && addLawyerData.location) {
+      setFieldData({ field: "location", message: "" });
+    }else if (addLawyerData && addLawyerData.category) {
+      setFieldData({ field: "category", message: "" });
+    }else if (addLawyerData && addLawyerData.court) {
+      setFieldData({ field: "court", message: "" });
+    } else {
+      setFieldData({ field: "", message: "" });
+    }
+  }, [addLawyerData]);
   ///// add Organisation api cll function /////
 
   const addLawyerFunc = (e) => {
     e.preventDefault();
-    var body = addLawyerData;
+    if (addLawyerData && !addLawyerData.name) {
+      setFieldData({
+        field: "name",
+        message: "Please enter Name",
+      });
+      
+    }else  if (addLawyerData && !addLawyerData.location) {
+      setFieldData({
+        field: "location",
+        message: "Please select Location",
+      });
+    } else  if (addLawyerData && !addLawyerData.category) {
+      setFieldData({
+        field: "category",
+        message: "Please select Category",
+      });
+    } else  if (addLawyerData && !addLawyerData.court) {
+      setFieldData({
+        field: "court",
+        message: "Please select Court",
+      });
+      
+    } 
+    
+    else {
+      setFieldData({ field: "", message: "" });
 
+
+    var body = {
+      ...addLawyerData,
+      // "court": selected && selected,
+      // "category": selectCat && selectCat
+    };
+
+    console.log(body);
     if (addLawyerData && addLawyerData._id) {
+      setLoader(true)
       axios
         .patch(api + "/update/" + addLawyerData._id, body, axiosConfig)
         .then((response) => {
@@ -143,36 +293,48 @@ const LawyersList = (props) => {
           handleClick();
 
           setUpdateMessage(response && response.data.message);
-
+          setLoader(false)
           if (response.data && response.data.error === false) {
             const { data } = response;
             dispatch(getLawyersList());
+            setSelectCat([])
+            setSelected([])
             setModalAddShow(false);
             setAddLawyerData({});
+           
           }
         })
         .catch((error) => {
+          setLoader(false)
           console.log(error, "shg add error");
         });
     } else {
+      setLoader(true)
+
       axios
         .post(api + "/create", body, axiosConfig)
         .then((response) => {
           console.log(response);
           handleClick();
           setUpdateMessage(response && response.data.message);
+          setLoader(false)
 
           if (response.data && response.data.error === false) {
             const { data } = response;
             dispatch(getLawyersList());
+            setSelectCat([])
+            setSelected([])
             setModalAddShow(false);
             setAddLawyerData({});
+            
           }
         })
         .catch((error) => {
+          setLoader(false)
           console.log(error, "shg add error");
         });
     }
+  }
   };
 
   //////////////// for csv function ////
@@ -200,9 +362,9 @@ const LawyersList = (props) => {
 
     // Convert users data to a csv
     let usersCsv = lawyersList.reduce((acc, user) => {
-      const { _id,name, location, name_of_group, blockId } = user;
+      const { _id, name, location, name_of_group, blockId } = user;
       acc.push(
-        [_id,name, location.name, name_of_group.name, blockId.name].join(",")
+        [_id, name, location.name, name_of_group.name, blockId.name].join(",")
       );
       return acc;
     }, []);
@@ -219,7 +381,12 @@ const LawyersList = (props) => {
   const fileReader = new FileReader();
   const [importCsvOpenModel, setImportCsvOpenModel] = useState(false);
   const [sampleArr, setSampleArr] = useState([
-    { LawyerName: "Ankush Tiwari", Location: "India", Category: "62a9bf6bc204c7023bcf0ab7", Block: "62a9a866c05c6a1059f92eb5" },
+    {
+      LawyerName: "Ankush Tiwari",
+      Location: "India",
+      Category: "62a9bf6bc204c7023bcf0ab7",
+      Block: "62a9a866c05c6a1059f92eb5",
+    },
   ]);
 
   const onImportCsv = () => {
@@ -367,7 +534,7 @@ const LawyersList = (props) => {
                 </span>
               </MDBTooltip>
             </div>
-            <LawyersListDataTable 
+            <LawyersListDataTable
               lawyersList={lawyersList && lawyersList.length > 0 && lawyersList}
               onSelectRow={onSelectRow}
               isLoading={isLoading}
@@ -458,7 +625,9 @@ const LawyersList = (props) => {
         >
           <Modal.Header closeButton>
             <Modal.Title id="contained-modal-title-vcenter">
-            {addLawyerData && addLawyerData._id ? "Update Lawyer" : " Add Lawyer"}  
+              {addLawyerData && addLawyerData._id
+                ? "Update Lawyer"
+                : " Add Lawyer"}
             </Modal.Title>
           </Modal.Header>
           <Modal.Body>
@@ -490,6 +659,11 @@ const LawyersList = (props) => {
                         })
                       }
                     />
+                        {fieldData.field == "name" && (
+                      <small className="mt-4 mb-2 text-danger">
+                        {fieldData && fieldData.message}
+                      </small>
+                    )}
                   </Form.Group>
                   {/* <Form.Group as={Col} md="6" className="mb-3">
                                         <Form.Label>Phone </Form.Label>
@@ -533,7 +707,7 @@ const LawyersList = (props) => {
                         })
                       }
                     >
-                      <option hidden={"true"}>Default select</option>
+                      <option hidden={"true"} value="">Default select</option>
                       {stateList &&
                         stateList.length > 0 &&
                         stateList.map((item) => {
@@ -544,10 +718,15 @@ const LawyersList = (props) => {
                           );
                         })}
                     </Form.Select>
+                    {fieldData.field == "location" && (
+                      <small className="mt-4 mb-2 text-danger">
+                        {fieldData && fieldData.message}
+                      </small>
+                    )}
                   </Form.Group>
                   <Form.Group className="form-group" as={Col} md="6">
                     <Form.Label>Category </Form.Label>
-                    <Form.Select
+                    {/* <Form.Select
                       name="name_of_group"
                       value={
                         addLawyerData &&
@@ -571,11 +750,31 @@ const LawyersList = (props) => {
                             </option>
                           );
                         })}
-                    </Form.Select>
+                    </Form.Select> */}
+                    <MultiSelect
+                      options={categoryArr}
+                      value={selectCat}
+                      hasSelectAll={false}
+                      disableSearch={true}
+                      onChange={setSelectCat}
+                      labelledBy={"Select"}
+                      className={"survivorMultiselect-box multiselectbox_span"}
+                      overrideStrings={{
+                        selectSomeItems: "Select columns to view",
+                        allItemsAreSelected: "All Categories are Selected",
+                        selectAll: "Select All",
+                        search: "Search",
+                      }}
+                    />
+                     {fieldData.field == "category" && (
+                      <small className="mt-4 mb-2 text-danger">
+                        {fieldData && fieldData.message}
+                      </small>
+                    )}
                   </Form.Group>
                   <Form.Group className="form-group" as={Col} md="6">
-                    <Form.Label>Block </Form.Label>
-                    <Form.Select
+                    <Form.Label>Court </Form.Label>
+                    {/* <Form.Select
                       name="blockId"
                       value={
                         addLawyerData &&
@@ -599,7 +798,27 @@ const LawyersList = (props) => {
                             </option>
                           );
                         })}
-                    </Form.Select>
+                    </Form.Select> */}
+
+                    <MultiSelect
+                      options={courtArr}
+                      value={selected}
+                      hasSelectAll={false}
+                      disableSearch={true}
+                      onChange={setSelected}
+                      labelledBy={"Select"}
+                      className={"survivorMultiselect-box multiselectbox_span"}
+                      overrideStrings={{
+                        selectSomeItems: "Select columns to view",
+                        allItemsAreSelected: "All Courts are Selected",
+                        selectAll: "Select All",
+                        search: "Search",
+                      }}
+                    />  {fieldData.field == "court" && (
+                      <small className="mt-4 mb-2 text-danger">
+                        {fieldData && fieldData.message}
+                      </small>
+                    )}
                   </Form.Group>
                 </Row>
                 <Row className="justify-content-between">
@@ -615,21 +834,26 @@ const LawyersList = (props) => {
                   <Form.Group as={Col} md="auto">
                     <Button
                       type="submit"
-                      disabled={
-                        addLawyerData && !addLawyerData.name
-                          ? true
-                          : !addLawyerData.location
-                          ? true
-                          : !addLawyerData.name_of_group
-                          ? true
-                          : !addLawyerData.blockId
-                          ? true
-                          : false
-                      }
+                      // disabled={
+                      //   addLawyerData && !addLawyerData.name
+                      //     ? true
+                      //     : !addLawyerData.location
+                      //     ? true
+                      //     : !addLawyerData.category
+                      //     ? true
+                      //     : !addLawyerData.court
+                      //     ? true
+                      //     : false
+                      // }
+                      disabled={loader == true ? true : false}
                       onClick={addLawyerFunc}
                       className="submit_btn shadow-0"
                     >
-                      Submit
+                       {loader && loader === true ? (
+                        <div class="spinner-border bigSpinnerWidth text-info text-center"></div>
+                      ) : (
+                        "Submit"
+                      )}
                     </Button>
                   </Form.Group>
                 </Row>

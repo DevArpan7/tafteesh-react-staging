@@ -8,7 +8,7 @@ import { useDispatch, useSelector } from "react-redux";
 import NotificationPage from "../../components/NotificationPage";
 import { NavLink, useHistory } from "react-router-dom";
 import moment from "moment";
-import DatePicker from "../../components/DatePicker"
+import DatePicker from "../../components/DatePicker";
 import {
   getSurvivorDetails,
   getStateList,
@@ -23,7 +23,7 @@ import { Autocomplete, TextField } from "@mui/material";
 
 const AddSurvivorsForm = (props) => {
   const [loader, setLoader] = useState(true);
-  const [resultLoad, setResultLoad] = useState(false)
+  const [resultLoad, setResultLoad] = useState(false);
   const [validated, setValidated] = useState(false);
   const [survivorData, setSurvivorData] = useState({});
   const userId = localStorage.getItem("userId");
@@ -36,7 +36,7 @@ const AddSurvivorsForm = (props) => {
     },
   };
 
-  const organizationId = localStorage.getItem('organizationId')
+  const organizationId = localStorage.getItem("organizationId");
   const history = useHistory();
   const survivorDetails = useSelector((state) => state.survivorDetails);
   const stateList = useSelector((state) => state.stateList);
@@ -49,13 +49,12 @@ const AddSurvivorsForm = (props) => {
   const [open, setOpen] = useState(false);
   const [fileSelect, setFileSelect] = useState("");
   const [pictureData, setPictureData] = useState({});
-  const [document, setDocument] = useState('');
+  const [document, setDocument] = useState("");
   const [updateMessage, setUpdateMessage] = useState("");
-  const [contentDocs, setContentDocs] = useState({})
+  const [contentDocs, setContentDocs] = useState({});
   const [errors, setErrors] = useState({});
-  const [messagType, setMessagType] = useState('')
-  const[customError, setCustomError]=useState({name:"",message:""})
-
+  const [messagType, setMessagType] = useState("");
+  const [customError, setCustomError] = useState({ name: "", message: "" });
 
   useEffect(() => {
     setTimeout(() => {
@@ -81,31 +80,37 @@ const AddSurvivorsForm = (props) => {
     if (!errors[e.target.name]) {
       setErrors({
         ...errors,
-        [e.target.name]: null
-      })
+        [e.target.name]: null,
+      });
     }
     dispatch(getDistrictList(e.target.value));
-
-  }
+  };
   //console.log(survivorDetails,"survivorDetails");
   useEffect(() => {
     setSurvivorData(survivorDetails);
   }, [survivorDetails]);
 
-
   // useEffect(() => {
   //   dispatch(getSurvivorDetails(props && props.survivorId))
   // }, [props]);
-
 
   useEffect(() => {
     //console.log(survivorDetails,"survivorDetails");
     if (survivorDetails && survivorDetails._id) {
       setSurvivorData(survivorDetails);
-      dispatch(getBlockList(survivorDetails && survivorDetails.state && survivorDetails.state._id, survivorDetails.district && survivorDetails.district._id));
-      dispatch(getDistrictList(survivorDetails && survivorDetails.state && survivorDetails.state._id));
+      dispatch(
+        getBlockList(
+          survivorDetails && survivorDetails.state && survivorDetails.state._id,
+          survivorDetails.district && survivorDetails.district._id
+        )
+      );
+      dispatch(
+        getDistrictList(
+          survivorDetails && survivorDetails.state && survivorDetails.state._id
+        )
+      );
     }
-  }, [survivorDetails])
+  }, [survivorDetails]);
 
   const getBlockListByDist = (e) => {
     setSurvivorData({
@@ -115,31 +120,30 @@ const AddSurvivorsForm = (props) => {
     if (!errors[e.target.name]) {
       setErrors({
         ...errors,
-        [e.target.name]: null
-      })
+        [e.target.name]: null,
+      });
     }
     dispatch(getBlockList(survivorData.state, e.target.value));
-  }
+  };
 
   const handleClick = () => {
     setOpen(true);
   };
 
   const handleClose = () => {
-    setValidated(false)
-    setSurvivorData({})
+    setValidated(false);
+    setSurvivorData({});
     setOpen(false);
-    
-
   };
 
-  const onCancelBtn = () => {
-    // to="/survivors" 
-    setValidated(false)
+  const onCancelBtn = (e) => {
+    // to="/survivors"
+e.preventDefault()
+    setValidated(false);
     setSurvivorData({});
+    setCustomError({ name: "", message: "" });
     history.goBack();
-
-  }
+  };
   console.log(survivorData, "survivorData");
 
   const handleFileInput = (e, flag) => {
@@ -148,7 +152,7 @@ const AddSurvivorsForm = (props) => {
     if (flag === "picture") {
       setFileSelect(e.target.files[0]);
     } else {
-      setDocument(e.target.files[0])
+      setDocument(e.target.files[0]);
     }
     storeFile(data, flag);
   };
@@ -168,11 +172,10 @@ const AddSurvivorsForm = (props) => {
       .then(function (response) {
         //console.log("successfully uploaded", response);
         if (response && response.data.error === false) {
-          const { data } = response
+          const { data } = response;
           if (flag === "picture") {
-            setPictureData(data.data)
-          }
-          else {
+            setPictureData(data.data);
+          } else {
             setContentDocs(data.data);
           }
         }
@@ -182,280 +185,343 @@ const AddSurvivorsForm = (props) => {
       });
   };
 
-
-  // const onChangeFunction=(e)=>{
-
-  //   setSurvivorData({
-  //     ...survivorData,
-  //     [e.target.name]: e.target.value
-  //   })
-  //   if(!!errors[e.target.name]){
-  //     setErrors({
-  //       ...errors,
-  //       [e.target.name]: null
-  //     })
-  //   }
-
-  // }
-
   const onHandleChange = (e) => {
-    // //console.log(e, e.target.name);
     setSurvivorData({
       ...survivorData,
-      [e.target.name]: e.target.value
-    })
-    // if (!errors[e.target.name]) {
-    //   setErrors({
-    //     ...errors,
-    //     [e.target.name]: null
-    //   })
-    // }
+      [e.target.name]: e.target.value,
+    });
   };
 
-  
-///// age of now
- const calculate_age = (dob1) => {
+  ///// age of now
+  const calculate_age = (dob1) => {
     var today = new Date();
-    var birthDate = new Date(dob1);  // create a date object directly from `dob1` argument
+    var birthDate = new Date(dob1); // create a date object directly from `dob1` argument
     var age_now = today.getFullYear() - birthDate.getFullYear();
     var m = today.getMonth() - birthDate.getMonth();
-    if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) 
-    {
-        age_now--;
+    if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
+      age_now--;
     }
     console.log(age_now);
     setSurvivorData({
       ...survivorData,
-      age_now: age_now
-    })
+      age_now: age_now,
+    });
     return age_now;
-  }
+  };
 
-  useEffect(()=>{
-    console.log(survivorData,"survivorData");
-    calculate_age(survivorData.date_of_birth)
+  useEffect(() => {
+    console.log(survivorData, "survivorData");
+    calculate_age(survivorData.date_of_birth);
+  }, [survivorData && survivorData.date_of_birth]);
 
-  },[survivorData && survivorData.date_of_birth])
-
-////////// age when trafficking ////
+  ////////// age when trafficking ////
   const calculateTraffickedage = (date) => {
     var today = new Date(date);
-    var birthDate = new Date(survivorData.date_of_birth);  // create a date object directly from `dob1` argument
+    var birthDate = new Date(survivorData.date_of_birth); // create a date object directly from `dob1` argument
     var age_when_trafficked = today.getFullYear() - birthDate.getFullYear();
     var m = today.getMonth() - birthDate.getMonth();
-    if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) 
-    {
+    if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
       age_when_trafficked--;
     }
     console.log(age_when_trafficked);
     setSurvivorData({
       ...survivorData,
-      age_when_trafficked: age_when_trafficked
-    })
+      age_when_trafficked: age_when_trafficked,
+    });
     return age_when_trafficked;
-  }
+  };
 
-  useEffect(()=>{
-    console.log(survivorData,"survivorData");
-    calculateTraffickedage(survivorData.date_of_trafficking)
+  useEffect(() => {
+    console.log(survivorData, "survivorData");
+    calculateTraffickedage(survivorData.date_of_trafficking);
+  }, [survivorData && survivorData.date_of_trafficking]);
 
-  },[survivorData && survivorData.date_of_trafficking])
-
-
-  const handleSubmit = (event) => {
-    console.log(event, "habdleSubmit")
-    // const {form}= event.target
-    const form = event.currentTarget;
-    console.log(form.checkValidity(), "frorm")
-    if (form.checkValidity() === false) {
-
-      if (survivorData && survivorData._id) {
-    // setValidated(false);
-        addSurvivorFunc(event);
-
-      } else {
-        event.preventDefault();
-        event.stopPropagation();
-      }
-
+  useEffect(() => {
+    if (survivorData && survivorData.survivor_name) {
+      setCustomError({
+        name: "survivor_name",
+        message: "",
+      });
+    } else if (survivorData && survivorData.gender) {
+      setCustomError({ name: "gender", message: "" });
+    } else if (survivorData && survivorData.marital_status) {
+      setCustomError({
+        name: "marital_status",
+        message: "",
+      });
+    } else if (survivorData && survivorData.state) {
+      setCustomError({ name: "state", message: "" });
+    } else if (survivorData && survivorData.district) {
+      setCustomError({ name: "district", message: "" });
+    } else if (survivorData && survivorData.block) {
+      setCustomError({ name: "block", message: "" });
+    } else if (survivorData && survivorData.village_name) {
+      setCustomError({
+        name: "village_name",
+        message: "",
+      });
+    } else if (survivorData && survivorData.panchayat_name) {
+      setCustomError({
+        name: "panchayat_name",
+        message: "",
+      });
+    } else if (survivorData && survivorData.date_of_birth) {
+      setCustomError({
+        name: "date_of_birth",
+        message: "",
+      });
+    } else if (survivorData && survivorData.date_of_trafficking) {
+      setCustomError({
+        name: "date_of_trafficking",
+        message: "",
+      });
+    } else if (survivorData && survivorData.police_station) {
+      setCustomError({
+        name: "police_station",
+        message: "",
+      });
+    } else if (survivorData && survivorData.status_in_tafteesh) {
+      setCustomError({
+        name: "status_in_tafteesh",
+        message: "",
+      });
+    } else if (survivorData && survivorData.notes_for_status_change) {
+      setCustomError({
+        name: "notes_for_status_change",
+        message: "",
+      });
+    } else if (survivorData && survivorData.phone_no) {
+      setCustomError({ name: "phone_no", message: "" });
+    } else if (survivorData && survivorData.alternate_contact_No) {
+      setCustomError({ name: "alternate_contact_No", message: "" });
+    } else if (survivorData && survivorData.pincode) {
+      setCustomError({ name: "pincode", message: "" });
     } else {
-      // event.preventDefault();  
-
-//       if(survivorData && survivorData.phone_no && survivorData.phone_no.length <1000000000){
-//           setCustomError({name:"phone_no", message: "Phone no. is invalied"})
-        
-//         }
-//         else if(survivorData && survivorData.alternate_contact_No && survivorData.alternate_contact_No.length < 1000000000){
-//           setCustomError({name:"alternate_contact_No", message: "Phone no. is invalied"})
-        
-//         }
-//         else if(survivorData && survivorData.pincode && survivorData.pincode.length < 7 ){
-
-//           setCustomError({name:"pincode", message: "Pincode. is invalied"})
-//         }
-//         else{
-//           setCustomError({name:"", message: ""})
-// console.log("dsdss")
-      addSurvivorFunc(event);
-        // }
-     
+      setCustomError({ name: "", message: "" });
     }
-    setValidated(true);
+  }, [survivorData]);
+
+console.log(customError,"customeerr")
+
+
+
+  const addSurvivorFunc = (e) => {
+    // console.log(document.getElementById(),"eeeee")
    
-// if(survivorData && !survivorData.survivor_name){
-
-//   setCustomError({name:"survivor_name", message: "Please enter Survivor name"})
-// }else if(survivorData && !survivorData.gender){
-//   setCustomError({name:"gender", message: "Please select Gender"})
-
-// }else if(survivorData && !survivorData.marital_status){
-//   setCustomError({name:"marital_status", message: "Please select Merital Status"})
-// }else if(survivorData && !survivorData.village_name){
-//   setCustomError({name:"village_name", message: "Please enter Village Name"})
-// }else if(survivorData && !survivorData.state){
-//   setCustomError({name:"state", message: "Please select State"})
-// }else if(survivorData && !survivorData.district){
-//   setCustomError({name:"district", message: "Please select District"})
-// }
-// else if(survivorData && !survivorData.block){
-//   setCustomError({name:"block", message: "Please select Block"})
-// }else if(survivorData && !survivorData.panchayat_name){
-//   setCustomError({name:"panchayat_name", message: "Please select Panchayat Name"})
-// }else if(survivorData && !survivorData.date_of_birth){
-//   setCustomError({name:"date_of_birth", message: "Please select Date of Birth"})
-// }else if(survivorData && !survivorData.date_of_trafficking){
-//   setCustomError({name:"date_of_trafficking", message: "Please select Date of Trafficking"})
-// }
-// else if(survivorData && !survivorData.police_station){
-//   setCustomError({name:"police_station", message: "Please select Police Station"})
-// }else if(survivorData && !survivorData.status_in_tafteesh){
-//   setCustomError({name:"status_in_tafteesh", message: "Please select Status in Tafteesh"})
-// } else if(survivorData && !survivorData.notes_for_status_change){
-//   setCustomError({name:"notes_for_status_change", message: "Please enter Notes for Status Change"})
-// }else if(survivorData && survivorData.phone_no && survivorData.phone_no.length <1000000000){
-//   setCustomError({name:"phone_no", message: "Phone no. is invalied"})
-
-// }
-// else{
-//         event.preventDefault();
-
-//   addSurvivorFunc(event);
-//   }
-}
- 
-// useEffect(()=>{
-//   if(survivorData && survivorData.phone_no && survivorData.phone_no.length == 1000000000){
-//     setCustomError({name:"", message: ""})
-  
-//   }
-// },[survivorData])
-
-  const addSurvivorFunc = (event) => {
-    console.log(event,"event")
-    event.preventDefault();
-    const tempData = {
-      ...survivorData,
-      "organization": organizationId,
-      "user_id": userId
-      // "picture": `https://tafteesh-staging-node.herokuapp.com/${pictureData && pictureData.filePath}`,
-      // "consent_form" :  `https://tafteesh-staging-node.herokuapp.com/${contentDocs && contentDocs.filePath}`
-    }
-    var body = tempData;
-    console.log(survivorData,"body")
-    if (tempData.survivor_name) {
-
-      if (props && props.survivorId) {
-        setResultLoad(true)
-        axios
-          .patch(api + "/update/" + props.survivorId, body, axiosConfig)
-          .then((res) => {
-            console.log(res);
-            setResultLoad(false)
-            handleClick();
-            setUpdateMessage(res && res.data.message);
-            setMessagType("success")
-
-            setValidated(false)
-           
-            const { data } = res;
-
-            if (res && res.data && res.data.error == false) {
-              setSurvivorData({});
-              dispatch({ type: "SURVIVOR_DETAILS", data: {} })
-              dispatch({ type: "SHG_LIST", data: [] })
-              //console.log(data, res);
-              dispatch({ type: "SURVIVOR_LIST", data: data });
-              // history.goBack();
-               history.push('/survivors');
-            }
-            else{
-              
+    e.preventDefault();
+    // const el = document.getElementById("field-view");
+    var phonPattern = new RegExp("^((\\+91-?)|0)?[0-9]{10}$")
+    var pinPattern = new RegExp("^((\\+91-?)|0)?[0-9]{6}$")
+    if (survivorData && !survivorData.survivor_name) {
+      setCustomError({
+        name: "survivor_name",
+        message: "Please enter Survivor name",
+      });
+      // window.scrollTo(10, el.offsetTop);
+    } else if (survivorData && !survivorData.gender) {
+      setCustomError({ name: "gender", message: "Please select Gender" });
+      // window.scrollTo(10, el.offsetTop);
+    } else if (survivorData && !survivorData.marital_status) {
+      setCustomError({
+        name: "marital_status",
+        message: "Please select Merital Status",
+      });
+      // window.scrollTo(10, el.offsetTop);
+    } else if (survivorData && !survivorData.state) {
+      setCustomError({ name: "state", message: "Please select State" });
+      // window.scrollTo(5, el.offsetTop);
+    } else if (survivorData && !survivorData.district) {
+      setCustomError({ name: "district", message: "Please select District" });
+      // window.scrollTo(5, el.offsetTop);
+    } else if (survivorData && !survivorData.block) {
+      setCustomError({ name: "block", message: "Please select Block" });
+      // window.scrollTo(4, el.offsetTop);
+    } else if (survivorData && !survivorData.village_name) {
+      setCustomError({
+        name: "village_name",
+        message: "Please enter Village Name",
+      });
+      // window.scrollTo(4, el.offsetTop);
+    } else if (survivorData && !survivorData.panchayat_name) {
+      setCustomError({
+        name: "panchayat_name",
+        message: "Please select Panchayat Name",
+      });
+      // window.scrollTo(4, el.offsetTop);
+    } else if (survivorData && !survivorData.date_of_birth) {
+      setCustomError({
+        name: "date_of_birth",
+        message: "Please select Date of Birth",
+      });
+      // window.scrollTo(4, el.offsetTop);
+    } else if (survivorData && !survivorData.date_of_trafficking) {
+      setCustomError({
+        name: "date_of_trafficking",
+        message: "Please select Date of Trafficking",
+      });
+      // window.scrollTo(4, el.offsetTop);
+    } else if (survivorData && !survivorData.police_station) {
+      setCustomError({
+        name: "police_station",
+        message: "Please select Police Station",
+      });
+      // window.scrollTo(4, el.offsetTop);
+    } else if (survivorData && !survivorData.status_in_tafteesh) {
+      setCustomError({
+        name: "status_in_tafteesh",
+        message: "Please select Status in Tafteesh",
+      });
+      // window.scrollTo(2, el.offsetTop);
+    } else if (survivorData && !survivorData.notes_for_status_change) {
+      setCustomError({
+        name: "notes_for_status_change",
+        message: "Please enter Notes for Status Change",
+      });
+      // window.scrollTo(2, el.offsetTop);
+    } else if (
+      survivorData &&
+      survivorData.phone_no &&
+      survivorData.phone_no < 1000000000
+    ) {
+      setCustomError({ name: "phone_no", message: "Phone no. is invalid" });
+      // window.scrollTo(8, el.offsetTop);
+    } else if (
+      survivorData &&
+      survivorData.phone_no &&
+      !phonPattern.test(survivorData.phone_no)
+    ) {
+      setCustomError({ name: "phone_no", message: "Phone no. is invalid" });
+      // window.scrollTo(8, el.offsetTop);
+    }else if (
+      survivorData &&
+      survivorData.alternate_contact_No &&
+      survivorData.alternate_contact_No < 1000000000
+    ) {
+      setCustomError({
+        name: "alternate_contact_No",
+        message: "Phone no. is invalid",
+      });
+      // window.scrollTo(8, el.offsetTop);
+    } else if (
+      survivorData &&
+      survivorData.alternate_contact_No &&
+      !phonPattern.test(survivorData.alternate_contact_No)
+    ) {
+      setCustomError({
+        name: "alternate_contact_No",
+        message: "Phone no. is invalid",
+      });
+      // window.scrollTo(8, el.offsetTop);
+    }else if (
+      survivorData &&
+      survivorData.pincode &&
+      survivorData.pincode < 99999
+    ) {
+      setCustomError({ name: "pincode", message: "Phone no. is invalied" });
+      // window.scrollTo(5, el.offsetTop);
+    }else if (
+      survivorData &&
+      survivorData.pincode &&
+      !pinPattern.test(survivorData.pincode)
+    ) {
+      setCustomError({ name: "pincode", message: "Phone no. is invalied" });
+      // window.scrollTo(5, el.offsetTop);
+    } else {
+      setCustomError({ name: "", message: "" });
+      const tempData = {
+        ...survivorData,
+        organization: organizationId,
+        user_id: userId,
+        // "picture": `https://tafteesh-staging-node.herokuapp.com/${pictureData && pictureData.filePath}`,
+        // "consent_form" :  `https://tafteesh-staging-node.herokuapp.com/${contentDocs && contentDocs.filePath}`
+      };
+      var body = tempData;
+      console.log(survivorData, "body");
+      if (tempData.survivor_name) {
+        if (props && props.survivorId) {
+          setResultLoad(true);
+          axios
+            .patch(api + "/update/" + props.survivorId, body, axiosConfig)
+            .then((res) => {
+              console.log(res);
+              setResultLoad(false);
               handleClick();
-              setUpdateMessage(data.data.message)
-              setMessagType("error")
-            }
-          })
-          .catch((error) => {
-            //console.log(error);
-            setResultLoad(false)
-            handleClick();
-            setUpdateMessage(error.message)
-            setMessagType("error")
-          });
+              setUpdateMessage(res && res.data.message);
+              setMessagType("success");
 
+              setValidated(false);
+
+              const { data } = res;
+
+              if (res && res.data && res.data.error == false) {
+                setSurvivorData({});
+                dispatch({ type: "SURVIVOR_DETAILS", data: {} });
+                dispatch({ type: "SHG_LIST", data: [] });
+                //console.log(data, res);
+                dispatch({ type: "SURVIVOR_LIST", data: data });
+                // history.goBack();
+                history.push("/survivors");
+              } else {
+                handleClick();
+                setUpdateMessage(data.data.message);
+                setMessagType("error");
+              }
+            })
+            .catch((error) => {
+              //console.log(error);
+              setResultLoad(false);
+              handleClick();
+              setUpdateMessage(error.message);
+              setMessagType("error");
+            });
+        } else {
+          setResultLoad(true);
+          axios
+            .post(api + "/create", body, axiosConfig)
+            .then((res) => {
+              // console.log(res,"res")
+
+              setUpdateMessage(res && res.data.message);
+              setResultLoad(false);
+              const { data } = res;
+
+              if (res && res.data && res.data.error == false) {
+                handleClick();
+                setValidated(false);
+                setMessagType("success");
+                dispatch({ type: "SURVIVOR_LIST", data: data });
+                // setSurvivorData({});
+                // dispatch({ type: "SURVIVOR_DETAILS", data: {} })
+                // history.goBack();
+                history.push("/survivors");
+              } else {
+                handleClick();
+                setUpdateMessage(data.data.message);
+                setMessagType("error");
+              }
+            })
+            .catch((error) => {
+              handleClick();
+              setUpdateMessage(error.message);
+              setMessagType("error");
+              setResultLoad(false);
+
+              //console.log(error);
+            });
+        }
       }
-      else {
-        setResultLoad(true)
-        axios
-          .post(api + "/create", body, axiosConfig)
-          .then((res) => {
-// console.log(res,"res")
-           
-            setUpdateMessage(res && res.data.message);
-            setResultLoad(false)
-            const { data } = res;
-
-            if (res && res.data && res.data.error == false) {
-              handleClick();
-              setValidated(false)
-              setMessagType("success")
-              dispatch({ type: "SURVIVOR_LIST", data: data });
-              // setSurvivorData({});
-              // dispatch({ type: "SURVIVOR_DETAILS", data: {} })
-              // history.goBack();
-              history.push("/survivors")
-            }
-            else{
-              handleClick();
-              setUpdateMessage(data.data.message)
-              setMessagType("error")
-            }
-          })
-          .catch((error) => {
-            handleClick();
-            setUpdateMessage(error.message)
-            setMessagType("error")
-            setResultLoad(false)
-
-            //console.log(error);
-          });
-      }
     }
-
   };
 
   return (
     <>
-      {loader && loader === true ?
-        <tr>
-          <td align="center">
+      {loader && loader === true ? (
+        
             <div class="spinner-border bigSpinner text-info"></div>
-          </td>
-        </tr>
-        :
-        <Form 
-        noValidate validated={validated}
-         onSubmit={handleSubmit}
+        
+      ) : (
+        <Form id="field-view"
+        // noValidate validated={validated} onSubmit={handleSubmit}
         >
           <NotificationPage
             handleClose={handleClose}
@@ -465,7 +531,7 @@ const AddSurvivorsForm = (props) => {
           />
           <div className="white_box_shadow_20 survivorsFormCard mb-4">
             <h3 className="survivorsFormCardHeading">
-              Personal Details 
+              Personal Details
               <i className="fal fa-user-circle"></i>
             </h3>
             <Row>
@@ -475,21 +541,27 @@ const AddSurvivorsForm = (props) => {
                 md="6"
                 controlId="validationCustom01"
               >
-                <Form.Label>Name <span className="requiredStar">*</span></Form.Label>
+                <Form.Label>
+                  Name <span className="requiredStar">*</span>
+                </Form.Label>
                 <Form.Control
-                  required
+                  // required
                   // isInvalid={!errors.survivor_name}
                   type="text"
                   name="survivor_name"
                   placeholder=""
                   onChange={onHandleChange}
-                  defaultValue={survivorData && survivorData.survivor_name && survivorData.survivor_name}
+                  defaultValue={
+                    survivorData &&
+                    survivorData.survivor_name &&
+                    survivorData.survivor_name
+                  }
                 />
-                {/* <Form.Control.Feedback type="invalid">
-                  Please enter Survivor Name.
-                </Form.Control.Feedback> */}
-                {customError && customError.name ==="survivor_name"&& <p style={{color: "red", fontSize:12}}> {customError.message}</p>}
-
+                {customError.name == "survivor_name" && (
+                  <small className="mt-4 mb-2 text-danger">
+                    {customError && customError.message}
+                  </small>
+                )}
               </Form.Group>
               <Form.Group
                 className="form-group"
@@ -497,72 +569,100 @@ const AddSurvivorsForm = (props) => {
                 md="6"
                 controlId="gender"
               >
-                <Form.Label>Gender <span className="requiredStar">*</span></Form.Label>
-            
-                <Form.Select required onChange={onHandleChange} name="gender"
-                  value={survivorData && survivorData.gender && survivorData.gender} >
-                  <option hidden="true" value={""}>Open this select menu</option>
+                <Form.Label>
+                  Gender <span className="requiredStar">*</span>
+                </Form.Label>
+
+                <Form.Select
+                  // required
+                  onChange={onHandleChange}
+                  name="gender"
+                  value={
+                    survivorData && survivorData.gender && survivorData.gender
+                  }
+                >
+                  <option hidden="true" value={""}>
+                    Open this select menu
+                  </option>
                   <option value="male">Male</option>
                   <option value="female">Female</option>
                   <option value="transgender">Transgender</option>
-
                 </Form.Select>
-                {/* <Form.Control.Feedback type="invalid">
-                  Please select gender.
-                </Form.Control.Feedback> */}
-                {customError && customError.name ==="gender"&& <p style={{color: "red", fontSize:12}}> {customError.message}</p>}
-
+                {customError.name == "gender" && (
+                  <small className="mt-4 mb-2 text-danger">
+                    {customError && customError.message}
+                  </small>
+                )}
               </Form.Group>
               <Form.Group
                 className="form-group"
                 as={Col}
                 md="6"
                 type="text"
-                controlId="validationCustom03">
-                <Form.Label>Marital Status <span className="requiredStar">*</span></Form.Label>
+                controlId="validationCustom03"
+              >
+                <Form.Label>
+                  Marital Status <span className="requiredStar">*</span>
+                </Form.Label>
                 <Form.Select
-                  required
+                  // required
                   onChange={onHandleChange}
-                  name="marital_status" value={survivorData && survivorData.marital_status && survivorData.marital_status} >
-                  <option value={""} hidden={true} >Open this select menu</option>
+                  name="marital_status"
+                  value={
+                    survivorData &&
+                    survivorData.marital_status &&
+                    survivorData.marital_status
+                  }
+                >
+                  <option value={""} hidden={true}>
+                    Open this select menu
+                  </option>
                   <option value="married">Married</option>
                   <option value="single">Single</option>
                   <option value="divorced">Divorced</option>
                   <option value="widowed">Widowed</option>
-
                 </Form.Select>
-                {/* <Form.Control.Feedback type="invalid">
-                  Marital Status is a required field.
-                </Form.Control.Feedback> */}
-                {customError && customError.name ==="marital_status"&& <p style={{color: "red", fontSize:12}}> {customError.message}</p>}
-
+                {customError.name == "marital_status" && (
+                  <small className="mt-4 mb-2 text-danger">
+                    {customError && customError.message}
+                  </small>
+                )}
               </Form.Group>
               <Form.Group
                 className="form-group"
                 as={Col}
                 md="6"
-                controlId="validationCustom04">
+                controlId="validationCustom04"
+              >
                 <Form.Label>No. Children</Form.Label>
-                <Form.Control defaultValue={survivorData && survivorData.no_of_children && survivorData.no_of_children}
+                <Form.Control
+                  defaultValue={
+                    survivorData &&
+                    survivorData.no_of_children &&
+                    survivorData.no_of_children
+                  }
                   onChange={onHandleChange}
                   type="number"
                   placeholder=""
                   name="no_of_children"
                   min={0}
-
                 />
               </Form.Group>
               <Form.Group
                 className="form-group"
                 as={Col}
                 md="6"
-                controlId="validationCustom03">
+                controlId="validationCustom03"
+              >
                 <Form.Label>No. of family members living together</Form.Label>
                 <Form.Control
-
                   type="number"
                   name="no_of_family_member"
-                  defaultValue={survivorData && survivorData.no_of_family_member && survivorData.no_of_family_member}
+                  defaultValue={
+                    survivorData &&
+                    survivorData.no_of_family_member &&
+                    survivorData.no_of_family_member
+                  }
                   placeholder=""
                   min={0}
                   onChange={onHandleChange}
@@ -583,33 +683,51 @@ const AddSurvivorsForm = (props) => {
                 className="form-group"
                 as={Col}
                 md="6"
-                controlId="validationCustom04">
+                controlId="validationCustom04"
+              >
                 <Form.Label>Phone No</Form.Label>
                 <Form.Control
                   onChange={onHandleChange}
-                  defaultValue={survivorData && survivorData.phone_no && survivorData.phone_no}
+                  defaultValue={
+                    survivorData &&
+                    survivorData.phone_no &&
+                    survivorData.phone_no
+                  }
                   type="text"
                   placeholder=""
                   name="phone_no"
                   maxLength={10}
                 />
-                {customError && customError.name ==="phone_no"&& <p style={{color: "red", fontSize:12}}>{customError.message}</p>}
+                {customError.name == "phone_no" && (
+                  <small className="mt-4 mb-2 text-danger">
+                    {customError && customError.message}
+                  </small>
+                )}
               </Form.Group>
               <Form.Group
                 className="form-group"
                 as={Col}
                 md="6"
-                controlId="validationCustom04">
+                controlId="validationCustom04"
+              >
                 <Form.Label>Alternate contact number</Form.Label>
                 <Form.Control
                   maxLength={10}
                   onChange={onHandleChange}
                   type="text"
                   placeholder=""
-                  defaultValue={survivorData && survivorData.alternate_contact_No && survivorData.alternate_contact_No}
+                  defaultValue={
+                    survivorData &&
+                    survivorData.alternate_contact_No &&
+                    survivorData.alternate_contact_No
+                  }
                   name="alternate_contact_No"
                 />
-                 {customError && customError.name ==="phone_no"&& <p style={{color: "red", fontSize:12}}>{customError.message}</p>}
+                {customError.name == "alternate_contact_No" && (
+                  <small className="mt-4 mb-2 text-danger">
+                    {customError && customError.message}
+                  </small>
+                )}
               </Form.Group>
             </Row>
           </div>
@@ -623,26 +741,38 @@ const AddSurvivorsForm = (props) => {
                 className="form-group"
                 as={Col}
                 md="6"
-                controlId="validationCustom04">
+                controlId="validationCustom04"
+              >
                 <Form.Label>Address Line 1</Form.Label>
                 <Form.Control
                   onChange={onHandleChange}
                   type="text"
                   placeholder=""
                   name="address_Line1"
-                  defaultValue={survivorData && survivorData.address_Line1 && survivorData.address_Line1}
+                  defaultValue={
+                    survivorData &&
+                    survivorData.address_Line1 &&
+                    survivorData.address_Line1
+                  }
                 />
               </Form.Group>
               <Form.Group className="form-group" as={Col} md="6">
-                <Form.Label>State <span className="requiredStar">*</span></Form.Label>
+                <Form.Label>
+                  State <span className="requiredStar">*</span>
+                </Form.Label>
                 <Form.Select
-                  required
+                  // required
                   // isInvalid={survivorData && !survivorData.state && !errors.sate}
                   onChange={getDistListByState}
                   name="state"
                   aria-label="Default select example"
-                  value={survivorData && survivorData.state && survivorData.state._id} >
-                  <option hidden="true" value=''>Open this select menu</option>
+                  value={
+                    survivorData && survivorData.state && survivorData.state._id
+                  }
+                >
+                  <option hidden="true" value="">
+                    Open this select menu
+                  </option>
 
                   {stateList &&
                     stateList.length > 0 &&
@@ -650,105 +780,140 @@ const AddSurvivorsForm = (props) => {
                       return <option value={data._id}>{data.name}</option>;
                     })}
                 </Form.Select>
-                {/* <Form.Control.Feedback type="invalid">
-                  Please select State
-                </Form.Control.Feedback> */}
-                {customError && customError.name ==="state"&& <p style={{color: "red", fontSize:12}}> {customError.message}</p>}
-
+                {customError.name == "state" && (
+                  <small className="mt-4 mb-2 text-danger">
+                    {customError && customError.message}
+                  </small>
+                )}
               </Form.Group>
               <Form.Group className="form-group" as={Col} md="6">
-                <Form.Label>District <span className="requiredStar">*</span></Form.Label>
+                <Form.Label>
+                  District <span className="requiredStar">*</span>
+                </Form.Label>
                 <Form.Select
                   // isInvalid={!!errors.district}
-                  required
+                  // required
                   onChange={getBlockListByDist}
                   name="district"
-                  value={survivorData && survivorData.district && survivorData.district._id}
-                  aria-label="Default select example">
-                  <option hidden="true" value={""}>Open this select menu</option>
+                  value={
+                    survivorData &&
+                    survivorData.district &&
+                    survivorData.district._id
+                  }
+                  aria-label="Default select example"
+                >
+                  <option hidden="true" value={""}>
+                    Open this select menu
+                  </option>
                   {districtList &&
                     districtList.length > 0 &&
                     districtList.map((data) => {
                       return <option value={data._id}>{data.name}</option>;
                     })}
-
-
                 </Form.Select>
-                {/* <Form.Control.Feedback type="invalid">
-                  Please select District
-                </Form.Control.Feedback> */}
-                {customError && customError.name ==="district"&& <p style={{color: "red", fontSize:12}}> {customError.message}</p>}
-
+                {customError.name == "district" && (
+                  <small className="mt-4 mb-2 text-danger">
+                    {customError && customError.message}
+                  </small>
+                )}
               </Form.Group>
               <Form.Group className="form-group" as={Col} md="6">
-                <Form.Label>Block <span className="requiredStar">*</span></Form.Label>
+                <Form.Label>
+                  Block <span className="requiredStar">*</span>
+                </Form.Label>
                 <Form.Select
                   // isInvalid={!!errors.block}
-                  required
+                  // required
                   onChange={onHandleChange}
                   name="block"
-                  value={survivorData && survivorData.block && survivorData.block._id}
-                  aria-label="Default select example">
-                  <option hidden="true" value={""}>Open this select menu</option>
+                  value={
+                    survivorData && survivorData.block && survivorData.block._id
+                  }
+                  aria-label="Default select example"
+                >
+                  <option hidden="true" value={""}>
+                    Open this select menu
+                  </option>
                   {blockList &&
                     blockList.length > 0 &&
                     blockList.map((data) => {
                       return <option value={data._id}>{data.name}</option>;
                     })}
-
                 </Form.Select>
-                {/* <Form.Control.Feedback type="invalid">
-                  Please select Block
-                </Form.Control.Feedback> */}
-                {customError && customError.name ==="block"&& <p style={{color: "red", fontSize:12}}> {customError.message}</p>}
-
+                {customError.name == "block" && (
+                  <small className="mt-4 mb-2 text-danger">
+                    {customError && customError.message}
+                  </small>
+                )}
               </Form.Group>
               <Form.Group className="form-group" as={Col} md="6">
-                <Form.Label>Village <span className="requiredStar">*</span></Form.Label>
+                <Form.Label>
+                  Village <span className="requiredStar">*</span>
+                </Form.Label>
                 <Form.Control
-                  required
+                  // required
                   onChange={onHandleChange}
                   name="village_name"
                   type="text"
                   placeholder=""
-                  defaultValue={survivorData && survivorData.village_name && survivorData.village_name}
+                  defaultValue={
+                    survivorData &&
+                    survivorData.village_name &&
+                    survivorData.village_name
+                  }
                 />
-                {/* <Form.Control.Feedback type="invalid">
-                  Please enter village name
-                </Form.Control.Feedback> */}
-                {customError && customError.name ==="village_name"&& <p style={{color: "red", fontSize:12}}> {customError.message}</p>}
-
+                {customError.name == "village_name" && (
+                  <small className="mt-4 mb-2 text-danger">
+                    {customError && customError.message}
+                  </small>
+                )}
               </Form.Group>
               <Form.Group className="form-group" as={Col} md="6">
-                <Form.Label>Panchayat <span className="requiredStar">*</span></Form.Label>
+                <Form.Label>
+                  Panchayat <span className="requiredStar">*</span>
+                </Form.Label>
                 <Form.Select
-                  required
+                  // required
                   onChange={onHandleChange}
                   name="panchayat_name"
-                  value={survivorData && survivorData.panchayat_name && survivorData.panchayat_name}
-                  aria-label="Default select example">
-                  <option hidden={true} value={""}>Open this select menu</option>
+                  value={
+                    survivorData &&
+                    survivorData.panchayat_name &&
+                    survivorData.panchayat_name
+                  }
+                  aria-label="Default select example"
+                >
+                  <option hidden={true} value={""}>
+                    Open this select menu
+                  </option>
                   <option value="1">One</option>
                   <option value="2">Two</option>
                   <option value="3">Three</option>
                 </Form.Select>
-                {/* <Form.Control.Feedback type="invalid">
-                  Please select Panchayat
-                </Form.Control.Feedback> */}
-                {customError && customError.name ==="panchayat_name"&& <p style={{color: "red", fontSize:12}}> {customError.message}</p>}
-
+                {customError.name == "panchayat_name" && (
+                  <small className="mt-4 mb-2 text-danger">
+                    {customError && customError.message}
+                  </small>
+                )}
               </Form.Group>
               <Form.Group className="form-group" as={Col} md="6">
                 <Form.Label>Pincode</Form.Label>
                 <Form.Control
-                  defaultValue={survivorData && survivorData.pincode && survivorData.pincode}
+                  defaultValue={
+                    survivorData && survivorData.pincode && survivorData.pincode
+                  }
                   onChange={onHandleChange}
                   name="pincode"
                   type="text"
                   placeholder=""
                   min={0}
-                  maxLength={7}
+                  maxLength={6}
                 />
+                {customError.name == "pincode" && (
+                  <small className="mt-4 mb-2 text-danger">
+                    {customError && customError.message}
+                  </small>
+                )}
               </Form.Group>
             </Row>
           </div>
@@ -758,12 +923,22 @@ const AddSurvivorsForm = (props) => {
               <i class="fal fa-calendar-alt"></i>
             </h3>
             <Row>
-              <Form.Group className="form-group" as={Col} md="6" >
-                <Form.Label>Date of Birth <span className="requiredStar">*</span></Form.Label>
-                <DatePicker datePickerChange={onHandleChange} name="date_of_birth" flag={"survivor"}
-                  message={" Please enter date of birth."} data={survivorData && survivorData.date_of_birth} />
-                {customError && customError.name ==="date_of_birth"&& <p style={{color: "red", fontSize:12}}> {customError.message}</p>}
-
+              <Form.Group className="form-group" as={Col} md="6">
+                <Form.Label>
+                  Date of Birth <span className="requiredStar">*</span>
+                </Form.Label>
+                <DatePicker
+                  datePickerChange={onHandleChange}
+                  name="date_of_birth"
+                  flag={"survivor"}
+                  message={" Please enter date of birth."}
+                  data={survivorData && survivorData.date_of_birth}
+                />
+                {customError.name == "date_of_birth" && (
+                  <small className="mt-4 mb-2 text-danger">
+                    {customError && customError.message}
+                  </small>
+                )}
               </Form.Group>
 
               {/* <Form.Group className="form-group" as={Col} md="6" controlId="dob">
@@ -789,25 +964,36 @@ const AddSurvivorsForm = (props) => {
               <Form.Group className="form-group" as={Col} md="6">
                 <Form.Label>Age Now </Form.Label>
                 <Form.Control
-                  defaultValue={survivorData && survivorData.age_now && survivorData.age_now}
+                  defaultValue={
+                    survivorData && survivorData.age_now && survivorData.age_now
+                  }
                   // onChange={onHandleChange}
                   disabled={true}
                   type="number"
                   placeholder=""
                   name="age_now"
-
                 />
               </Form.Group>
-              <Form.Group className="form-group" as={Col} md="6" controlId="dot">
-                <Form.Label>Date of Trafficking <span className="requiredStar">*</span></Form.Label>
+              <Form.Group
+                className="form-group"
+                as={Col}
+                md="6"
+                controlId="dot"
+              >
+                <Form.Label>
+                  Date of Trafficking <span className="requiredStar">*</span>
+                </Form.Label>
                 <DatePicker
-                  
-                  message={" Please enter date of Trafficking."}
+                  // message={" Please enter date of Trafficking."}
                   name="date_of_trafficking"
                   datePickerChange={onHandleChange}
                   data={survivorData && survivorData.date_of_trafficking}
                 />
-                {customError && customError.name ==="date_of_trafficking"&& <p style={{color: "red", fontSize:12}}>{customError.message}</p>}
+                {customError.name == "date_of_trafficking" && (
+                  <small className="mt-4 mb-2 text-danger">
+                    {customError && customError.message}
+                  </small>
+                )}
                 {/* <Form.Control
               required
                 onChange={onHandleChange}
@@ -820,7 +1006,12 @@ const AddSurvivorsForm = (props) => {
                 Please enter date of Trafficking.
               </Form.Control.Feedback> */}
               </Form.Group>
-              <Form.Group className="form-group" as={Col} md="6" controlId="doj">
+              <Form.Group
+                className="form-group"
+                as={Col}
+                md="6"
+                controlId="doj"
+              >
                 <Form.Label>Age When Trafficked </Form.Label>
                 <Form.Control
                   // defaultValue={survivorData && survivorData.age_when_trafficked && survivorData.age_when_trafficked}
@@ -834,7 +1025,7 @@ const AddSurvivorsForm = (props) => {
               </Form.Group>
             </Row>
           </div>
-            {/* <Form.Group
+          {/* <Form.Group
             className="form-group"
             as={Col}
             md="6"
@@ -869,7 +1060,7 @@ const AddSurvivorsForm = (props) => {
 }
             </div>
           </Form.Group> */}
-            {/* <Form.Group className="form-group" as={Col} md="6">
+          {/* <Form.Group className="form-group" as={Col} md="6">
             <Form.Label>Age Now </Form.Label>
             <Form.Control
               onChange={onHandleChange}
@@ -885,15 +1076,24 @@ const AddSurvivorsForm = (props) => {
             </h3>
             <Row>
               <Form.Group className="form-group" as={Col} md="6">
-                <Form.Label>Police Station <span className="requiredStar">*</span></Form.Label>
+                <Form.Label>
+                  Police Station <span className="requiredStar">*</span>
+                </Form.Label>
                 <Form.Select
-                  isInvalid={!!errors.police_station}
-                  required
+                  // isInvalid={!!errors.police_station}
+                  // required
                   onChange={onHandleChange}
-                  value={survivorData && survivorData.police_station && survivorData.police_station}
+                  value={
+                    survivorData &&
+                    survivorData.police_station &&
+                    survivorData.police_station
+                  }
                   name="police_station"
-                  aria-label="Default select example">
-                  <option hidden="true" value={""}>Open this select menu</option>
+                  aria-label="Default select example"
+                >
+                  <option hidden="true" value={""}>
+                    Open this select menu
+                  </option>
 
                   {policeStationList &&
                     policeStationList.length > 0 &&
@@ -901,10 +1101,11 @@ const AddSurvivorsForm = (props) => {
                       return <option value={data._id}>{data.name}</option>;
                     })}
                 </Form.Select>
-                {/* <Form.Control.Feedback type="invalid">
-                  Please select Police Station
-                </Form.Control.Feedback> */}
-                {customError && customError.name ==="police_station"&& <p style={{color: "red", fontSize:12}}> {customError.message}</p>}
+                {customError.name == "police_station" && (
+                  <small className="mt-4 mb-2 text-danger">
+                    {customError && customError.message}
+                  </small>
+                )}
               </Form.Group>
               <Form.Group className="form-group" as={Col} md="6">
                 <Form.Label>SHG</Form.Label>
@@ -912,23 +1113,38 @@ const AddSurvivorsForm = (props) => {
                   onChange={onHandleChange}
                   name="shg"
                   value={survivorData && survivorData.shg && survivorData.shg}
-                  aria-label="Default select example">
-                  {shgList && shgList.data &&
+                  aria-label="Default select example"
+                >
+                  <option hidden={true} value={""}>
+                    Open this select menu
+                  </option>
+                  {shgList &&
+                    shgList.data &&
                     shgList.data.length > 0 &&
                     shgList.data.map((data) => {
-                      return <option value={data._id}>{data.name.toUpperCase()}</option>;
+                      return (
+                        <option value={data._id}>
+                          {data.name.toUpperCase()}
+                        </option>
+                      );
                     })}
-                  <option hidden={true} value={""}>Open this select menu</option>
                 </Form.Select>
               </Form.Group>
               <Form.Group className="form-group" as={Col} md="6">
                 <Form.Label>Collectives</Form.Label>
                 <Form.Select
                   onChange={onHandleChange}
-                  name="collectives" value={survivorData && survivorData.collectives && survivorData.collectives}
-                  aria-label="Default select example">
+                  name="collectives"
+                  value={
+                    survivorData &&
+                    survivorData.collectives &&
+                    survivorData.collectives
+                  }
+                  aria-label="Default select example"
+                >
                   <option hidden={true}>Open this select menu</option>
-                  {collectivesList && collectivesList.data &&
+                  {collectivesList &&
+                    collectivesList.data &&
                     collectivesList.data.length > 0 &&
                     collectivesList.data.map((data) => {
                       return <option value={data._id}>{data.name}</option>;
@@ -936,30 +1152,47 @@ const AddSurvivorsForm = (props) => {
                 </Form.Select>
               </Form.Group>
               <Form.Group className="form-group" as={Col} md="6">
-                <Form.Label>Status in tafteesh <span className="requiredStar">*</span></Form.Label>
+                <Form.Label>
+                  Status in tafteesh <span className="requiredStar">*</span>
+                </Form.Label>
 
                 <Form.Select
-                  isInvalid={!!errors.police_station}
-                  required
+                  // isInvalid={!!errors.police_station}
+                  // required
                   onChange={onHandleChange}
                   name="status_in_tafteesh"
-                  value={survivorData && survivorData.status_in_tafteesh && survivorData.status_in_tafteesh}
-                  aria-label="Default select example">
-                  <option hidden="true" value={""}>Open this select menu</option>
+                  value={
+                    survivorData &&
+                    survivorData.status_in_tafteesh &&
+                    survivorData.status_in_tafteesh
+                  }
+                  aria-label="Default select example"
+                >
+                  <option hidden="true" value={""}>
+                    Open this select menu
+                  </option>
                   <option value="active">Active</option>
                   <option value="dropped-out">Dropped out</option>
                   <option value="tentative">Tentative</option>
                 </Form.Select>
-                {/* <Form.Control.Feedback type="invalid">
-                  Please select Status in tafteesh
-                </Form.Control.Feedback> */}
-                {customError && customError.name ==="status_in_tafteesh"&& <p style={{color: "red", fontSize:12}}> {customError.message}</p>}
+                {customError.name == "status_in_tafteesh" && (
+                  <small className="mt-4 mb-2 text-danger">
+                    {customError && customError.message}
+                  </small>
+                )}
               </Form.Group>
               <Form.Group className="form-group" as={Col} md="6">
-                <Form.Label>Notes for status change in tafteesh <span className="requiredStar">*</span></Form.Label>
+                <Form.Label>
+                  Notes for status change in tafteesh{" "}
+                  <span className="requiredStar">*</span>
+                </Form.Label>
                 <Form.Control
-                  required
-                  defaultValue={survivorData && survivorData.notes_for_status_change && survivorData.notes_for_status_change}
+                  // required
+                  defaultValue={
+                    survivorData &&
+                    survivorData.notes_for_status_change &&
+                    survivorData.notes_for_status_change
+                  }
                   onChange={onHandleChange}
                   type="text"
                   placeholder=""
@@ -968,35 +1201,43 @@ const AddSurvivorsForm = (props) => {
                 {/* <Form.Control.Feedback type="invalid">
                   Please enter Notes for status change in tafteesh
                 </Form.Control.Feedback> */}
-                {customError && customError.name ==="notes_for_status_change"&& <p style={{color: "red", fontSize:12}}> {customError.message}</p>}
+                {customError &&
+                  customError.name === "notes_for_status_change" && (
+                    <p style={{ color: "red", fontSize: 12 }}>
+                      {" "}
+                      {customError.message}
+                    </p>
+                  )}
               </Form.Group>
             </Row>
           </div>
 
-
           <Row className="justify-content-between">
             <Form.Group as={Col} xs="auto">
-              <button onClick={onCancelBtn} className="text-uppercase cancle_btn">
+              <button
+                onClick={onCancelBtn}
+                className="text-uppercase cancle_btn"
+              >
                 Cancel
               </button>
             </Form.Group>
             <Form.Group as={Col} xs="auto">
               <Button
                 disabled={resultLoad === true ? true : false}
-                // disabled={ survivorData && !survivorData.survivor_name ? true:
-                // !survivorData.gender ? true : !survivorData.marital_status ? true : 
-                // !survivorData.village_name ? true: !survivorData.state ? true :
-                //  !survivorData.district ? true : !survivorData.panchayat_name ? true :
-                //   !survivorData.block ? true: !survivorData.police_station ? true :
-                //    !survivorData.status_in_tafteesh ? true : !survivorData.notes_for_status_change ? true : false}
-                // onClick={(e)=>handleSubmit(e)}
-                className="submit_btn text-uppercase" type="submit">
-                Submit
+                onClick={(e)=>addSurvivorFunc(e)}
+                className="submit_btn text-uppercase"
+                type="submit"
+              >
+                {resultLoad && resultLoad === true ? (
+                  <div class="spinner-border bigSpinnerWidth text-info text-center"></div>
+                ) : (
+                  "Submit"
+                )}
               </Button>
             </Form.Group>
           </Row>
         </Form>
-      }
+      )}
     </>
   );
 };

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Form, Row, Col } from "react-bootstrap";
 import { KamoTopbar } from "../../components";
 import { MDBTooltip, MDBBtn } from "mdb-react-ui-kit";
@@ -7,38 +7,24 @@ import { Link, useHistory } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import NotificationPage from "../../components/NotificationPage";
 import axios from "axios";
-import {
-  getMasterBlockList,
-  getStateList,
-  getDistrictList,
-} from "../../redux/action";
-
-import moment from "moment";
+import { getCITVersionList } from "../../redux/action";
 import Dropdown from "react-bootstrap/Dropdown";
+import DropdownButton from "react-bootstrap/DropdownButton";
+import moment from "moment";
 import CsvImportPage from "../../components/CsvImportPage";
 import Papa from "papaparse";
-import BlocksDataTable from "./BlocksDataTable";
 import AlertComponent from "../../components/AlertComponent";
+import CitVersionDataTable from "./CitVersionDataTable";
 
-const KamoBlocks = (props) => {
+const CitVersion = (props) => {
   const [modalAddShow, setModalAddShow] = useState(false);
-
+  const [isLoading, setIsLoading] = useState(true);
   const dispatch = useDispatch();
   const [open, setOpen] = useState(false);
-  const masterBlockList = useSelector((state) => state.masterBlockList);
-  const stateList = useSelector((state) => state.stateList);
-  const districtList = useSelector((state) => state.districtList);
-
-  const [fieldData, setFieldData] = useState({ field: "", message: "" });
-  const [loader, setLoader] = useState(false);
-
-  const [showAlert, setShowAlert] = useState(false);
-  const handleCloseAlert = () => setShowAlert(false);
-  const [erorMessage, setErorMessage] = useState("");
-
-  const [addBlockData, setAddBlockData] = useState({});
+  const citVersionList = useSelector((state) => state.citVersionList);
+  const [addShgData, setAddShgData] = useState({});
   const [updateMessage, setUpdateMessage] = useState("");
-  const api = "https://tafteesh-staging-node.herokuapp.com/api/block";
+  const api = "https://tafteesh-staging-node.herokuapp.com/api/cit-version";
   const token = localStorage.getItem("accessToken");
   let axiosConfig = {
     headers: {
@@ -48,6 +34,24 @@ const KamoBlocks = (props) => {
   };
   const [activeClass, setActiveClass] = useState(false);
   const [selectedData, setSelectedData] = useState({});
+  const [showAlert, setShowAlert] = useState(false);
+  const handleCloseAlert = () => setShowAlert(false);
+  const [fieldData, setFieldData] = useState({ field: "", message: "" });
+  const [loader, setLoader] = useState(false);
+
+  //////// delete function call //////////
+  const onDeleteChangeFunc = () => {
+    if (selectedData && !selectedData._id) {
+      alert("Please select one partner");
+    } else {
+      setShowAlert(true);
+    }
+  };
+
+  //   const onDeleteFunction=()=>{
+  //     dispatch(deleteCitDimension(selectedData._id))
+  //     setShowAlert(false)
+  //   }
 
   const handleClick = () => {
     setOpen(true);
@@ -61,152 +65,101 @@ const KamoBlocks = (props) => {
     setSelectedData(item);
     setActiveClass(true);
   };
-
   useEffect(() => {
-    dispatch(getMasterBlockList());
-    dispatch(getStateList());
+    dispatch(getCITVersionList());
   }, [props]);
-  const [isLoading, setIsLoading] = useState(true);
-
   useEffect(() => {
     setTimeout(() => {
       setIsLoading(false);
     }, 1000);
-  }, [masterBlockList]);
-  useEffect(() => {
-    if (addBlockData && addBlockData.stateId && addBlockData.stateId._id) {
-      dispatch(getDistrictList(addBlockData.stateId._id));
-    } else {
-      dispatch(getDistrictList(addBlockData.stateId));
-    }
-  }, [addBlockData.stateId]);
-
+  }, [citVersionList]);
   ////// on cancel button function ///
   const onCancel = () => {
     setModalAddShow(false);
-    setAddBlockData({});
-    setFieldData({
-        field: "",
-        message: "",
-      });
+    setAddShgData({});
+    setFieldData({ field: "", message: "" });
     // setSelectedData({})
   };
 
   const ongotoEdit = () => {
     if (selectedData && !selectedData._id) {
-      alert("Please select one block");
+      alert("Please select one CIT Version");
     } else {
       setModalAddShow(true);
-      setAddBlockData(selectedData);
+      setAddShgData(selectedData);
     }
   };
 
   const ongotoAdd = () => {
     setModalAddShow(true);
-    setAddBlockData({});
+    setAddShgData({});
     setSelectedData({});
   };
 
-  /////// delete function call //////////
-  const onDeleteChangeFunc = () => {
-    if (selectedData && !selectedData._id) {
-      alert("Please select one Block ");
-    } else {
-      setShowAlert(true);
-    }
-  };
 
-  const onDeleteFunction = () => {
-    axios
-      .patch(api + "/delete/" + selectedData._id)
-      .then((response) => {
-        handleClick();
-        setUpdateMessage(response && response.data.message);
-        if (response.data && response.data.error === false) {
-          const { data } = response;
-          setSelectedData({});
-          dispatch(getMasterBlockList());
-          setShowAlert(false);
-          setErorMessage("");
-        }
-      })
-      .catch((error) => {
-        //console.log(error, "partner error");
+  useEffect(()=>{
+    if (addShgData && addShgData.name) {
+        setFieldData({ field: "name", message: "" });
+      } 
+      else{}
+    },[addShgData])
+  ///// add shg api cll function /////
+
+  const addShgFunc = (e) => {
+    e.preventDefault();
+
+    if (addShgData && !addShgData.name) {
+      setFieldData({
+        field: "name",
+        message: "Please enter Version",
       });
-  };
-
-  useEffect(() => {
-    if (addBlockData && addBlockData.name) {
-      setFieldData({ field: "name", message: "" });
-    } else if (addBlockData && addBlockData.stateId) {
-      setFieldData({ field: "stateId", message: "" });
-    } else if (addBlockData && addBlockData.districtId) {
-      setFieldData({ field: "districtId", message: "" });
+     
     } else {
       setFieldData({ field: "", message: "" });
-    }
-  }, [addBlockData]);
-  ///// add Organisation api cll function /////
+      var body = addShgData;
 
-  const addBlockFunc = (e) => {
-    e.preventDefault();
-    if (addBlockData && !addBlockData.name) {
-      setFieldData({ field: "name", message: "Please enter Block Name" });
-    } else if (addBlockData && !addBlockData.stateId) {
-      setFieldData({ field: "stateId", message: "Please select State Name" });
-    } else if (addBlockData && !addBlockData.districtId) {
-      setFieldData({
-        field: "districtId",
-        message: "Please select District Name",
-      });
-    } else {
-        setFieldData({
-            field: "",
-            message: "",
-          });
-      var body = addBlockData;
-
-      if (addBlockData && addBlockData._id) {
-        setLoader(true);
+      if (addShgData && addShgData._id) {
+        setLoader(true)
         axios
-          .patch(api + "/update/" + addBlockData._id, body, axiosConfig)
+          .patch(api + "/update/" + addShgData._id, body, axiosConfig)
           .then((response) => {
             console.log(response);
             handleClick();
 
             setUpdateMessage(response && response.data.message);
-            setLoader(false);
+            setLoader(false)
             if (response.data && response.data.error === false) {
               const { data } = response;
-              dispatch(getMasterBlockList());
-              setAddBlockData({});
+              dispatch(getCITVersionList());
+              setModalAddShow(false);
+              setAddShgData({});
+
               // setSelectedData({});
               setActiveClass(false);
-              setModalAddShow(false);
             }
           })
           .catch((error) => {
-            setLoader(false);
-            console.log(error, "shg add error");
+            setLoader(false)
+            console.log(error, "cit add error");
           });
       } else {
-        setLoader(true);
+        setLoader(true)
         axios
           .post(api + "/create", body, axiosConfig)
           .then((response) => {
             console.log(response);
             handleClick();
             setUpdateMessage(response && response.data.message);
-            setLoader(false);
+            setLoader(false)
             if (response.data && response.data.error === false) {
               const { data } = response;
-              dispatch(getMasterBlockList());
-              setAddBlockData({});
+              dispatch(getCITVersionList());
               setModalAddShow(false);
+              setAddShgData({});
             }
           })
           .catch((error) => {
-            setLoader(false);
+            setLoader(false)
             console.log(error, "shg add error");
           });
       }
@@ -234,18 +187,18 @@ const KamoBlocks = (props) => {
     e.preventDefault();
 
     // Headers for each column
-    let headers = ["Id,Block,State,District"];
+    let headers = ["Id,CITVersion,CreatedAt"];
 
     // Convert users data to a csv
-    let usersCsv = masterBlockList.reduce((acc, user) => {
-      const { _id, name, stateId, districtId } = user;
-      acc.push([_id, name, stateId, districtId].join(","));
+    let usersCsv = citVersionList.reduce((acc, user) => {
+      const { _id, name, createdAt } = user;
+      acc.push([_id, name, createdAt].join(","));
       return acc;
     }, []);
 
     downloadFile({
       data: [...headers, ...usersCsv].join("\n"),
-      fileName: "blockList.csv",
+      fileName: "citDimension.csv",
       fileType: "text/csv",
     });
   };
@@ -255,32 +208,25 @@ const KamoBlocks = (props) => {
   const [importCSVdata, setImportCSVdata] = useState([]);
   const fileReader = new FileReader();
   const [importCsvOpenModel, setImportCsvOpenModel] = useState(false);
-  const [sampleArr, setSampleArr] = useState([
-    {
-      name: "Andal",
-      stateId: "62a9a7c3c05c6a1059f92eb0",
-      districtId: "62a9e0bd700081c79aaf47e6",
-    },
-  ]);
+  const [sampleArr, setSampleArr] = useState([{ name: "Mental Issue" }]);
 
   const onImportCsv = () => {
     setImportCsvOpenModel(!importCsvOpenModel);
   };
 
   const downloadSampleCsv = (e) => {
-    e.preventDefault();
-    let headers = ["Block,State,District"];
+    let headers = ["CITDimension"];
 
     // Convert users data to a csv
     let usersCsv = sampleArr.reduce((acc, user) => {
-      const { name, stateId, districtId } = user;
-      acc.push([name, stateId, districtId].join(","));
+      const { name } = user;
+      acc.push([name].join(","));
       return acc;
     }, []);
 
     downloadFile({
       data: [...headers, ...usersCsv].join("\n"),
-      fileName: "blockList.csv",
+      fileName: "citVersion.csv",
       fileType: "text/csv",
     });
   };
@@ -319,11 +265,7 @@ const KamoBlocks = (props) => {
       importCSVdata.length > 0 &&
       importCSVdata.map((item) => {
         return (
-          (obj = {
-            name: item && item.Block,
-            stateId: item && item.State,
-            districtId: item && item.District,
-          }),
+          (obj = { name: item && item.CITDimension }),
           console.log(obj, "obj"),
           axios
             .post(api + "/create", obj, axiosConfig)
@@ -333,7 +275,7 @@ const KamoBlocks = (props) => {
               setUpdateMessage(response && response.data.message);
               if (response.data && response.data.error === false) {
                 const { data } = response;
-                dispatch(getMasterBlockList());
+                dispatch(getCITVersionList());
                 setImportCSVdata([]);
                 setFile();
                 setImportCsvOpenModel(false);
@@ -358,7 +300,7 @@ const KamoBlocks = (props) => {
         <div className="bodyright">
           <div className="row justify-content-between">
             <div className="col-auto">
-              <h2 className="page_title">Blocks List</h2>
+              <h2 className="page_title">CIT Version List</h2>
             </div>
           </div>
           <div className="white_box_shadow_20 survivors_table_wrap vieweditdeleteMargin40 position-relative">
@@ -399,52 +341,20 @@ const KamoBlocks = (props) => {
                   <i className="fal fa-pencil"></i>
                 </span>
               </MDBTooltip>
-              <MDBTooltip
-                tag="button"
-                wrapperProps={{ className: "delete_btn" }}
-                title="Delete"
-              >
-                <span onClick={() => onDeleteChangeFunc()}>
-                  <i className="fal fa-trash-alt"></i>
-                </span>
-              </MDBTooltip>
+              {/* <MDBTooltip tag="button" wrapperProps={{ className: "delete_btn" }} title='Delete'>
+                                <span onClick={()=> onDeleteChangeFunc()}>
+                                    <i className="fal fa-trash-alt"></i>
+                                </span>
+                            </MDBTooltip> */}
             </div>
-            <BlocksDataTable
-              masterBlockList={
-                masterBlockList && masterBlockList.length > 0 && masterBlockList
+
+            <CitVersionDataTable
+              citVersionList={
+                citVersionList && citVersionList.length > 0 && citVersionList
               }
               onSelectRow={onSelectRow}
               isLoading={isLoading}
             />
-            {/* <div className="table-responsive">
-                            <table className="table table-borderless mb-0">
-                                <thead>
-                                    <tr>
-                                        <th width="33.33%">Name </th>
-                                        <th width="33.33%">createdAt</th>
-
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {masterBlockList && masterBlockList.length > 0 ? masterBlockList.map((item) => {
-                                        return (
-                                            <tr className={[item._id === selectedData._id && activeClass === true && 'current']}
-                                                onClick={() => onSelectRow(item)}>
-                                                <td>{item && item.name && item.name}</td>
-                                                <td>{item && item.createdAt && moment(item.createdAt).format("DD/MMM/YYYY")}</td>
-                                            </tr>
-                                        )
-                                    })
-                                        :
-                                        <tr>
-                                            <td className="text-center" colSpan={2}>
-                                                <b>NO Data Found !!</b>
-                                            </td>
-                                        </tr>
-                                    }
-                                </tbody>
-                            </table>
-                        </div> */}
           </div>
         </div>
         {importCsvOpenModel === true && (
@@ -472,7 +382,6 @@ const KamoBlocks = (props) => {
             </Modal.Body>
           </Modal>
         )}
-
         <Modal
           className="addFormModal"
           show={modalAddShow}
@@ -483,7 +392,9 @@ const KamoBlocks = (props) => {
         >
           <Modal.Header closeButton>
             <Modal.Title id="contained-modal-title-vcenter">
-              {addBlockData && addBlockData._id ? "Update Block" : "Add Block"}
+              {addShgData && addShgData._id
+                ? "Update CIT Version"
+                : "Add CIT Version"}
             </Modal.Title>
           </Modal.Header>
           <Modal.Body>
@@ -491,88 +402,22 @@ const KamoBlocks = (props) => {
               <Form>
                 <Row>
                   <Form.Group className="form-group" as={Col} md="6">
-                    <Form.Label>Name </Form.Label>
+                    <Form.Label>Version </Form.Label>
                     <Form.Control
+                      defaultValue={
+                        addShgData && addShgData.name && addShgData.name
+                      }
                       type="text"
                       placeholder=""
-                      defaultValue={
-                        addBlockData && addBlockData.name && addBlockData.name
-                      }
                       name="name"
                       onChange={(e) =>
-                        setAddBlockData({
-                          ...addBlockData,
+                        setAddShgData({
+                          ...addShgData,
                           [e.target.name]: e.target.value,
                         })
                       }
                     />
-                    {fieldData.field == "name" && (
-                      <small className="mt-4 mb-2 text-danger">
-                        {fieldData && fieldData.message}
-                      </small>
-                    )}
-                  </Form.Group>
-                  <Form.Group className="form-group" as={Col} md="6">
-                    <Form.Label>State </Form.Label>
-                    <Form.Select
-                      name="stateId"
-                      value={
-                        addBlockData &&
-                        addBlockData.stateId &&
-                        addBlockData.stateId._id
-                      }
-                      onChange={(e) =>
-                        setAddBlockData({
-                          ...addBlockData,
-                          [e.target.name]: e.target.value,
-                        })
-                      }
-                    >
-                      <option hidden={"true"} value="">Default select</option>
-                      {stateList &&
-                        stateList.length > 0 &&
-                        stateList.map((item) => {
-                          return (
-                            <option value={item._id}>
-                              {item && item.name}
-                            </option>
-                          );
-                        })}
-                    </Form.Select>
-                    {fieldData.field == "stateId" && (
-                      <small className="mt-4 mb-2 text-danger">
-                        {fieldData && fieldData.message}
-                      </small>
-                    )}
-                  </Form.Group>
-                  <Form.Group className="form-group" as={Col} md="6">
-                    <Form.Label>District </Form.Label>
-                    <Form.Select
-                      name="districtId"
-                      value={
-                        addBlockData &&
-                        addBlockData.districtId &&
-                        addBlockData.districtId._id
-                      }
-                      onChange={(e) =>
-                        setAddBlockData({
-                          ...addBlockData,
-                          [e.target.name]: e.target.value,
-                        })
-                      }
-                    >
-                      <option hidden={"true"} value="">Default select</option>
-                      {districtList &&
-                        districtList.length > 0 &&
-                        districtList.map((item) => {
-                          return (
-                            <option value={item._id}>
-                              {item && item.name}
-                            </option>
-                          );
-                        })}
-                    </Form.Select>
-                    {fieldData.field == "districtId" && (
+                     {fieldData.field == "name" && (
                       <small className="mt-4 mb-2 text-danger">
                         {fieldData && fieldData.message}
                       </small>
@@ -593,16 +438,13 @@ const KamoBlocks = (props) => {
                   <Form.Group as={Col} md="auto">
                     <Button
                       type="submit"
-                      disabled={loader == true ? true : false}
-                      onClick={addBlockFunc}
+                      disabled={loader == true ? true: false}
+                      onClick={addShgFunc}
                       className="submit_btn shadow-0"
                     >
-                      {" "}
-                      {loader && loader === true ? (
+                    {loader && loader === true ? (
                         <div class="spinner-border bigSpinnerWidth text-info text-center"></div>
-                      ) : (
-                        "Submit"
-                      )}
+                      ): "Submit"}
                     </Button>
                   </Form.Group>
                 </Row>
@@ -615,11 +457,10 @@ const KamoBlocks = (props) => {
         <AlertComponent
           showAlert={showAlert}
           handleCloseAlert={handleCloseAlert}
-          onDeleteFunction={onDeleteFunction}
         />
       )}
     </>
   );
 };
 
-export default KamoBlocks;
+export default CitVersion;

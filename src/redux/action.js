@@ -1933,6 +1933,67 @@ export const getCitDimensionList = () => {
   };
 };
 
+
+
+////////////getCitDimensionList by version id /////
+
+export const getCitDimensionListByVersionId = (id) => {
+  return (dispatch) => {
+    axios
+      .get(api + "cit-dimension/list-by-version/"+id,axiosConfig)
+      .then((response) => {
+        //console.log(response);
+        if (response.data && response.data.error == false) {
+          const { data } = response;
+
+          dispatch(citDimensionList(data.data));
+        }
+      })
+      .catch((error) => {
+        //console.log(error, "CITDimension error");
+      });
+  };
+};
+
+
+///////// getCitDimensionListAll with version data //////
+// export const getCitDimensionListAll = () => {
+//   return (dispatch) => {
+//     axios
+//       .get(api + "cit-dimension/list-all",axiosConfig)
+//       .then((response) => {
+//         //console.log(response);
+//         if (response.data && response.data.error == false) {
+//           const { data } = response;
+
+//           dispatch(citDimensionList(data.data));
+//         }
+//       })
+//       .catch((error) => {
+//         //console.log(error, "CITDimension error");
+//       });
+//   };
+// };
+
+/////////// cit dimension list with CIT version /////
+export const getCitDimensionAllList = () => {
+  return (dispatch) => {
+    axios
+      .get(api + "cit-dimension/list-all",axiosConfig)
+      .then((response) => {
+        //console.log(response);
+        if (response.data && response.data.error == false) {
+          const { data } = response;
+
+          dispatch(citDimensionList(data.data));
+        }
+      })
+      .catch((error) => {
+        //console.log(error, "CITDimension error");
+      });
+  };
+};
+
 export const deleteCitDimension = (id) => {
   return (dispatch) => {
     axios
@@ -1942,7 +2003,8 @@ export const deleteCitDimension = (id) => {
         if (response.data && response.data.error === false) {
           const { data } = response;
 
-          dispatch(getCitDimensionList());
+          // dispatch(getCitDimensionList());
+          dispatch(getCitDimensionAllList())
         }
       })
       .catch((error) => {
@@ -2005,6 +2067,8 @@ export const getCitDimensionQuestionList = () => {
       });
   };
 };
+
+
 const citDimensionQuestionListByDimension = (data) => {
   //console.log(data, "CITDimensionQuestion reducers");
   return {
@@ -2262,6 +2326,113 @@ export const getAdminDashboardData = () => {
         }
       })
       .catch((error) => {
+      });
+  };
+};
+
+
+
+const notificationList = (data) => {
+  //console.log(data, "CITreducers");
+  return {
+    type: "NOTIFICATION_LIST",
+    data: data,
+  };
+};
+
+export const getNotificationList = (id) => {
+  console.log(id,"id");
+  return (dispatch) => {
+    axios
+    .get(api + "notification/list/"+id)
+      .then((response) => {
+        if (response.data && response.data.error === false) {
+          const { data } = response;
+          console.log(data,"data")
+          dispatch(notificationList(data.data));
+        }
+        else{
+          dispatch(notificationList({}));
+        }
+      })
+      .catch((error) => {
+      });
+  };
+};
+
+
+const citVersionList = (data) => {
+  return {
+    type: "CIT_VERSION_LIST",
+    data: data,
+  };
+};
+
+export const getCITVersionList = (id) => {
+  return (dispatch) => {
+    axios
+      .get(api + "cit-version/list")
+      .then((response) => {
+        console.log(response);
+        if (response.data && response.data.error === false) {
+          const { data } = response;
+
+          dispatch(citVersionList(data.data));
+        }
+      })
+      .catch((error) => {
+        //console.log(error, "partner error");
+      });
+  };
+};
+
+
+
+const pendingItemList = (data) => {
+  //console.log(data, "state reducers");
+  return {
+    type: "PENDING_ITEM_LIST",
+    data: data,
+  };
+};
+export const getPendingItemList = (id) => {
+return (dispatch) => {
+    axios
+      .get(api + "pending-action/list/"+id,axiosConfig)
+      .then((response) => {
+        // console.log(response);
+        if (response.data && response.data.error == false) {
+          const { data } = response;
+          dispatch(pendingItemList(data.data));
+        }
+      })
+      .catch((error) => {
+        //console.log(error, "actList error");
+      });
+  };
+};
+
+
+const survivorArchiveItem = (data) => {
+  //console.log(data, "state reducers");
+  return {
+    type: "SURVIVOR_ARCHIVE_ITEM_LIST",
+    data: data,
+  };
+};
+export const getArchiveItem = (module,userId) => {
+return (dispatch) => {
+    axios
+      .get(api + "deleted-data/list?module="+module+"&user="+userId,axiosConfig)
+      .then((response) => {
+        // console.log(response);
+        if (response.data && response.data.error == false) {
+          const { data } = response;
+          dispatch(survivorArchiveItem(data.data));
+        }
+      })
+      .catch((error) => {
+        //console.log(error, "actList error");
       });
   };
 };

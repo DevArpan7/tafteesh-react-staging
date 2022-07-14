@@ -39,6 +39,12 @@ const KamoPartners = (props) => {
   };
   const [activeClass, setActiveClass] = useState(false);
   const [selectedData, setSelectedData] = useState({});
+  
+const [partnerName,setPartnerName] = useState('')
+const [fieldData,setFieldData] = useState({field:"",message :""})
+const [phoneno,setPhoneno] = useState('')
+const [partEmail,setPartEmail] = useState('')
+const [loader, setLoader] = useState(false);
 
   const handleClick = () => {
     setOpen(true);
@@ -65,6 +71,7 @@ const KamoPartners = (props) => {
   const onCancel = () => {
     setModalAddShow(false);
     setAddPartnerData({});
+    setFieldData({ field: "", message: "" });
     // setSelectedData({});
   };
 
@@ -102,21 +109,79 @@ const KamoPartners = (props) => {
     console.log(addPartnerData, "org data");
   }, [addPartnerData]);
 
+  useEffect(() => {
+    console.log(fieldData, "fieldData");
+    if (addPartnerData && addPartnerData.name) {
+      setPartnerName(false);
+      setFieldData({ field: "name", message: "" });
+    } else if (addPartnerData && addPartnerData.phone_no) {
+      setPhoneno(false);
+      setFieldData({ field: "phone_no", message: "" });
+    } else if (addPartnerData && addPartnerData.email) {
+      setPartEmail(false);
+      setFieldData({ field: "email", message: "" });
+    } else {
+    }
+    setFieldData({ field: "", message: "" });
+    
+  
+  }, [addPartnerData]);
   ///// add Organisation api cll function /////
 
   const addPartnerFunc = (e) => {
     e.preventDefault();
-    var body = addPartnerData;
     var pattern = new RegExp(
       /^(("[\w-\s]+")|([\w-]+(?:\.[\w-]+)*)|("[\w-\s]+")([\w-]+(?:\.[\w-]+)*))(@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$)|(@\[?((25[0-5]\.|2[0-4][0-9]\.|1[0-9]{2}\.|[0-9]{1,2}\.))((25[0-5]|2[0-4][0-9]|1[0-9]{2}|[0-9]{1,2})\.){2}(25[0-5]|2[0-4][0-9]|1[0-9]{2}|[0-9]{1,2})\]?$)/i
     );
     let isValid = true;
-    if (!pattern.test(body.email)) {
-      isValid = false;
+    if (addPartnerData && !addPartnerData.name) {
+      setFieldData({
+        field: "name",
+        message: "Please enter Name",
+      });
+      setPartnerName(true);
+    } else if (addPartnerData && !addPartnerData.phone_no) {
+      setFieldData({ field: "phone_no", message: "Please enter Phone no" });
+      setPhoneno(true);
+      setPartnerName(false)
 
-      setErorMessage("Please enter valid email address.");
-    } else {
+    }else if (addPartnerData && addPartnerData.phone_no < 1000000000) {
+      setFieldData({ field: "phone_no", message: "Phone no is invalid" });
+      setPhoneno(true);
+      setPartnerName(false)
+    }
+     else if (addPartnerData && !addPartnerData.email) {
+      setFieldData({
+        field: "email",
+        message: "Please enter Email Id",
+      });
+      setPartEmail(true);
+      setPhoneno(false);
+      setPartnerName(false)
+    } else if (
+      addPartnerData &&
+      addPartnerData.email  &&
+      !pattern.test(addPartnerData.email)
+    ) {
+      setFieldData({ field: "email", message: "Please enter valid email Id." });
+    
+      isValid = false;
+      setPartEmail(true);
+      setPhoneno(false);
+      setPartnerName(false)
+    }
+   
+    else {
+      setFieldData({ field: "", message: "" });
+      setPartEmail(false);
+      setPhoneno(false);
+      setPartnerName(false)
+
+
+    var body = addPartnerData;
+   
       if (addPartnerData && addPartnerData._id) {
+        setLoader(true);
         axios
           .patch(api + "/update/" + addPartnerData._id, body, axiosConfig)
           .then((response) => {
@@ -124,7 +189,7 @@ const KamoPartners = (props) => {
             handleClick();
 
             setUpdateMessage(response && response.data.message);
-
+            setLoader(false);
             if (response.data && response.data.error === false) {
               const { data } = response;
               dispatch(getPartnerList());
@@ -136,15 +201,18 @@ const KamoPartners = (props) => {
             }
           })
           .catch((error) => {
+            setLoader(false);
             console.log(error, "shg add error");
           });
       } else {
+        setLoader(true);
         axios
           .post(api + "/create", body, axiosConfig)
           .then((response) => {
             console.log(response);
             handleClick();
             setUpdateMessage(response && response.data.message);
+            setLoader(false);
             if (response.data && response.data.error === false) {
               const { data } = response;
               dispatch(getPartnerList());
@@ -154,10 +222,12 @@ const KamoPartners = (props) => {
             }
           })
           .catch((error) => {
+            setLoader(false);
             console.log(error, "shg add error");
           });
       }
     }
+  
   };
 
   //////////////// for csv function ////
@@ -358,51 +428,7 @@ const KamoPartners = (props) => {
               onSelectRow={onSelectRow}
               isLoading={isLoading}
             />
-            {/* <div className="table-responsive">
-              <table className="table table-borderless mb-0">
-                <thead>
-                  <tr>
-                    <th width="33.33%">Name </th>
-                    <th width="33.33%">Phone</th>
-                    <th width="33.33%">Email</th>
-                    <th width="33.33%">createdAt</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {partnerList &&
-                  partnerList.data &&
-                  partnerList.data.length > 0 ? (
-                    partnerList.data.map((item) => {
-                      return (
-                        <tr
-                          className={[
-                            item._id === selectedData._id &&
-                              activeClass === true &&
-                              "current",
-                          ]}
-                          onClick={() => onSelectRow(item)}
-                        >
-                          <td>{item && item.name && item.name}</td>
-                          <td>{item && item.phone_no && item.phone_no}</td>
-                          <td>{item && item.email && item.email}</td>
-                          <td>
-                            {item &&
-                              item.createdAt &&
-                              moment(item.createdAt).format("DD/MM/YYYY")}
-                          </td>
-                        </tr>
-                      );
-                    })
-                  ) : (
-                    <tr>
-                      <td className="text-center" colSpan={4}>
-                        <b>NO Data Found !!</b>
-                      </td>
-                    </tr>
-                  )}
-                </tbody>
-              </table>
-            </div> */}
+         
           </div>
         </div>
         {importCsvOpenModel === true && (
@@ -467,6 +493,11 @@ const KamoPartners = (props) => {
                         })
                       }
                     />
+                     {fieldData.field == "name" && (
+                      <small className="mt-4 mb-2 text-danger">
+                        {fieldData && fieldData.message}
+                      </small>
+                    )}
                   </Form.Group>
                   <Form.Group as={Col} md="6" className="mb-3">
                     <Form.Label>Phone </Form.Label>
@@ -487,6 +518,11 @@ const KamoPartners = (props) => {
                         })
                       }
                     />
+                     {fieldData.field == "phone_no" && (
+                      <small className="mt-4 mb-2 text-danger">
+                        {fieldData && fieldData.message}
+                      </small>
+                    )}
                   </Form.Group>
                   <Form.Group as={Col} md="12" className="mb-3">
                     <Form.Label>Email </Form.Label>
@@ -506,12 +542,11 @@ const KamoPartners = (props) => {
                         })
                       }
                     />
-                    <div
-                      className="text-danger"
-                      style={{ fontSize: 12, marginTop: 5 }}
-                    >
-                      {erorMessage && erorMessage}{" "}
-                    </div>
+                   {fieldData.field == "email" && (
+                      <small className="mt-4 mb-2 text-danger">
+                        {fieldData && fieldData.message}
+                      </small>
+                    )}
                   </Form.Group>
                 </Row>
                 <Row className="justify-content-between">
@@ -528,19 +563,15 @@ const KamoPartners = (props) => {
                   <Form.Group as={Col} md="auto">
                     <Button
                       type="submit"
-                      disabled={
-                        addPartnerData && !addPartnerData.name
-                          ? true
-                          : !addPartnerData.phone_no
-                          ? true
-                          : !addPartnerData.email
-                          ? true
-                          : false
-                      }
+                     
+                      disabled={loader == true ? true: false}
                       onClick={addPartnerFunc}
                       className="submit_btn shadow-0"
                     >
-                      Submit
+                      {loader && loader === true ? (
+                        <div class="spinner-border bigSpinnerWidth text-info text-center"></div>
+                      ): "Submit"}
+                      
                     </Button>
                   </Form.Group>
                 </Row>

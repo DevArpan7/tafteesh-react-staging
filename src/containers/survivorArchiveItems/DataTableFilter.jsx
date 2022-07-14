@@ -16,10 +16,10 @@ import { TriStateCheckbox } from "primereact/tristatecheckbox";
 // import './DataTableDemo.css';
 import moment from "moment";
 
-const LawyersListDataTable = (props) => {
+const DataTableFilter = (props) => {
   const [customers1, setCustomers1] = useState([]);
   const [filters1, setFilters1] = useState(null);
-  const { lawyersList, onSelectRow,isLoading } = props;
+  const { survivorList,onSelectRow ,isLoading,editData} = props;
 
   const [globalFilterValue1, setGlobalFilterValue1] = useState("");
   const [globalFilterValue2, setGlobalFilterValue2] = useState("");
@@ -28,19 +28,31 @@ const LawyersListDataTable = (props) => {
   const [selectedProduct5, setSelectedProduct5] = useState(null);
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [representatives, setrepresentatives] = useState([]);
+  //   const representatives = [
+  // { name: "Amy Elsner", image: "amyelsner.png" },
+  // { name: "Anna Fali", image: "annafali.png" },
+  // { name: "Asiya Javayant", image: "asiyajavayant.png" },
+  // { name: "Bernardo Dominic", image: "bernardodominic.png" },
+  // { name: "Elwin Sharvill", image: "elwinsharvill.png" },
+  // { name: "Ioni Bowcher", image: "ionibowcher.png" },
+  // { name: "Ivan Magalhaes", image: "ivanmagalhaes.png" },
+  // { name: "Onyama Limba", image: "onyamalimba.png" },
+  // { name: "Stephen Shaw", image: "stephenshaw.png" },
+  // { name: "XuXue Feng", image: "xuxuefeng.png" },
+  //   ];
 
   useEffect(() => {
-    console.log(props, "props");
+    // console.log(props, "props");
     let obj = {};
     let arr = [];
-    lawyersList &&
-      lawyersList.length > 0 &&
-      lawyersList.map((item) => {
-        console.log(item, "itemitemitem");
+    survivorList &&
+      survivorList.length > 0 &&
+      survivorList.map((item) => {
+        // console.log(item, "itemitemitem");
         return (
           (obj = { survivor_name: item.survivor_name, image: "amyelsner.png" }),
-          arr.push(obj),
-          console.log(representatives, obj, "representatives")
+          arr.push(obj)
+          // console.log(representatives, obj, "representatives")
         );
       });
     setrepresentatives(arr);
@@ -50,9 +62,9 @@ const LawyersListDataTable = (props) => {
   // ];
 
   const customerService =
-    lawyersList && lawyersList.length > 0 && lawyersList;
+    survivorList && survivorList.length > 0 && survivorList;
 
-  console.log(customerService, "customer servicessssss");
+  // console.log(customerService, "customer servicessssss");
 
   useEffect(() => {
     setCustomers1(customerService);
@@ -61,7 +73,7 @@ const LawyersListDataTable = (props) => {
   }, [customerService]);
 
   useEffect(() => {
-    console.log(representatives, "representatives");
+    // console.log(representatives, "representatives");
   }, [representatives]);
 
   const getCustomers = (data) => {
@@ -72,7 +84,7 @@ const LawyersListDataTable = (props) => {
   };
 
   const formatDate = (value) => {
-    console.log(value, "value");
+    // console.log(value, "value");
     // return value.toLocaleDateString('en-US', {
     //     day: '2-digit',
     //     month: '2-digit',
@@ -94,16 +106,16 @@ const LawyersListDataTable = (props) => {
 
   const onGlobalFilterChange1 = (e) => {
     const value = e.target.value;
-    console.log(value, "value");
+    console.log(value,"value");
     let _filters1 = { ...filters1 };
-
+    
     _filters1["global"].value = value;
-    console.log(_filters1, " _filters1");
+    // console.log( _filters1," _filters1");
     setFilters1(_filters1);
     setGlobalFilterValue1(value);
   };
 
-  console.log(filters1, "filters1");
+  // console.log(filters1,"filters1");
   // const onGlobalFilterChange2 = (e) => {
   //     const value = e.target.value;
   //     let _filters2 = { ...filters2 };
@@ -223,9 +235,23 @@ const LawyersListDataTable = (props) => {
     );
   };
 
-  const firDateBodyTemplate = (rowData) => {
-    return formatDate(rowData.fir.date);
-    
+  const survivorNameBodyTemplate = (rowData) => {
+    // const representative = rowData.representative;
+    return (
+      <React.Fragment>
+        {/* <img
+          alt={representative.name}
+          src={`showcase/demo/images/avatar/${representative.image}`}
+          onError={(e) =>
+            (e.target.src =
+              "https://www.primefaces.org/wp-content/uploads/2020/05/placeholder.png")
+          }
+          width={32}
+          style={{ verticalAlign: "middle" }}
+        /> */}
+        <span className="image-text">{rowData.survivor_name}</span>
+      </React.Fragment>
+    );
   };
 
   const representativeFilterTemplate = (options) => {
@@ -236,7 +262,7 @@ const LawyersListDataTable = (props) => {
         options={representatives}
         itemTemplate={representativesItemTemplate}
         onChange={(e) => options.filterCallback(e.value)}
-        optionLabel="source"
+        optionLabel="survivor_name"
         placeholder="Any"
         className="p-column-filter"
       />
@@ -244,7 +270,7 @@ const LawyersListDataTable = (props) => {
   };
 
   const representativesItemTemplate = (option) => {
-    console.log(option, "option");
+      console.log(option,"option")
     return (
       <div className="p-multiselect-representative-option">
         <img
@@ -262,70 +288,25 @@ const LawyersListDataTable = (props) => {
     );
   };
 
-  const phoneNumberBodyTemplate = (rowData) => {
+  const dateOfTraffickingBodyTemplate = (rowData) => {
+    return formatDate(rowData.date_of_trafficking);
+  };
+
+  const dgenderBodyTemplate = (rowData) => {
+    return (
+      <span className={`customer-badge status-${rowData.gender}`}>
+        {rowData.gender}
+      </span>
+    );
+  };
+
+  const phoneBodyTemplate = (rowData) => {
     return (
       <span className={`customer-badge status-${rowData.phone_no}`}>
         {rowData.phone_no}
       </span>
     );
   };
-
-  const nameBodyTemplate = (rowData) => {
-    // return formatDate(rowData.rescue_from_city);
-    return (
-      <span className={`customer-badge status-${rowData.name}`}>
-        {rowData.name}
-      </span>
-    );
-  };
-
-  const categoryBodyTemplate = (rowData) => {
-    // return formatDate(rowData.received_on);
-    
-    return (
-      <>
-      {rowData.category && rowData.category.length>0 && rowData.category.map((item,index)=> {
-      return(
-
-      <span className={`customer-badge status-${item && ( rowData.category.length-1 ==index && item.name || item.name+"," )}`}>
-        {item && ( rowData.category.length-1 ==index && item.name || item.name+"," )}
-      </span>
-      )})}
-      </>
-      
-    );
-  };
-
-  const blockIdBodyTemplate = (rowData) => {
-    // return formatDate(rowData.received_on);
-    
-    return (
-      <>  {rowData.court && rowData.court.length>0 && rowData.court.map((item,index)=> {
-        return(
-      <span className={`customer-badge status-${item && ( rowData.court.length-1 ==index && item.name || item.name+"," )}`}>
-        {item && ( rowData.court.length-1 ==index && item.name || item.name+"," )}
-      </span>
-        )})}
-</>
-    );
-  };
-  const locationBodyTemplate = (rowData) => {
-    // return formatDate(rowData.received_on);
-    
-    return (
-      <span className={`customer-badge status-${rowData.location && rowData.location !== null ? rowData.location.name : ""}`}>
-        {rowData.location && rowData.location !== null ? rowData.location.name : "" }
-      </span>
-    );
-  };
-
-
-  const createdAtMarkBodyTemplate = (rowData) => {
-    return formatDate(rowData.createdAt);
-  };
-  
-
-  
 
   const dateFilterTemplate = (options) => {
     return (
@@ -447,10 +428,11 @@ const LawyersListDataTable = (props) => {
 
   console.log(selectedProduct5, "selectedProduct5");
 
-  const onSelectRowFunc = (value) => {
+  const onSelectRowFunc=(value)=>{
     setSelectedProduct5(value);
-    onSelectRow(value);
-  };
+    onSelectRow(value)
+
+  }
 
   return (
     <div className="dataTableFilter">
@@ -467,62 +449,94 @@ const LawyersListDataTable = (props) => {
           dataKey="_id"
           filters={filters1}
           filterDisplay="menu"
+          // loading={loading1}
           loading={isLoading}
           responsiveLayout="scroll"
           globalFilterFields={[
-            "name",
-            "court",
-            "category",
-            "location"
+            "survivor_id",
+            "survivor_name",
+            "date_of_trafficking",
+            "gender",
+            "phone_no",
           ]}
           header={header1}
           emptyMessage="No Data found."
         >
-        <Column selectionMode="single" />
-         
-        <Column
+          <Column selectionMode="single" />
+          <Column
+            header="ID"
+            filterField="survivor_id"
+            style={{ minWidth: "12rem" }}
+            body={survivorIdBodyTemplate}
+            filter
+            filterPlaceholder="Search by survivor id"
+            filterClear={filterClearTemplate}
+            filterApply={filterApplyTemplate}
+            filterFooter={filterFooterTemplate}
+          />
+          <Column
             header="Name"
-            // dataType="date"
-            filterField="name"
-            style={{ minWidth: "15rem" }}
-            body={nameBodyTemplate}
+            filterField="survivor_name"
+            showFilterMatchModes={false}
+            filterMenuStyle={{ width: "14rem" }}
+            style={{ minWidth: "14rem" }}
+            body={survivorNameBodyTemplate}
+            filter
+            filterElement={representativeFilterTemplate}
+          />
+          <Column
+            header="Date of Trafficking"
+            filterField="date_of_trafficking"
+            dataType="date"
+            style={{ minWidth: "14rem" }}
+            body={dateOfTraffickingBodyTemplate}
+            filter
+            filterElement={dateFilterTemplate}
+          />
+          <Column
+            header="Gender"
+            filterField="gender"
+            style={{ minWidth: "10rem" }}
+            body={dgenderBodyTemplate}
             filter
             filterElement={balanceFilterTemplate}
-        />
+          />
+          <Column
+            header="Phone"
+            filterField="phone_no"
+            style={{ minWidth: "10rem" }}
+            body={phoneBodyTemplate}
+            filter
+            filterElement={balanceFilterTemplate}
+          />
 
-        <Column
-            header="Category"
-            //dataType="date"
-            filterField="category"
-            style={{ minWidth: "15rem" }}
-            body={categoryBodyTemplate}
+          {/* <Column
+            header="Rescue"
+            filterField="re"
+            style={{ minWidth: "10rem" }}
+            body={balanceBodyTemplate}
             filter
             filterElement={balanceFilterTemplate}
-        />
-        <Column
-            header="Court"
-            //dataType="date"
-            filterField="court"
-            style={{ minWidth: "15rem" }}
-            body={blockIdBodyTemplate}
+          />
+          <Column
+            header="PC"
+            filterField="balance"
+            style={{ minWidth: "10rem" }}
+            body={balanceBodyTemplate}
             filter
             filterElement={balanceFilterTemplate}
-        />
-        <Column
-            header="Location"
-            // dataType="date"
-            filterField="location"
-            style={{ minWidth: "15rem" }}
-            body={locationBodyTemplate}
+          />
+          <Column
+            header="VC"
+            filterField="balance"
+            style={{ minWidth: "10rem" }}
+            body={balanceBodyTemplate}
             filter
             filterElement={balanceFilterTemplate}
-        />
-        
-        
-
+          /> */}
         </DataTable>
     </div>
   );
 };
 
-export default LawyersListDataTable;
+export default DataTableFilter;

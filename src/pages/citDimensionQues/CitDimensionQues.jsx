@@ -25,10 +25,9 @@ import { makeStyles } from "@material-ui/core/styles";
 import Radio from "@mui/material/Radio";
 import CitDimensionQuesDataTable from "./CitDimensionQuesDataTable";
 
-
 const CitDimensionQues = (props) => {
   const [modalAddShow, setModalAddShow] = useState(false);
-  const [isLoading,setIsLoading] = useState(true)
+  const [isLoading, setIsLoading] = useState(true);
 
   const dispatch = useDispatch();
   const [open, setOpen] = useState(false);
@@ -49,20 +48,24 @@ const CitDimensionQues = (props) => {
   const [selectedData, setSelectedData] = useState({});
   const [showAlert, setShowAlert] = useState(false);
   const handleCloseAlert = () => setShowAlert(false);
-  const [optionObj, setOptionObj] = useState("");
-  const [optionArr, setOptionArr] = useState([]);
   const citDimensionList = useSelector((state) => state.citDimensionList);
-  const [inputValue, setInputValue] = React.useState("");
-  const [selectedItem, setSelectedItem] = React.useState([]);
+  const [citDataExistance, setCitDataExistance] = useState(false);
+  const [citOption, setCitOption] = useState(false);
+  const [citAnsType, setCitAnsType] = useState(false);
+  const [citData, setCitData] = useState(false);
+  const [citDimension, setCitDimension] = useState(false);
+  const [fieldData, setFieldData] = useState({
+    field: "",
+    message: "",
+  });
 
   const [selectedValue, setSelectedValue] = React.useState(false);
-  
-  const trueArr = [true, 'true'];
+  const [loader, setLoader] = useState(false);
 
-const[openCheckfrom,setOpenCheckfrom] = useState()
-  const handleChangeRadio = (event) => {
-    setSelectedValue(event.target.value);
-  };
+  const trueArr = [true, "true"];
+
+  const [openCheckfrom, setOpenCheckfrom] = useState();
+  
   //////// delete function call //////////
   const onDeleteChangeFunc = () => {
     if (selectedData && !selectedData._id) {
@@ -72,19 +75,18 @@ const[openCheckfrom,setOpenCheckfrom] = useState()
     }
   };
 
-useEffect(()=>{
-  console.log(openCheckfrom,"openCheckfrom");
-},[openCheckfrom])
-
-useEffect(() => {
-  setTimeout(() => {
-    setIsLoading(false);
-  }, 1000);
-}, [citDimensionQuestionList]);
+  useEffect(() => {
+    console.log(openCheckfrom, "openCheckfrom");
+  }, [openCheckfrom]);
 
   useEffect(() => {
+    setTimeout(() => {
+      setIsLoading(false);
+    }, 1000);
+  }, [citDimensionQuestionList]);
 
-    setOpenCheckfrom(selectedValue)
+  useEffect(() => {
+    setOpenCheckfrom(selectedValue);
 
     setaddCitDimensionQuesData({
       ...addCitDimensionQuesData,
@@ -106,7 +108,7 @@ useEffect(() => {
   };
 
   const onSelectRow = (item) => {
-    console.log(item,"itemmm")
+    console.log(item, "itemmm");
     setSelectedData(item);
     setActiveClass(true);
   };
@@ -137,66 +139,150 @@ useEffect(() => {
     setSelectedData({});
   };
 
+  const onOptionChange = (e) => {
+    let data = e.target.value;
+    var options = data.split(",");
+    setaddCitDimensionQuesData({
+      ...addCitDimensionQuesData,
+      options: options,
+    });
+  };
 
-const onOptionChange=(e)=>{
-  
-  let data = e.target.value
-  var options = data.split(',');
-  setaddCitDimensionQuesData({
-    ...addCitDimensionQuesData,
-    options: options,
-  })
-}
+  useEffect(() => {
+    console.log(fieldData, "fieldData");
+    if (addCitDimensionQuesData && addCitDimensionQuesData.cit_dimension) {
+      setCitDimension(false);
+      setFieldData({ field: "cit_dimension", message: "" });
+    } else if (addCitDimensionQuesData && addCitDimensionQuesData.data) {
+      setCitData(false);
+      setFieldData({ field: "data", message: "" });
+    } else if (addCitDimensionQuesData && addCitDimensionQuesData.answer_type) {
+      setCitAnsType(false);
+      setFieldData({ field: "answer_type", message: "" });
+    } else if (addCitDimensionQuesData && addCitDimensionQuesData.options) {
+      setCitOption(false);
+      setFieldData({ field: "options", message: "" });
+    } else if (
+      addCitDimensionQuesData &&
+      addCitDimensionQuesData.data_existance_check_from
+    ) {
+      setCitDataExistance(false);
+      setFieldData({ field: "data_existance_check_from", message: "" });
+    } else {
+    }
+  }, [addCitDimensionQuesData]);
+
+  console.log(fieldData, "fieldData");
 
   ///// add shg api cll function /////
-  console.log(addCitDimensionQuesData, "addCitDimensionQuesData");
   const addShgFunc = (e) => {
     e.preventDefault();
-    var body = addCitDimensionQuesData;
+    console.log(addCitDimensionQuesData, "addCitDimensionQuesData");
 
-    if (addCitDimensionQuesData && addCitDimensionQuesData._id) {
-      axios
-        .patch(
-          api + "/update/" + addCitDimensionQuesData._id,
-          body,
-          axiosConfig
-        )
-        .then((response) => {
-          console.log(response);
-          handleClick();
-
-          setUpdateMessage(response && response.data.message);
-
-          if (response.data && response.data.error === false) {
-            const { data } = response;
-            dispatch(getCitDimensionQuestionList());
-            setModalAddShow(false);
-            setaddCitDimensionQuesData({});
-
-            // setSelectedData({});
-            setActiveClass(false);
-          }
-        })
-        .catch((error) => {
-          console.log(error, "cit add error");
-        });
+    if (addCitDimensionQuesData && !addCitDimensionQuesData.cit_dimension) {
+      setFieldData({
+        field: "cit_dimension",
+        message: "Please enter CIT Dimension value",
+      });
+      setCitDimension(true);
+    } else if (addCitDimensionQuesData && !addCitDimensionQuesData.data) {
+      setFieldData({ field: "data", message: "Please enter Question" });
+      setCitData(true);
+      setCitDimension(false);
+    } else if (
+      addCitDimensionQuesData &&
+      !addCitDimensionQuesData.answer_type
+    ) {
+      setFieldData({
+        field: "answer_type",
+        message: "Please enter Answer Type",
+      });
+      setCitAnsType(true);
+      setCitData(false);
+      setCitDimension(false);
+    } else if (
+      addCitDimensionQuesData &&
+      addCitDimensionQuesData.answer_type != "textarea" &&
+      !addCitDimensionQuesData.options
+    ) {
+      setFieldData({ field: "options", message: "Please enter Option" });
+      setCitOption(true);
+      setCitAnsType(false);
+      setCitData(false);
+      setCitDimension(false);
+    } else if (
+      addCitDimensionQuesData &&
+      addCitDimensionQuesData.data_existance_check === "true" &&
+      !addCitDimensionQuesData.data_existance_check_from
+    ) {
+      setFieldData({
+        field: "data_existance_check_from",
+        message: "Please select Data existance check",
+      });
+      setCitDataExistance(true);
+      setCitOption(false);
+      setCitAnsType(false);
+      setCitData(false);
+      setCitDimension(false);
     } else {
-      axios
-        .post(api + "/create", body, axiosConfig)
-        .then((response) => {
-          console.log(response);
-          handleClick();
-          setUpdateMessage(response && response.data.message);
-          if (response.data && response.data.error === false) {
-            const { data } = response;
-            dispatch(getCitDimensionQuestionList());
-            setModalAddShow(false);
-            setaddCitDimensionQuesData({});
-          }
-        })
-        .catch((error) => {
-          console.log(error, "shg add error");
-        });
+      setFieldData({ field: "", message: "" });
+      setCitDataExistance(false);
+      setCitOption(false);
+      setCitAnsType(false);
+      setCitData(false);
+      setCitDimension(false);
+
+      var body = addCitDimensionQuesData;
+
+      if (addCitDimensionQuesData && addCitDimensionQuesData._id) {
+        setLoader(true);
+        axios
+          .patch(
+            api + "/update/" + addCitDimensionQuesData._id,
+            body,
+            axiosConfig
+          )
+          .then((response) => {
+            console.log(response);
+            handleClick();
+
+            setUpdateMessage(response && response.data.message);
+            setLoader(false);
+            if (response.data && response.data.error === false) {
+              const { data } = response;
+              dispatch(getCitDimensionQuestionList());
+              setModalAddShow(false);
+              setaddCitDimensionQuesData({});
+
+              // setSelectedData({});
+              setActiveClass(false);
+            }
+          })
+          .catch((error) => {
+            setLoader(false);
+            console.log(error, "cit add error");
+          });
+      } else {
+        setLoader(true);
+        axios
+          .post(api + "/create", body, axiosConfig)
+          .then((response) => {
+            console.log(response);
+            handleClick();
+            setUpdateMessage(response && response.data.message);
+            setLoader(false);
+            if (response.data && response.data.error === false) {
+              const { data } = response;
+              dispatch(getCitDimensionQuestionList());
+              setModalAddShow(false);
+              setaddCitDimensionQuesData({});
+            }
+          })
+          .catch((error) => {
+            setLoader(false);
+            console.log(error, "shg add error");
+          });
+      }
     }
   };
   //////////////// for csv function ////
@@ -402,67 +488,14 @@ const onOptionChange=(e)=>{
             </div>
 
             <CitDimensionQuesDataTable
-              citDimensionQuestionList={citDimensionQuestionList &&
-              citDimensionQuestionList.length > 0 &&
-              citDimensionQuestionList}
+              citDimensionQuestionList={
+                citDimensionQuestionList &&
+                citDimensionQuestionList.length > 0 &&
+                citDimensionQuestionList
+              }
               onSelectRow={onSelectRow}
               isLoading={isLoading}
             />
-
-            {/*<div className="table-responsive">
-              <table className="table table-borderless mb-0">
-                <thead>
-                  <tr>
-                    {" "}
-                    <th width="33.33%">CIT Dimension </th>
-                    <th width="33.33%">Question </th>
-                    <th width="30%">Question Existance Check </th>
-                    <th width="36.66%">Question Existance Check From </th>
-                    {/* <th width="33.33%">CreatedAt</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {citDimensionQuestionList &&
-                  citDimensionQuestionList.length > 0 ? (
-                    citDimensionQuestionList.map((item) => {
-                      return (
-                        <tr
-                          className={[
-                            item._id === selectedData._id &&
-                              activeClass === true &&
-                              "current",
-                          ]}
-                          onClick={() => onSelectRow(item)}
-                        >
-                          <td>
-                            {item.cit_dimension && item.cit_dimension.name}
-                          </td>
-                          <td>{item.data && item.data}</td>
-                          <td>
-                            {item &&
-                            item.data_existance_check &&
-                            item.data_existance_check === true
-                              ? "Yes"
-                              : "No"}
-                          </td>
-                          <td>
-                            {item.data_existance_check_from &&
-                              item.data_existance_check_from}
-                          </td>
-                          {/* <td>{item && item.createdAt && moment(item.createdAt).format("DD/MMM/YYYY")}</td> 
-                        </tr>
-                      );
-                    })
-                  ) : (
-                    <tr>
-                      <td className="text-center" colSpan={2}>
-                        <b>NO Data Found !!</b>
-                      </td>
-                    </tr>
-                  )}
-                </tbody>
-              </table>
-            </div>*/}
           </div>
         </div>
         {importCsvOpenModel === true && (
@@ -500,7 +533,9 @@ const onOptionChange=(e)=>{
         >
           <Modal.Header closeButton>
             <Modal.Title id="contained-modal-title-vcenter">
-            {addCitDimensionQuesData && addCitDimensionQuesData._id ? "Update CIT Dimension Question" : "Add CIT Dimension Question"}
+              {addCitDimensionQuesData && addCitDimensionQuesData._id
+                ? "Update CIT Dimension Question"
+                : "Add CIT Dimension Question"}
             </Modal.Title>
           </Modal.Header>
           <Modal.Body>
@@ -523,7 +558,9 @@ const onOptionChange=(e)=>{
                         })
                       }
                     >
-                      <option hidden={"true"}>Default select</option>
+                      <option hidden={"true"} value="">
+                        Default select
+                      </option>
                       {citDimensionList &&
                         citDimensionList.length > 0 &&
                         citDimensionList.map((item) => {
@@ -534,6 +571,11 @@ const onOptionChange=(e)=>{
                           );
                         })}
                     </Form.Select>
+                    {fieldData.field == "cit_dimension" && (
+                      <small className="mt-4 mb-2 text-danger">
+                        {fieldData && fieldData.message}
+                      </small>
+                    )}
                   </Form.Group>
                   <Form.Group className="form-group" as={Col} md="6">
                     <Form.Label>Question </Form.Label>
@@ -553,6 +595,11 @@ const onOptionChange=(e)=>{
                         })
                       }
                     />
+                    {fieldData.field == "data" && (
+                      <small className="mt-4 mb-2 text-danger">
+                        {fieldData && fieldData.message}
+                      </small>
+                    )}
                   </Form.Group>
                   <Form.Group className="form-group" as={Col} md="6">
                     <Form.Label>Answer Type </Form.Label>
@@ -570,12 +617,19 @@ const onOptionChange=(e)=>{
                         })
                       }
                     >
-                      <option hidden={"true"}>Default select</option>
+                      <option hidden={"true"} value="">
+                        Default select
+                      </option>
                       <option value={"textarea"}>{"Textarea"}</option>
                       <option value={"select"}>{"Select"}</option>
                       <option value={"checkbox"}>{"Checkbox"}</option>
                       <option value={"radio"}>{"Radio"}</option>
                     </Form.Select>
+                    {fieldData.field == "answer_type" && (
+                      <small className="mt-4 mb-2 text-danger">
+                        {fieldData && fieldData.message}
+                      </small>
+                    )}
                   </Form.Group>
                   {addCitDimensionQuesData &&
                     addCitDimensionQuesData.answer_type &&
@@ -584,16 +638,21 @@ const onOptionChange=(e)=>{
                         <Form.Label>Options </Form.Label>
                         <i className="bi bi-plus-circle-fill"></i>
                         <Form.Control
-                      defaultValue={
-                        addCitDimensionQuesData &&
-                        addCitDimensionQuesData.options &&
-                        addCitDimensionQuesData.options.map(x=> x)
-                      }
-                      type="text"
-                      placeholder="yes,no,other"
-                      name="options"
-                      onChange={(e) => onOptionChange(e) }
-                    />
+                          defaultValue={
+                            addCitDimensionQuesData &&
+                            addCitDimensionQuesData.options &&
+                            addCitDimensionQuesData.options.map((x) => x)
+                          }
+                          type="text"
+                          placeholder="yes,no,other"
+                          name="options"
+                          onChange={(e) => onOptionChange(e)}
+                        />
+                        {fieldData.field == "options" && (
+                          <small className="mt-4 mb-2 text-danger">
+                            {fieldData && fieldData.message}
+                          </small>
+                        )}
                       </Form.Group>
                     )}
 
@@ -604,10 +663,11 @@ const onOptionChange=(e)=>{
                       row
                       aria-labelledby="demo-form-control-label-placement"
                       name="data_existance_check"
-                      defaultValue={addCitDimensionQuesData &&
+                      defaultValue={
+                        addCitDimensionQuesData &&
                         addCitDimensionQuesData.data_existance_check &&
-                        addCitDimensionQuesData.data_existance_check}
-                      // onChange={handleChangeRadio}
+                        addCitDimensionQuesData.data_existance_check
+                      }
                       onChange={(e) =>
                         setaddCitDimensionQuesData({
                           ...addCitDimensionQuesData,
@@ -630,32 +690,43 @@ const onOptionChange=(e)=>{
                     </RadioGroup>
                   </Form.Group>
                   {addCitDimensionQuesData &&
-                        addCitDimensionQuesData.data_existance_check &&
-                        String(addCitDimensionQuesData.data_existance_check) == 'true' &&
-                  <Form.Group className="form-group" as={Col} md="6">
-                    <Form.Label>Data Existance Check From </Form.Label>
-                    <Form.Select
-                      name="data_existance_check_from"
-                      value={
-                        addCitDimensionQuesData &&
-                        addCitDimensionQuesData.data_existance_check_from &&
-                        addCitDimensionQuesData.data_existance_check_from
-                      }
-                      onChange={(e) =>
-                        setaddCitDimensionQuesData({
-                          ...addCitDimensionQuesData,
-                          [e.target.name]: e.target.value,
-                        })
-                      }
-                    >
-                      <option hidden={"true"}>Default select</option>
-                      <option value={"documents"}>{"Documents"}</option>
-                      <option value={"fir"}>{"FIR"}</option>
-                      <option value={"investigation"}>{"Investigation"}</option>
-                      <option value={"chargesheet"}>{"Chargesheet"}</option>
-                    </Form.Select>
-                  </Form.Group>
-}
+                    addCitDimensionQuesData.data_existance_check &&
+                    String(addCitDimensionQuesData.data_existance_check) ==
+                      "true" && (
+                      <Form.Group className="form-group" as={Col} md="6">
+                        <Form.Label>Data Existance Check From </Form.Label>
+                        <Form.Select
+                          name="data_existance_check_from"
+                          value={
+                            addCitDimensionQuesData &&
+                            addCitDimensionQuesData.data_existance_check_from &&
+                            addCitDimensionQuesData.data_existance_check_from
+                          }
+                          onChange={(e) =>
+                            setaddCitDimensionQuesData({
+                              ...addCitDimensionQuesData,
+                              [e.target.name]: e.target.value,
+                            })
+                          }
+                        >
+                          <option hidden={"true"} value="">
+                            Default select
+                          </option>
+                          <option value={"documents"}>{"Documents"}</option>
+                          <option value={"fir"}>{"FIR"}</option>
+                          <option value={"investigation"}>
+                            {"Investigation"}
+                          </option>
+                          <option value={"chargesheet"}>{"Chargesheet"}</option>
+                        </Form.Select>
+                        {fieldData.field == "data_existance_check_from" &&
+                          citDataExistance == true && (
+                            <small className="mt-4 mb-2 text-danger">
+                              {fieldData && fieldData.message}
+                            </small>
+                          )}
+                      </Form.Group>
+                    )}
                 </Row>
                 <Row className="justify-content-between">
                   <Form.Group as={Col} md="auto">
@@ -671,15 +742,15 @@ const onOptionChange=(e)=>{
                   <Form.Group as={Col} md="auto">
                     <Button
                       type="submit"
-                      // disabled={
-                      //   addCitDimensionQuesData && !addCitDimensionQuesData.name
-                      //     ? true
-                      //     : false
-                      // }
+                      disabled={loader == true ? true: false}
+                     
                       onClick={addShgFunc}
                       className="submit_btn shadow-0"
                     >
-                      Submit
+                      {loader && loader === true ? (
+                        <div class="spinner-border bigSpinnerWidth text-info text-center"></div>
+                      ): "Submit"}
+                      
                     </Button>
                   </Form.Group>
                 </Row>

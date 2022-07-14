@@ -296,8 +296,8 @@ const OrganizationsDataTable = (props) => {
 
   const contactPersonBodyTemplate = (rowData) => {    
     return (
-      <span className={`customer-badge status-${rowData.contactPersion}`}>
-        {rowData.contactPersion}
+      <span className={`customer-badge status-${rowData.contact_persion}`}>
+        {rowData.contact_persion}
       </span>
     );
   };
@@ -498,7 +498,7 @@ const OrganizationsDataTable = (props) => {
             "phone",
             "email",
             "city",
-            "contactPersion",
+            "contact_persion",
             "state"
           ]}
           header={header1}
@@ -546,7 +546,7 @@ const OrganizationsDataTable = (props) => {
         <Column
             header="Contact Person"
             // dataType="date"
-            filterField="contactPersion"
+            filterField="contact_persion"
             style={{ minWidth: "14rem" }}
             body={contactPersonBodyTemplate}
             filter

@@ -4,7 +4,7 @@ import "./socialdashboard.css";
 import axios from "axios";
 
 import SocialDashboardTab from './SocialDashboardTab';
-import { servivorDashboardApi} from '../../redux/action';
+import { servivorDashboardApi,getPendingItemList} from '../../redux/action';
 
 import { useDispatch, useSelector } from "react-redux";
 
@@ -14,6 +14,8 @@ const Dashboard = (props) => {
     const api = "https://tafteesh-staging-node.herokuapp.com/api/";
     const token = localStorage.getItem("accessToken");
     const role = localStorage.getItem("role");
+    const userId = localStorage.getItem("userId");
+
 
     let axiosConfig = {
       headers: {
@@ -21,6 +23,7 @@ const Dashboard = (props) => {
         Authorization: `Bearer ${token}`,
       },
     };
+    const pendingItemList = useSelector((state) => state.pendingItemList);
 
 const [vcArray,setVcArray] = useState([])
 const [pcArray,setPcArray] = useState([])
@@ -42,6 +45,7 @@ const [loader , setLoader] = useState(false);
   
   useEffect(() => {
     servivorDashboardApi();
+    // dispatch(getPendingItemList(userId))
   }, [props])
 
 

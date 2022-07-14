@@ -826,7 +826,7 @@ const deletedByRef = localStorage.getItem("role");
                 </Form.Group>
               </Row>
               <Row className="justify-content-between">
-                <Form.Group as={Col} md="auto">
+                <Form.Group as={Col} xs="auto">
                   <MDBBtn
                     className="shadow-0 cancle_btn"
                     color="danger"
@@ -835,7 +835,7 @@ const deletedByRef = localStorage.getItem("role");
                     Close
                   </MDBBtn>
                 </Form.Group>
-                <Form.Group as={Col} md="auto">
+                <Form.Group as={Col} xs="auto">
                   <Button
                     type="submit"
                     // onClick={(e) => addDocumentFunc(e)}

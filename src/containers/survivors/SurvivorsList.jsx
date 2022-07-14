@@ -8,7 +8,7 @@ import NotificationPage from "../../components/NotificationPage";
 import Modal from "react-bootstrap/Modal";
 import { Button, Form, Row, Col } from "react-bootstrap";
 // import { findAncestor, gotoDetails } from "../Library/Helpers";
-import { findAncestor,goToAdd,goToEditSurvivor,gotoSurvivorDetails ,goToSurvivorFir,goToSurvivorInvestBysurvivor,gotoSurvivorChargeBySurv} from "../../utils/helper";
+import { findAncestor,goToAdd,goToEditSurvivor,gotoSurvivorDetails,gotoSurvivorArchive ,goToSurvivorFir,goToSurvivorInvestBysurvivor,gotoSurvivorChargeBySurv} from "../../utils/helper";
 import { jsPDF } from "jspdf";
 import "jspdf-autotable";
 
@@ -97,7 +97,7 @@ const deletedByRef = localStorage.getItem("role");
 
   useEffect(()=>{
 
-    dispatch(getSurvivorDetails(editData._id))
+    dispatch(getSurvivorDetails(editData && editData._id))
   },[editData && editData._id])
 
   const handleCloseAlert = () =>{ 
@@ -214,6 +214,11 @@ const onDeleteFunction=()=>{
       // });
     }
   };
+const gotoArchiveList=(e)=>{
+  gotoSurvivorArchive(e,"survivor",history)
+}
+
+
   const gotoInvestigation = (e) => {
     if (!survivorId || survivorId === "") {
       alert("Please select one survivor");
@@ -738,6 +743,11 @@ const onDeleteFunction=()=>{
                         onClick={(e) => gotoSurvivorCIT(e)}
                       >
                         CIT
+                      </Dropdown.Item>
+                      <Dropdown.Item
+                        onClick={(e) => gotoArchiveList(e)}
+                      >
+                        Archive List
                       </Dropdown.Item>
                     </Dropdown.Menu>
                   </Dropdown>

@@ -727,7 +727,7 @@ const [alertMessage,setAlertMessage]= useState('')
                 </Form.Group>
               </Row>
               <Row className="justify-content-between">
-                <Form.Group as={Col} md="auto">
+                <Form.Group as={Col} xs="auto">
                   <MDBBtn
                     type="button"
                     className="shadow-0 cancle_btn"
@@ -737,7 +737,7 @@ const [alertMessage,setAlertMessage]= useState('')
                     Cancel
                   </MDBBtn>
                 </Form.Group>
-                <Form.Group as={Col} md="auto">
+                <Form.Group as={Col} xs="auto">
                   <Button
                     type="submit"
                     disabled={resultLoad === true ? true : false}

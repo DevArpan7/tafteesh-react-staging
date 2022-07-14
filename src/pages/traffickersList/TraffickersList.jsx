@@ -64,6 +64,9 @@ const TraffickersList = (props) => {
   const [trafficimage, setTrafficimage] = useState();
   const [messagType, setMessagType] = useState("");
 
+  const [fieldData, setFieldData] = useState({ field: "", message: "" });
+  const [loader, setLoader] = useState(false);
+
   useEffect(() => {
     dispatch(getTraffickerList());
     dispatch(getPoliceStationList());
@@ -86,6 +89,15 @@ const TraffickersList = (props) => {
     setActiveClass(true);
     setUserId(data._id);
   };
+const gotoEdit=()=>{
+  if (!userId) {
+    alert("Please select a trafficker");
+  } else {
+    setModalAddShow(true);
+    getTraffickerDetails(userId)
+  }
+}
+
 
   const gotoView = (e) => {
     if (!userId) {
@@ -207,35 +219,56 @@ const TraffickersList = (props) => {
     });
   }, [addSourceData]);
 
-  // const handleSubmit = (event) => {
-  //     const form = event.currentTarget;
-  //     if (form.checkValidity() === false) {
-  //         event.preventDefault();
-  //         event.stopPropagation();
-  //     }
-
-  //     setValidated(true);
-  // };
-  const handleSubmit = (event) => {
-    console.log(event, "habdleSubmit");
-    // const {form}= event.target
-    const form = event.currentTarget;
-    if (form.checkValidity() === false) {
-      if (userId && userId) {
-        addUserFunc(event);
-        setValidated(false);
-      } else {
-        event.preventDefault();
-        event.stopPropagation();
-      }
+  
+  useEffect(() => {
+    if (addTraffickerData && addTraffickerData.trafficker_name) {
+      setFieldData({ field: "trafficker_name", message: "" });
+    } else if (addTraffickerData && addTraffickerData.gender) {
+      setFieldData({ field: "gender", message: "" });
+    } else if (addTraffickerData && addTraffickerData.age) {
+      setFieldData({ field: "age", message: "" });
+    } else if (addTraffickerData && addTraffickerData.relation_with_survivor) {
+      setFieldData({ field: "relation_with_survivor", message: "" });
+    }else if (addTraffickerData && addTraffickerData.identification_mark) {
+      setFieldData({ field: "identification_mark", message: "" });
     } else {
-      addUserFunc(event);
+      setFieldData({ field: "", message: "" });
     }
-    setValidated(true);
-  };
+  }, [addTraffickerData]);
 
   const addUserFunc = (e) => {
     e.preventDefault();
+
+    if (addTraffickerData && !addTraffickerData.trafficker_name) {
+      setFieldData({ field: "trafficker_name", message: "Please enter Name" });
+    } else if (addTraffickerData && !addTraffickerData.gender) {
+      setFieldData({ field: "gender", message: "Please select Gender" });
+    } else if (addTraffickerData && !addTraffickerData.age) {
+      setFieldData({
+        field: "age",
+        message: "Please enter Age",
+      });
+    } else if (addTraffickerData && !addTraffickerData.relation_with_survivor) {
+      setFieldData({
+        field: "relation_with_survivor",
+        message: "Please write relation with survivor",
+      });
+    } else if (addTraffickerData && !addTraffickerData.identification_mark) {
+      setFieldData({
+        field: "identification_mark",
+        message: "Please write Identification Mark",
+      });
+    }else if (addTraffickerData && !addTraffickerData.trafficked_to) {
+      setFieldData({
+        field: "trafficked_to",
+        message: "Please write Trafficked To",
+      });
+    } else {
+      setFieldData({
+        field: "",
+        message: "",
+      });
+
     var objData = {
       ...addTraffickerData,
       image: trafficimage && trafficimage,
@@ -244,12 +277,12 @@ const TraffickersList = (props) => {
     };
     var body = objData;
     if (userId) {
-      setResultLoad(true);
+      setLoader(true);
       axios
         .patch(api + "/trafficker-profile/update/" + userId, body, axiosConfig)
         .then((res) => {
           console.log(res);
-          setResultLoad(false);
+          setLoader(false);
 
           // setResultLoad(FormatColorReset)
           if (res && res.data && res.data.error == false) {
@@ -270,20 +303,20 @@ const TraffickersList = (props) => {
           }
         })
         .catch((error) => {
-          setResultLoad(false);
+          setLoader(false);
           handleClick();
           setUpdateMessage(error && error.message);
           setMessagType("error");
           console.log(error);
         });
     } else {
-      setResultLoad(true);
+      setLoader(true);
       axios
         .post(api + "/trafficker-profile/create", body, axiosConfig)
         .then((res) => {
           console.log(res);
 
-          setResultLoad(false);
+          setLoader(false);
           if (res && res.data && res.data.error == false) {
             const { data } = res;
             handleClick();
@@ -304,13 +337,14 @@ const TraffickersList = (props) => {
           }
         })
         .catch((error) => {
-          setResultLoad(false);
+          setLoader(false);
           handleClick();
           setUpdateMessage(error && error.message);
           setMessagType("error");
           console.log(error);
         });
     }
+  }
   };
 
   /////// delete function call //////////
@@ -445,11 +479,7 @@ const TraffickersList = (props) => {
               >
                 <span
                   onClick={() => {
-                    if (!userId) {
-                      alert("Please select a trafficker");
-                    } else {
-                      setModalAddShow(true);
-                    }
+                    gotoEdit()
                   }}
                 >
                   <i className="fal fa-pencil"></i>
@@ -475,161 +505,6 @@ const TraffickersList = (props) => {
           </div>
         </div>
 
-        {/* <Modal className="addFormModal" show={modalAddShow} onHide={setModalAddShow} size="lg" aria-labelledby="reason-modal" centered>
-                    <Modal.Header closeButton>
-                        <Modal.Title id="contained-modal-title-vcenter">
-                            Add Traffickers
-                        </Modal.Title>
-                    </Modal.Header>
-                    <Modal.Body>
-                        <div className="site_form_wraper">
-                            <Form noValidate validated={validated} onSubmit={handleSubmit}>
-                                <NotificationPage
-                                    handleClose={handleClose}
-                                    open={open}
-                                    message={updateMessage}
-                                />
-                                <Row>
-                                    <Form.Group className="form-group" as={Col} md="6">
-                                        <Form.Label>Name <span className='requiredStar'>*</span></Form.Label>
-                                        <Form.Control
-                                            defaultValue={addTraffickerData && addTraffickerData.trafficker_name}
-                                            name='trafficker_name'
-                                            onChange={(e) => setAddTraffickerData({
-                                                ...addTraffickerData,
-                                                [e.target.name]: e.target.value
-                                            })
-                                            }
-                                            type="text"
-                                            placeholder=""
-                                        />
-                                    </Form.Group>
-                                    <Form.Group className="form-group" as={Col} md="6">
-                                        <Form.Label>Age <span className='requiredStar'>*</span></Form.Label>
-                                        <Form.Control
-                                            defaultValue={addTraffickerData && addTraffickerData.age}
-                                            name='age'
-                                            onChange={(e) => setAddTraffickerData({
-                                                ...addTraffickerData,
-                                                [e.target.name]: e.target.value
-                                            })
-                                            }
-                                            type="number"
-                                            placeholder=""
-                                        />
-                                    </Form.Group>
-                                    <Form.Group as={Col} md="6" className="form-group">
-                                        <Form.Label>Gender <span className='requiredStar'>*</span></Form.Label>
-                                        <Form.Select
-                                            onChange={(e) => setAddTraffickerData({
-                                                ...addTraffickerData,
-                                                [e.target.name]: e.target.value
-                                            })
-                                            }
-                                            name='gender'
-                                            value={addTraffickerData && addTraffickerData.gender}
-                                        >
-                                            <option hidden="true">Open this select menu</option>
-                                            <option value="male">Male</option>
-                                            <option value="female">Female</option>
-                                            <option value="transgender">Transgender</option>
-                                        </Form.Select>
-                                    </Form.Group>
-                                    <Form.Group as={Col} md="6" className="form-group">
-                                        <Form.Label>Photo </Form.Label>
-                                        <Form.Control
-                                            onChange={handleFileInput}
-                                            type="file"
-                                            name="file"
-                                            size="lg"
-                                        />
-
-                                        {pictureArr && pictureArr.map((pic) => {
-                                            return (
-                                                <div style={{fontSize: "12px"}}> 
-                                                    {pic && pic.split('/').pop()}
-
-                                                </div>
-                                            )
-                                        })}
-
-
-                                    </Form.Group>
-                                    <Form.Group className="form-group" as={Col} md="6">
-                                        <Form.Label>ID Mark </Form.Label>
-                                        <Form.Control
-                                            defaultValue={addTraffickerData && addTraffickerData.identification_mark}
-                                            name='identification_mark'
-                                            onChange={(e) => setAddTraffickerData({
-                                                ...addTraffickerData,
-                                                [e.target.name]: e.target.value
-                                            })
-                                            }
-                                            type="text"
-                                            placeholder=""
-                                        />
-                                    </Form.Group>
-                                    <Form.Group className="form-group" as={Col} md="6">
-                                        <Form.Label>Is Trafficker ?</Form.Label>
-                                        <Form.Select name="is_trafficker"
-                                            value={addTraffickerData && addTraffickerData.is_trafficker && addTraffickerData.is_trafficker}
-                                            onChange={(e) => setAddTraffickerData({
-                                                ...addTraffickerData,
-                                                [e.target.name]: e.target.value
-                                            })}>
-                                            <option hidden={true}>Default select</option>
-                                            <option value={true}>Yes</option>
-                                            <option value={false}>No</option>
-                                        </Form.Select>
-                                    </Form.Group>
-                                    {/* <Form.Group className="form-group" as={Col} md="6">
-                                        <Form.Label>Alias </Form.Label>
-                                        <Form.Control
-                                            defaultValue={addTraffickerData && addTraffickerData.alias}
-                                            name='alias'
-                                            onChange={(e) => setAddTraffickerData({
-                                                ...addTraffickerData,
-                                                [e.target.name]: e.target.value
-                                            })
-                                            }
-                                            type="text"
-                                            placeholder=""
-                                        />
-                                    </Form.Group> ---commentend
-
-                                    <Form.Group as={Col} md="12" className="form-group">
-                                        <Form.Label>Address</Form.Label>
-                                        <Form.Control
-                                            as="textarea"
-                                            rows="4"
-                                            defaultValue={addTraffickerData && addTraffickerData.residential_address}
-                                            name='residential_address'
-                                            onChange={(e) => setAddTraffickerData({
-                                                ...addTraffickerData,
-                                                [e.target.name]: e.target.value
-                                            })
-                                            }
-                                            placeholder="Enter Address"
-                                        />
-                                    </Form.Group>
-                                </Row>
-                                <Row className="justify-content-between">
-                                    <Form.Group as={Col} md="auto">
-                                        <MDBBtn type='button' className="shadow-0 cancle_btn" color='danger'
-                                            onClick={() => onCancel()}>Close</MDBBtn>
-                                    </Form.Group>
-                                    <Form.Group as={Col} md="auto">
-                                        <Button type="submit"
-                                            disabled={addTraffickerData && !addTraffickerData.trafficker_name ? true :
-                                                !addTraffickerData.gender ? true : !addTraffickerData.age ? true :
-                                                    false}
-                                            className="submit_btn shadow-0" onClick={addUserFunc} >Submit</Button>
-                                    </Form.Group>
-                                </Row>
-                            </Form>
-                        </div>
-                    </Modal.Body>
-                </Modal> */}
 
         <Modal
           className="addFormModal"
@@ -647,7 +522,7 @@ const TraffickersList = (props) => {
           </Modal.Header>
           <Modal.Body>
             <div className="site_form_wraper">
-              <Form noValidate validated={validated} onSubmit={handleSubmit}>
+              <Form >
                 <NotificationPage
                   handleClose={handleClose}
                   open={open}
@@ -667,7 +542,7 @@ const TraffickersList = (props) => {
                         addTraffickerData.trafficker_name
                       }
                       type="text"
-                      required
+                      
                       placeholder=""
                       onChange={(e) =>
                         setAddTraffickerData({
@@ -676,9 +551,11 @@ const TraffickersList = (props) => {
                         })
                       }
                     />
-                    <Form.Control.Feedback type="invalid">
-                      Please enter Name of Trafficker / Accused
-                    </Form.Control.Feedback>
+                    {fieldData.field == "trafficker_name" && (
+                      <small className="mt-4 mb-2 text-danger">
+                        {fieldData && fieldData.message}
+                      </small>
+                    )}
                   </Form.Group>
                   <Form.Group as={Col} md="6" className="form-group">
                     <Form.Label>
@@ -691,7 +568,7 @@ const TraffickersList = (props) => {
                           [e.target.name]: e.target.value,
                         })
                       }
-                      required
+                      
                       name="gender"
                       value={
                         addTraffickerData &&
@@ -707,9 +584,11 @@ const TraffickersList = (props) => {
                       <option value="transgender">Transgender</option>
                       {/* <option value="others">Others</option> */}
                     </Form.Select>
-                    <Form.Control.Feedback type="invalid">
-                      Please select Gender
-                    </Form.Control.Feedback>
+                    {fieldData.field == "gender" && (
+                      <small className="mt-4 mb-2 text-danger">
+                        {fieldData && fieldData.message}
+                      </small>
+                    )}
                   </Form.Group>
                   <Form.Group className="form-group" as={Col} md="6">
                     <Form.Label>
@@ -717,7 +596,7 @@ const TraffickersList = (props) => {
                     </Form.Label>
                     <Form.Control
                       name="age"
-                      required
+                      
                       type="number"
                       placeholder=""
                       onChange={(e) =>
@@ -732,9 +611,11 @@ const TraffickersList = (props) => {
                         addTraffickerData.age
                       }
                     />
-                    <Form.Control.Feedback type="invalid">
-                      Please enter Age
-                    </Form.Control.Feedback>
+                     {fieldData.field == "age" && (
+                      <small className="mt-4 mb-2 text-danger">
+                        {fieldData && fieldData.message}
+                      </small>
+                    )}
                   </Form.Group>
                   <Form.Group as={Col} md="6" className="form-group">
                     <Form.Label>
@@ -748,7 +629,7 @@ const TraffickersList = (props) => {
                           [e.target.name]: e.target.value,
                         })
                       }
-                      required
+                      
                       value={
                         addTraffickerData &&
                         addTraffickerData.relation_with_survivor &&
@@ -766,9 +647,11 @@ const TraffickersList = (props) => {
                       <option value="friend">Friend</option>
                       <option value="unknown">Unknown</option>
                     </Form.Select>
-                    <Form.Control.Feedback type="invalid">
-                      Please select Relationship with survivour (if any)
-                    </Form.Control.Feedback>
+                    {fieldData.field == "relation_with_survivor" && (
+                      <small className="mt-4 mb-2 text-danger">
+                        {fieldData && fieldData.message}
+                      </small>
+                    )}
                   </Form.Group>
                   <Form.Group as={Col} md="6" className="form-group">
                     <Form.Label>Residential address (SA)</Form.Label>
@@ -823,30 +706,31 @@ const TraffickersList = (props) => {
                           [e.target.name]: e.target.value,
                         })
                       }
-                      required
+                      
                       defaultValue={
                         addTraffickerData &&
                         addTraffickerData.identification_mark &&
                         addTraffickerData.identification_mark
                       }
                     />
-                    <Form.Control.Feedback type="invalid">
-                      Please enter Identification Mark
-                    </Form.Control.Feedback>
+                    {fieldData.field == "identification_mark" && (
+                      <small className="mt-4 mb-2 text-danger">
+                        {fieldData && fieldData.message}
+                      </small>
+                    )}
+                    
                   </Form.Group>
                   <Form.Group as={Col} md="6" className="mb-3">
-                    <Form.Label>Document</Form.Label>
+                    <Form.Label>Image</Form.Label>
                     <Form.Control
                       onChange={handleFileInput}
                       type="file"
-                      required
+                      
                       name="file"
                       size="lg"
                       // defaultValue={addDocumentData && addDocumentData.file && addDocumentData.file}
                     />
-                    <Form.Control.Feedback type="invalid">
-                      Please add document.
-                    </Form.Control.Feedback>
+                  
                   </Form.Group>
                   <Form.Group as={Col} md="6" className="form-group">
                     <Form.Label>
@@ -861,7 +745,7 @@ const TraffickersList = (props) => {
                         })
                       }
                       name="trafficked_to"
-                      required
+                      
                       value={
                         addTraffickerData &&
                         addTraffickerData.trafficked_to &&
@@ -874,9 +758,12 @@ const TraffickersList = (props) => {
                       <option value="destination">Destination</option>
                       <option value="transit">Transit</option>
                     </Form.Select>
-                    <Form.Control.Feedback type="invalid">
-                      Please select Source
-                    </Form.Control.Feedback>
+                    {fieldData.field == "trafficked_to" && (
+                      <small className="mt-4 mb-2 text-danger">
+                        {fieldData && fieldData.message}
+                      </small>
+                    )}
+                    
                   </Form.Group>
                   {addTraffickerData &&
                     addTraffickerData.trafficked_to === "destination" && (
@@ -887,14 +774,7 @@ const TraffickersList = (props) => {
                         className="form-group"
                       >
                         <Row>
-                          {/* <Form.Group as={Col} md="6" className="form-group">
-                                                <Form.Label>Photo </Form.Label>
-                                                <Form.Control
-                                                    type="file"
-                                                    name="file"
-                                                    size="lg"
-                                                />
-                                            </Form.Group> */}
+                         
                           <Form.Group as={Col} md="12" className="form-group">
                             <h5>Destination</h5>
                           </Form.Group>
@@ -1513,11 +1393,16 @@ const TraffickersList = (props) => {
                   <Form.Group as={Col} md="auto">
                     <Button
                       type="submit"
-                      disabled={resultLoad}
-                      // onClick={(e) => addUserFunc(e)}
+                      // disabled={resultLoad}
+                      disabled={loader == true ? true : false}
+                      onClick={(e) => addUserFunc(e)}
                       className="submit_btn shadow-0"
                     >
-                      Submit
+                       {loader && loader === true ? (
+                        <div class="spinner-border bigSpinnerWidth text-info text-center"></div>
+                      ) : (
+                        "Submit"
+                      )}
                     </Button>
                   </Form.Group>
                 </Row>
@@ -1538,3 +1423,161 @@ const TraffickersList = (props) => {
 };
 
 export default TraffickersList;
+
+
+
+ {/* <Modal className="addFormModal" show={modalAddShow} onHide={setModalAddShow} size="lg" aria-labelledby="reason-modal" centered>
+                    <Modal.Header closeButton>
+                        <Modal.Title id="contained-modal-title-vcenter">
+                            Add Traffickers
+                        </Modal.Title>
+                    </Modal.Header>
+                    <Modal.Body>
+                        <div className="site_form_wraper">
+                            <Form noValidate validated={validated} onSubmit={handleSubmit}>
+                                <NotificationPage
+                                    handleClose={handleClose}
+                                    open={open}
+                                    message={updateMessage}
+                                />
+                                <Row>
+                                    <Form.Group className="form-group" as={Col} md="6">
+                                        <Form.Label>Name <span className='requiredStar'>*</span></Form.Label>
+                                        <Form.Control
+                                            defaultValue={addTraffickerData && addTraffickerData.trafficker_name}
+                                            name='trafficker_name'
+                                            onChange={(e) => setAddTraffickerData({
+                                                ...addTraffickerData,
+                                                [e.target.name]: e.target.value
+                                            })
+                                            }
+                                            type="text"
+                                            placeholder=""
+                                        />
+                                    </Form.Group>
+                                    <Form.Group className="form-group" as={Col} md="6">
+                                        <Form.Label>Age <span className='requiredStar'>*</span></Form.Label>
+                                        <Form.Control
+                                            defaultValue={addTraffickerData && addTraffickerData.age}
+                                            name='age'
+                                            onChange={(e) => setAddTraffickerData({
+                                                ...addTraffickerData,
+                                                [e.target.name]: e.target.value
+                                            })
+                                            }
+                                            type="number"
+                                            placeholder=""
+                                        />
+                                    </Form.Group>
+                                    <Form.Group as={Col} md="6" className="form-group">
+                                        <Form.Label>Gender <span className='requiredStar'>*</span></Form.Label>
+                                        <Form.Select
+                                            onChange={(e) => setAddTraffickerData({
+                                                ...addTraffickerData,
+                                                [e.target.name]: e.target.value
+                                            })
+                                            }
+                                            name='gender'
+                                            value={addTraffickerData && addTraffickerData.gender}
+                                        >
+                                            <option hidden="true">Open this select menu</option>
+                                            <option value="male">Male</option>
+                                            <option value="female">Female</option>
+                                            <option value="transgender">Transgender</option>
+                                        </Form.Select>
+                                    </Form.Group>
+                                    <Form.Group as={Col} md="6" className="form-group">
+                                        <Form.Label>Photo </Form.Label>
+                                        <Form.Control
+                                            onChange={handleFileInput}
+                                            type="file"
+                                            name="file"
+                                            size="lg"
+                                        />
+
+                                        {pictureArr && pictureArr.map((pic) => {
+                                            return (
+                                                <div style={{fontSize: "12px"}}> 
+                                                    {pic && pic.split('/').pop()}
+
+                                                </div>
+                                            )
+                                        })}
+
+
+                                    </Form.Group>
+                                    <Form.Group className="form-group" as={Col} md="6">
+                                        <Form.Label>ID Mark </Form.Label>
+                                        <Form.Control
+                                            defaultValue={addTraffickerData && addTraffickerData.identification_mark}
+                                            name='identification_mark'
+                                            onChange={(e) => setAddTraffickerData({
+                                                ...addTraffickerData,
+                                                [e.target.name]: e.target.value
+                                            })
+                                            }
+                                            type="text"
+                                            placeholder=""
+                                        />
+                                    </Form.Group>
+                                    <Form.Group className="form-group" as={Col} md="6">
+                                        <Form.Label>Is Trafficker ?</Form.Label>
+                                        <Form.Select name="is_trafficker"
+                                            value={addTraffickerData && addTraffickerData.is_trafficker && addTraffickerData.is_trafficker}
+                                            onChange={(e) => setAddTraffickerData({
+                                                ...addTraffickerData,
+                                                [e.target.name]: e.target.value
+                                            })}>
+                                            <option hidden={true}>Default select</option>
+                                            <option value={true}>Yes</option>
+                                            <option value={false}>No</option>
+                                        </Form.Select>
+                                    </Form.Group>
+                                    {/* <Form.Group className="form-group" as={Col} md="6">
+                                        <Form.Label>Alias </Form.Label>
+                                        <Form.Control
+                                            defaultValue={addTraffickerData && addTraffickerData.alias}
+                                            name='alias'
+                                            onChange={(e) => setAddTraffickerData({
+                                                ...addTraffickerData,
+                                                [e.target.name]: e.target.value
+                                            })
+                                            }
+                                            type="text"
+                                            placeholder=""
+                                        />
+                                    </Form.Group> ---commentend
+
+                                    <Form.Group as={Col} md="12" className="form-group">
+                                        <Form.Label>Address</Form.Label>
+                                        <Form.Control
+                                            as="textarea"
+                                            rows="4"
+                                            defaultValue={addTraffickerData && addTraffickerData.residential_address}
+                                            name='residential_address'
+                                            onChange={(e) => setAddTraffickerData({
+                                                ...addTraffickerData,
+                                                [e.target.name]: e.target.value
+                                            })
+                                            }
+                                            placeholder="Enter Address"
+                                        />
+                                    </Form.Group>
+                                </Row>
+                                <Row className="justify-content-between">
+                                    <Form.Group as={Col} md="auto">
+                                        <MDBBtn type='button' className="shadow-0 cancle_btn" color='danger'
+                                            onClick={() => onCancel()}>Close</MDBBtn>
+                                    </Form.Group>
+                                    <Form.Group as={Col} md="auto">
+                                        <Button type="submit"
+                                            disabled={addTraffickerData && !addTraffickerData.trafficker_name ? true :
+                                                !addTraffickerData.gender ? true : !addTraffickerData.age ? true :
+                                                    false}
+                                            className="submit_btn shadow-0" onClick={addUserFunc} >Submit</Button>
+                                    </Form.Group>
+                                </Row>
+                            </Form>
+                        </div>
+                    </Modal.Body>
+                </Modal> */}

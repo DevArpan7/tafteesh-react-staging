@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import NotificationPage from "../../components/NotificationPage";
 import axios from "axios";
 import { NavLink, useHistory } from "react-router-dom";
-import { getBlockList, getDistrictList } from "../../redux/action";
+import { getBlockList, getDistrictList,getUsersList } from "../../redux/action";
 
 const AddUserForm = (props) => {
   console.log(props, "add user form");
@@ -36,9 +36,10 @@ const AddUserForm = (props) => {
     },
   };
   const [messagType, setMessagType] = useState("");
-
+  const [fieldData, setFieldData] = useState({ field: "", message: "" });
+  const [loader, setLoader] = useState(false);
   const { userId, data } = props;
-const[rolArr,setRolArr] =useState([])
+  const [rolArr, setRolArr] = useState([]);
   console.log(userId, data, "userId");
 
   const handleClick = () => {
@@ -48,17 +49,16 @@ const[rolArr,setRolArr] =useState([])
   const handleClose = () => {
     setOpen(false);
   };
-
-
-  useEffect(()=>{
-     let arr = roleList &&
+  
+  useEffect(() => {
+    let arr =
+      roleList &&
       roleList.length > 0 &&
-      roleList.filter((data) => data.name != 'Admin')
-      setRolArr(arr)
+      roleList.filter((data) => data.name != "Admin");
+    setRolArr(arr);
+  }, [roleList]);
 
-  },[roleList])
-
-  console.log(rolArr,"rolArr");
+  console.log(rolArr, "rolArr");
   const getDistrictListByState = (e) => {
     setAddUserData({
       ...addUserData,
@@ -79,9 +79,8 @@ const[rolArr,setRolArr] =useState([])
     dispatch(getBlockList(addUserData.state, e.target.value));
   };
 
-
-/////////////////////file upload function/////////////////////////
-const handleFileInput = (e) => {
+  /////////////////////file upload function/////////////////////////
+  const handleFileInput = (e) => {
     console.log(e, e.target.files[0]);
     let data = e.target.files[0];
 
@@ -117,44 +116,107 @@ const handleFileInput = (e) => {
       });
   };
 
-
-
-  const handleSubmit = (event) => {
-    const form = event.currentTarget;
-    if (form.checkValidity() === false) {
-      if (userId) {
-        addUserFunc(event);
-      } else {
-        event.preventDefault();
-        event.stopPropagation();
-      }
+  useEffect(() => {
+    if (addUserData && addUserData.fname) {
+      setFieldData({ field: "fname", message: "" });
+    } else if (addUserData && addUserData.lname) {
+      setFieldData({ field: "lname", message: "" });
+    } else if (addUserData && addUserData.email) {
+      setFieldData({ field: "email", message: "" });
+    } else if (addUserData && addUserData.mobile) {
+      setFieldData({ field: "mobile", message: "" });
+    } else if (addUserData && addUserData.alternative_ph_no) {
+      setFieldData({ field: "alternative_ph_no", message: "" });
+    } else if (addUserData && addUserData.pin) {
+      setFieldData({ field: "pin", message: "" });
+    } else if (addUserData && addUserData.role) {
+      setFieldData({ field: "role", message: "" });
     } else {
-      addUserFunc(event);
+      setFieldData({ field: "", message: "" });
     }
-    setValidated(true);
-  };
+  }, [addUserData]);
 
   const addUserFunc = (e) => {
     e.preventDefault();
-
-    var body = {
-        ...addUserData,
-        image: trafficimage && trafficimage
-    };
     var pattern = new RegExp(
       /^(("[\w-\s]+")|([\w-]+(?:\.[\w-]+)*)|("[\w-\s]+")([\w-]+(?:\.[\w-]+)*))(@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$)|(@\[?((25[0-5]\.|2[0-4][0-9]\.|1[0-9]{2}\.|[0-9]{1,2}\.))((25[0-5]|2[0-4][0-9]|1[0-9]{2}|[0-9]{1,2})\.){2}(25[0-5]|2[0-4][0-9]|1[0-9]{2}|[0-9]{1,2})\]?$)/i
     );
+    var phonPattern = new RegExp("^((\\+91-?)|0)?[0-9]{10}$")
+    var pinPattern = new RegExp("^((\\+91-?)|0)?[0-9]{6}$")
     let isValid = true;
-    if (!pattern.test(body.email)) {
+    const elment = document.getElementById("field-view");
+    if (addUserData && !addUserData.fname) {
+      setFieldData({
+        field: "fname",
+        message: "Please enter First Name",
+      });
+      
+      window.scrollTo(10, elment.offsetTop);
+    } else if (addUserData && !addUserData.lname) {
+      setFieldData({
+        field: "lname",
+        message: "Please enter Last Name",
+      });
+      window.scrollTo(10, elment.offsetTop);
+    } else if (addUserData && !addUserData.email) {
+      setFieldData({
+        field: "email",
+        message: "Please enter Email Id",
+      });
+      window.scrollTo(9, elment.offsetTop);
+    } else if (
+      addUserData &&
+      addUserData.email &&
+      !pattern.test(addUserData.email)
+    ) {
+      setFieldData({ field: "email", message: "Please enter valid email Id." });
+      window.scrollTo(9, elment.offsetTop);
       isValid = false;
+    } else if (addUserData && !addUserData.mobile) {
+      setFieldData({ field: "mobile", message: "Please enter Mobile no" });
+      window.scrollTo(9, elment.offsetTop);
+    } else if (addUserData && addUserData.mobile < 1000000000) {
+      setFieldData({ field: "mobile", message: "Mobile no is invalid" });
+      window.scrollTo(9, elment.offsetTop);
+    }else if (addUserData && addUserData.mobile && !phonPattern.test(addUserData.mobile)) {
+      setFieldData({ field: "mobile", message: "Mobile no is invalid" });
+      window.scrollTo(9, elment.offsetTop);
+    }
+    else if (addUserData && addUserData.alternative_ph_no < 1000000000) {
+      setFieldData({ field: "alternative_ph_no", message: "Mobile no is invalid" });
+      window.scrollTo(9, elment.offsetTop);
 
-      setErorMessage("Please enter valid email address.");
+    }else if (addUserData &&  addUserData.alternative_ph_no && !phonPattern.test(addUserData.alternative_ph_no)) {
+      setFieldData({ field: "alternative_ph_no", message: "Mobile no is invalid" });
+      window.scrollTo(9, elment.offsetTop);
+    }
+    else if (addUserData && addUserData.pin < 99999) {
+      setFieldData({ field: "pin", message: "PIN no is invalid" });
+      window.scrollTo(1, elment.offsetTop);
+      
+    }else if (addUserData && addUserData.pin && !pinPattern.test(addUserData.pin)) {
+      setFieldData({ field: "pin", message: "PIN no is invalid" });
+      window.scrollTo(1, elment.offsetTop);
+      
+    }
+
+     else if (addUserData && !addUserData.role) {
+      setFieldData({ field: "role", message: "Please select Role" });
     } else {
+      setFieldData({ field: "", message: "" });
+
+      var body = {
+        ...addUserData,
+        image: trafficimage && trafficimage,
+      };
+
       if (userId) {
+        setLoader(true);
         axios
           .patch(api + "/user/update-profile/" + userId, body, axiosConfig)
           .then((res) => {
             console.log(res);
+            setLoader(false);
 
             if (res && res.data && res.data.error == false) {
               const { data } = res;
@@ -164,6 +226,7 @@ const handleFileInput = (e) => {
               setMessagType("success");
               console.log(data, res);
               dispatch({ type: "USERS_LIST", data: data });
+              dispatch(getUsersList());
               history.push("/user-list");
             } else {
               handleClick();
@@ -173,16 +236,20 @@ const handleFileInput = (e) => {
           })
           .catch((error) => {
             console.log(error);
+            setLoader(false);
+
             handleClick();
             setMessagType("error");
             setUpdateMessage(error && error.message);
           });
       } else {
+        setLoader(true);
+
         axios
           .post(api + "/user/create", body, axiosConfig)
           .then((res) => {
             console.log(res);
-
+            setLoader(false);
             if (res && res.data && res.data.error == false) {
               const { data } = res;
               setErorMessage("");
@@ -190,6 +257,7 @@ const handleFileInput = (e) => {
               setMessagType("success");
               setUpdateMessage(res && res.data.message);
               console.log(data, res);
+              dispatch(getUsersList());
               dispatch({ type: "USERS_LIST", data: data });
               history.push("/user-list");
             } else {
@@ -199,6 +267,7 @@ const handleFileInput = (e) => {
             }
           })
           .catch((error) => {
+            setLoader(false);
             console.log(error);
             handleClick();
             setMessagType("error");
@@ -231,7 +300,7 @@ const handleFileInput = (e) => {
 
   return (
     <>
-      <Form noValidate validated={validated} onSubmit={handleSubmit}>
+      <Form id="field-view">
         <NotificationPage
           handleClose={handleClose}
           open={open}
@@ -270,7 +339,6 @@ const handleFileInput = (e) => {
                 First Name: <span className="requiredStar">*</span>
               </Form.Label>
               <Form.Control
-                required
                 defaultValue={addUserData && addUserData.fname}
                 name="fname"
                 onChange={(e) =>
@@ -281,10 +349,11 @@ const handleFileInput = (e) => {
                 }
                 type="text"
                 placeholder=""
-              />
-              <Form.Control.Feedback type="invalid">
-                First Name is a required field.
-              </Form.Control.Feedback>
+              /> {fieldData.field == "fname" && (
+                <small className="mt-4 mb-2 text-danger">
+                  {fieldData && fieldData.message}
+                </small>
+              )}
             </Form.Group>
             <Form.Group
               className="form-group"
@@ -297,7 +366,6 @@ const handleFileInput = (e) => {
               </Form.Label>
               <Form.Control
                 defaultValue={addUserData && addUserData.lname}
-                required
                 name="lname"
                 onChange={(e) =>
                   setAddUserData({
@@ -307,10 +375,11 @@ const handleFileInput = (e) => {
                 }
                 type="text"
                 placeholder=""
-              />
-              <Form.Control.Feedback type="invalid">
-                Last Name Status is a required field.
-              </Form.Control.Feedback>
+              /> {fieldData.field == "lname" && (
+                <small className="mt-4 mb-2 text-danger">
+                  {fieldData && fieldData.message}
+                </small>
+              )}
             </Form.Group>
             <Form.Group
               className="form-group"
@@ -325,7 +394,6 @@ const handleFileInput = (e) => {
                 defaultValue={addUserData && addUserData.email}
                 type="email"
                 name="email"
-                required
                 onChange={(e) =>
                   setAddUserData({
                     ...addUserData,
@@ -338,11 +406,12 @@ const handleFileInput = (e) => {
                 className="text-danger"
                 style={{ fontSize: 12, marginTop: 5 }}
               >
-                {erorMessage && erorMessage}{" "}
+              {fieldData.field == "email" && (
+                      <small className="mt-4 mb-2 text-danger">
+                        {fieldData && fieldData.message}
+                      </small>
+                    )}
               </div>
-              <Form.Control.Feedback type="invalid">
-                Please enter Email.
-              </Form.Control.Feedback>
             </Form.Group>
 
             <Form.Group
@@ -379,6 +448,7 @@ const handleFileInput = (e) => {
                 Phone No <span className="requiredStar">*</span>
               </Form.Label>
               <Form.Control
+                maxLength={10}
                 type="text"
                 name="mobile"
                 defaultValue={addUserData && addUserData.mobile}
@@ -391,9 +461,11 @@ const handleFileInput = (e) => {
                 placeholder=""
                 required
               />
-              <Form.Control.Feedback type="invalid">
-                Please enter Phone no.
-              </Form.Control.Feedback>
+              {fieldData.field == "mobile" && (
+                      <small className="mt-4 mb-2 text-danger">
+                        {fieldData && fieldData.message}
+                      </small>
+                    )}
             </Form.Group>
             <Form.Group
               className="form-group"
@@ -403,6 +475,7 @@ const handleFileInput = (e) => {
             >
               <Form.Label>Alternate Phone number</Form.Label>
               <Form.Control
+              maxLength={10}
                 type="text"
                 name="alternative_ph_no"
                 defaultValue={addUserData && addUserData.alternative_ph_no}
@@ -413,7 +486,11 @@ const handleFileInput = (e) => {
                   })
                 }
                 placeholder=""
-              />
+              />{fieldData.field == "alternative_ph_no" && (
+                <small className="mt-4 mb-2 text-danger">
+                  {fieldData && fieldData.message}
+                </small>
+              )}
             </Form.Group>
           </Row>
         </div>
@@ -514,6 +591,7 @@ const handleFileInput = (e) => {
               <Form.Control
                 defaultValue={addUserData && addUserData.pin && addUserData.pin}
                 type="text"
+                maxLength={6}
                 name="pin"
                 placeholder=""
                 onChange={(e) =>
@@ -523,6 +601,11 @@ const handleFileInput = (e) => {
                   })
                 }
               />
+              {fieldData.field == "pin" && (
+                      <small className="mt-4 mb-2 text-danger">
+                        {fieldData && fieldData.message}
+                      </small>
+                    )}
             </Form.Group>
           </Row>
         </div>
@@ -546,7 +629,11 @@ const handleFileInput = (e) => {
                     [e.target.name]: e.target.value,
                   })
                 }
-                value={addUserData && addUserData.state && addUserData.state}
+                value={
+                  addUserData &&
+                  addUserData.organization_type &&
+                  addUserData.organization_type
+                }
                 name="organization_type"
                 aria-label="Default select example"
               >
@@ -608,6 +695,7 @@ const handleFileInput = (e) => {
                       return <option value={data._id}>{data.name}</option>;
                     })}
               </Form.Select>
+              
             </Form.Group>
             <Form.Group
               className="form-group"
@@ -621,7 +709,6 @@ const handleFileInput = (e) => {
               <Form.Select
                 value={addUserData && addUserData.role && addUserData.role._id}
                 name="role"
-                required
                 onChange={(e) =>
                   setAddUserData({
                     ...addUserData,
@@ -636,31 +723,25 @@ const handleFileInput = (e) => {
                 {rolArr &&
                   rolArr.length > 0 &&
                   rolArr.map((data) => {
-                    return (
-                      <option value={data._id}>
-                        {data.name}
-                      </option>
-                    );
+                    return <option value={data._id}>{data.name}</option>;
                   })}
               </Form.Select>
-              <Form.Control.Feedback type="invalid">
-                Please select Role
-              </Form.Control.Feedback>
+              {fieldData.field == "role" && (
+                      <small className="mt-4 mb-2 text-danger">
+                        {fieldData && fieldData.message}
+                      </small>
+                    )}
             </Form.Group>
             <Form.Group as={Col} md="6" className="mb-3">
-                    <Form.Label>Document</Form.Label>
-                    <Form.Control
-                      onChange={handleFileInput}
-                      type="file"
-                      required
-                      name="file"
-                      size="lg"
-                      // defaultValue={addDocumentData && addDocumentData.file && addDocumentData.file}
-                    />
-                    <Form.Control.Feedback type="invalid">
-                      Please add document.
-                    </Form.Control.Feedback>
-                    </Form.Group>
+              <Form.Label>Document</Form.Label>
+              <Form.Control
+                onChange={handleFileInput}
+                type="file"
+                name="file"
+                size="lg"
+                // defaultValue={addDocumentData && addDocumentData.file && addDocumentData.file}
+              />
+            </Form.Group>
           </Row>
           {/* </div>
 
@@ -812,11 +893,15 @@ const handleFileInput = (e) => {
           <Form.Group as={Col} xs="auto">
             <Button
               className="submit_btn text-uppercase"
-              // disabled={addUserData && !addUserData.fname ? true : !addUserData.lname ? true : !addUserData.email ? true : !addUserData.mobile ? true : !addUserData.role  ? true :  addUserData.role === 'false' ? true : false}
-              // onClick={addUserFunc}
+              disabled={loader == true ? true : false}
+              onClick={addUserFunc}
               type="submit"
             >
-              Submit
+              {loader && loader === true ? (
+                <div class="spinner-border bigSpinnerWidth text-info text-center"></div>
+              ) : (
+                "Submit"
+              )}
             </Button>
           </Form.Group>
         </Row>

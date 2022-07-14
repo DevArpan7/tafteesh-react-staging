@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { jsPDF } from "jspdf";
-import ReactDragListView from 'react-drag-listview';
+import ReactDragListView from "react-drag-listview";
 import "jspdf-autotable";
 import { Topbar, SurvivorTopCard } from "../../components";
 import { FilterMatchMode, FilterOperator } from "primereact/api";
@@ -36,6 +36,7 @@ import {
   getSurvivorDetails,
   getCitDimensionQuestionList,
   getCitDimensionList,
+  // getCitDimensionListAllByVersion,
   getCitList,
   getCitDimensionQuestionsById,
   createCITDetailApi,
@@ -43,6 +44,8 @@ import {
   createCITListOfAction,
   getCitListOfActionsByCitId,
   getCITStarDetails,
+  getCITVersionList,
+  getCitDimensionListByVersionId
 } from "../../redux/action";
 import star from "../../assets/img/star.png";
 import moment from "moment";
@@ -76,7 +79,10 @@ const SurvivorCIT = (props) => {
     (state) => state.citDimensionQuestionList
   );
   const citList = useSelector((state) => state.citList);
-  const [defaultData,setDefaultData]= useState({version: 1, status: "ongoing"})
+  const [defaultData, setDefaultData] = useState({
+    // version: 1,
+    status: "ongoing",
+  });
   const [addCitData, setAddCitData] = useState({});
   const [updateMessage, setUpdateMessage] = useState("");
   const api = "https://tafteesh-staging-node.herokuapp.com/api";
@@ -87,6 +93,8 @@ const SurvivorCIT = (props) => {
       Authorization: `Bearer ${token}`,
     },
   };
+  const citVersionList = useSelector((state) => state.citVersionList);
+
   const [selectedData, setSelectedData] = useState("");
   const [activeClass, setActiveClass] = useState(false);
   const [addDimnsionData, setAddDimensionData] = useState({});
@@ -161,6 +169,8 @@ const SurvivorCIT = (props) => {
     setGlobalFilterValue1(value);
   };
   const onSelectRow = (item) => {
+
+    console.log(item,"itemItem")
     setSelectedData(item);
     setSelectedRow(item);
     setActiveClass(true);
@@ -170,6 +180,8 @@ const SurvivorCIT = (props) => {
     getCitListOfActionsByCitId(item._id).then((res) => {
       setActionListToShow(res);
     });
+    dispatch(getCitDimensionListByVersionId(item.cit_version))
+
   };
   const onGotoAddcit = () => {
     setModalCitShow(true);
@@ -180,8 +192,10 @@ const SurvivorCIT = (props) => {
       alert("Please a CIT to edit");
     } else {
       setModalCitShow(true);
-      const setData = {...selectedData};
-      setData.next_assesment_date = moment(setData.next_assesment_date).format("DD-MMM-YYYY");
+      const setData = { ...selectedData };
+      setData.next_assesment_date = moment(setData.next_assesment_date).format(
+        "DD-MMM-YYYY"
+      );
       setAddCitData(setData);
     }
   };
@@ -224,7 +238,9 @@ const SurvivorCIT = (props) => {
     if (props.location.state) {
       dispatch(getSurvivorDetails(props.location.state));
     }
-    dispatch(getCitDimensionList());
+    // dispatch(getCitDimensionList());
+    // dispatch(getCitDimensionListAllByVersion())
+    dispatch(getCITVersionList());
     dispatch(getCitDimensionQuestionList());
     dispatch(getCitList(props.location.state));
   }, [props]);
@@ -283,7 +299,6 @@ const SurvivorCIT = (props) => {
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [citDimensionList]);
- 
 
   ////////////// API CALL FUCTION FOR ADD AND UPDATE CIT ////////
   const addCitFunc = (e) => {
@@ -307,14 +322,19 @@ const SurvivorCIT = (props) => {
         }
       }
     }
-   
+
     // console.warn(pictureData, profile);
     var body = {
       ...addCitData,
-      ...defaultData,
+      "cit_version": addCitData && addCitData.cit_version ?  addCitData.cit_version  : citVersionList &&
+      citVersionList.length > 0 &&
+      citVersionList[0]._id,
+      "status" : addCitData && addCitData.status ?  addCitData.status  : defaultData.status,
       survivor: props.location.state,
     };
-    body.next_assesment_date = moment(body.next_assesment_date).format("YYYY-MM-DD");
+    body.next_assesment_date = moment(body.next_assesment_date).format(
+      "YYYY-MM-DD"
+    );
 
     // console.log("body", body)
     if (addCitData && addCitData._id) {
@@ -337,7 +357,7 @@ const SurvivorCIT = (props) => {
           console.log(error, "fir add error");
         });
     } else {
-      if(!isValid){
+      if (!isValid) {
         alert("CIT already exists for that data");
         return;
       }
@@ -406,7 +426,7 @@ const SurvivorCIT = (props) => {
 
             setModalDimensionsShow(false);
             setSelectedData(response.data.result);
-            
+
             if (selectedData) {
               if (survivorDetails) {
                 getCITStarDetails(survivorDetails?._id).then((res) => {
@@ -435,7 +455,9 @@ const SurvivorCIT = (props) => {
       case "select":
         return (
           <Form.Select required>
-            <option value="" hidden={true}>Default select</option>
+            <option value="" hidden={true}>
+              Default select
+            </option>
             {ques.options?.map((opt, index) => {
               return (
                 <option key={index} value={opt}>
@@ -445,23 +467,23 @@ const SurvivorCIT = (props) => {
             })}
           </Form.Select>
         );
-        case "radio":
-          return (
-            <>
-              {ques.options?.map((opt, index) => {
-                return (
-                  <Form.Check
-                    inline
-                    name={`radio_${ques._id}`}
-                    className="Radio"
-                    key={index}
-                    type="radio"
-                    label={opt}
-                  />
-                );
-              })}
-            </>
-          );
+      case "radio":
+        return (
+          <>
+            {ques.options?.map((opt, index) => {
+              return (
+                <Form.Check
+                  inline
+                  name={`radio_${ques._id}`}
+                  className="Radio"
+                  key={index}
+                  type="radio"
+                  label={opt}
+                />
+              );
+            })}
+          </>
+        );
       case "checkbox":
         return (
           <>
@@ -511,7 +533,11 @@ const SurvivorCIT = (props) => {
           data.dimension_detail.push({
             question_id: item._id,
             answer: e.target.elements[index].value,
-            action_needed: actionListToSend.find((t)=> t.dimension_queston === item._id) ? true: false,
+            action_needed: actionListToSend.find(
+              (t) => t.dimension_queston === item._id
+            )
+              ? true
+              : false,
           });
         }
       } else if (item.answer_type === "checkbox") {
@@ -526,13 +552,16 @@ const SurvivorCIT = (props) => {
         data.dimension_detail.push({
           question_id: item._id,
           answer,
-          action_needed:  actionListToSend.find((t)=> t.dimension_queston === item._id) ? true: false,
+          action_needed: actionListToSend.find(
+            (t) => t.dimension_queston === item._id
+          )
+            ? true
+            : false,
         });
-      }
-      else if (item.answer_type === "radio") {
+      } else if (item.answer_type === "radio") {
         let answer = "";
         let radioItem = `radio_${item._id}`;
-        console.log(e.target.elements[radioItem])
+        console.log(e.target.elements[radioItem]);
         e.target.elements[radioItem]?.forEach((groupItem, index1) => {
           if (groupItem.checked) {
             answer = answer
@@ -543,7 +572,11 @@ const SurvivorCIT = (props) => {
         data.dimension_detail.push({
           question_id: item._id,
           answer,
-          action_needed:  actionListToSend.find((t)=> t.dimension_queston === item._id) ? true: false,
+          action_needed: actionListToSend.find(
+            (t) => t.dimension_queston === item._id
+          )
+            ? true
+            : false,
         });
       }
     });
@@ -618,7 +651,8 @@ const SurvivorCIT = (props) => {
         cit_id: selectedData?._id,
         dimension_id: item._id,
         dimension_queston: ques._id,
-        sr_no: toUpdate.length === 0? 0 : toUpdate[toUpdate.length-1].sr_no +1,
+        sr_no:
+          toUpdate.length === 0 ? 0 : toUpdate[toUpdate.length - 1].sr_no + 1,
         score: 0,
         department: "",
         duty_bearer: "",
@@ -851,32 +885,30 @@ const SurvivorCIT = (props) => {
       });
   };
 
-  const onDragDrop  = (from , to) =>{
-    console.log(from,to,"froooo")
+  const onDragDrop = (from, to) => {
+    console.log(from, to, "froooo");
     const data = [...actionListToShow];
-    data[from].sr_no = to+1;
-    data[to].sr_no = from+1;
+    data[from].sr_no = to + 1;
+    data[to].sr_no = from + 1;
     axios
-    .patch(
-      api + "/cit-goal/rearrange-serial-number",
-      data,
-      axiosConfig
-    )
-    .then((response) => {
-      if (response.data && response.data.error === false) {
-        setActionListToShow(response.data.data);
-      }
-    })
-    .catch((error) => {
-      console.log(error, "fir add error");
-    });
-  }
+      .patch(api + "/cit-goal/rearrange-serial-number", data, axiosConfig)
+      .then((response) => {
+        if (response.data && response.data.error === false) {
+          setActionListToShow(response.data.data);
+        }
+      })
+      .catch((error) => {
+        console.log(error, "fir add error");
+      });
+  };
   const onAssesmentChange = (e) => {
-    const nextAssDate = moment(e.target.value).add(6, "M").format("DD-MMM-YYYY");
+    const nextAssDate = moment(e.target.value)
+      .add(6, "M")
+      .format("DD-MMM-YYYY");
     setAddCitData({
       ...addCitData,
       next_assesment_date: nextAssDate,
-      [e.target.name]: e.target.value
+      [e.target.name]: e.target.value,
     });
   };
 
@@ -1047,7 +1079,7 @@ const SurvivorCIT = (props) => {
                     // filterApply={filterApplyTemplate}
                     // filterFooter={filterFooterTemplate}
                   />
-                   <Column
+                  <Column
                     header="WELL BEING SCORE"
                     filterField="overall_score"
                     style={{ minWidth: "14rem" }}
@@ -1079,7 +1111,6 @@ const SurvivorCIT = (props) => {
                     body={getBodyOfColumn}
                     filter
                   />
-                  
                 </DataTable>
               </div>
             </div>
@@ -1150,7 +1181,7 @@ const SurvivorCIT = (props) => {
                                 >
                                   <div className="citQuestion_top">
                                     <div className="citQuestion_top_left">
-                                      <h3 className="mb-0">Q.{index1+1}.</h3>
+                                      <h3 className="mb-0">Q.{index1 + 1}.</h3>
                                     </div>
                                     <div className="citQuestion_top_middle">
                                       {detail.question_id?.data}
@@ -1192,8 +1223,13 @@ const SurvivorCIT = (props) => {
           )}
 
           <div className="mt-5 goalsList" id="list_goal_pdf">
-            <h4 className="mb-4 small_heading">Goals/List of action (Pending - {actionListToShow?.filter((t)=> t.status=== false).length}, closed - {actionListToShow?.filter((t)=> t.status=== true).length})</h4>
-            
+            <h4 className="mb-4 small_heading">
+              Goals/List of action (Pending -{" "}
+              {actionListToShow?.filter((t) => t.status === false).length},
+              closed -{" "}
+              {actionListToShow?.filter((t) => t.status === true).length})
+            </h4>
+
             <div
               className=" white_box_shadow_20 survivors_table_wrap position-relative"
               id="list_goal_pdf_view"
@@ -1202,7 +1238,7 @@ const SurvivorCIT = (props) => {
                 <table className="table table-borderless mb-0">
                   <thead>
                     <tr>
-                       <th>Sr No</th>
+                      <th>Sr No</th>
                       <th>Created Date</th>
                       <th>Dimension</th>
                       <th>Question</th>
@@ -1213,73 +1249,90 @@ const SurvivorCIT = (props) => {
                     </tr>
                   </thead>
                   <tbody>
-                  <ReactDragListView handleSelector="a" onDragEnd={(fromIndex, toIndex)=>onDragDrop(fromIndex, toIndex)} >
-                    {actionListToShow && actionListToShow.length > 0 ? (
-                      actionListToShow.map((item) => {
-
-                        console.log(item,"looooog")
-                        return (
-                          <tr>
-                           
-                            <td> <a href="javascript:voi(0)" class="move_ic"><i class="fa fa-arrows" aria-hidden="true"></i></a> {item.sr_no}</td>
-                            <td>
-                              {item &&
-                                item.createdAt &&
-                                moment(item.createdAt).format("DD/MM/YYYY")}
-                            </td>
-                            <td>{item.dimension_id?.name}</td>
-                            <td>{item.dimension_queston && item.dimension_queston.data}</td>
-                            <td>{item.duty_bearer}</td>
-                            <td>{item.department}</td>
-                            <td>
-                              {" "}
-                              <MDBSwitch
-                                checked={item.status}
-                                onChange={() => toggleStatus(item)}
-                                label={item.status ? "Closed" : "Pending"}
-                              />
-                            </td>
-                            <td>
-                              <MDBTooltip
-                                tag="button"
-                                wrapperProps={{ className: "edit_btn" }}
-                                title="Add Activity"
-                              >
-                                <span
-                                  onClick={() => openEditActivityModal(item)}
+                    <ReactDragListView
+                      handleSelector="a"
+                      onDragEnd={(fromIndex, toIndex) =>
+                        onDragDrop(fromIndex, toIndex)
+                      }
+                    >
+                      {actionListToShow && actionListToShow.length > 0 ? (
+                        actionListToShow.map((item) => {
+                          console.log(item, "looooog");
+                          return (
+                            <tr>
+                              <td>
+                                {" "}
+                                <a href="javascript:voi(0)" class="move_ic">
+                                  <i
+                                    class="fa fa-arrows"
+                                    aria-hidden="true"
+                                  ></i>
+                                </a>{" "}
+                                {item.sr_no}
+                              </td>
+                              <td>
+                                {item &&
+                                  item.createdAt &&
+                                  moment(item.createdAt).format("DD/MM/YYYY")}
+                              </td>
+                              <td>{item.dimension_id?.name}</td>
+                              <td>
+                                {item.dimension_queston &&
+                                  item.dimension_queston.data}
+                              </td>
+                              <td>{item.duty_bearer}</td>
+                              <td>{item.department}</td>
+                              <td>
+                                {" "}
+                                <MDBSwitch
+                                  checked={item.status}
+                                  onChange={() => toggleStatus(item)}
+                                  label={item.status ? "Closed" : "Pending"}
+                                />
+                              </td>
+                              <td>
+                                <MDBTooltip
+                                  tag="button"
+                                  wrapperProps={{ className: "edit_btn" }}
+                                  title="Add Activity"
                                 >
-                                  <i className="fal fa-pencil"></i>
-                                </span>
-                              </MDBTooltip>
-                              <MDBTooltip
-                                tag="button"
-                                wrapperProps={{ className: "edit_btn" }}
-                                title="Edit"
-                              >
-                                <span onClick={() => openEditGoal(item)}>
-                                  <i className="fal fa-pencil"></i>
-                                </span>
-                              </MDBTooltip>
-                              <MDBTooltip
-                                tag="button"
-                                wrapperProps={{ className: "delete_btn-goal" }}
-                                title="Delete"
-                              >
-                                <span onClick={() => openDeleteAlert(item)}>
-                                  <i className="fal fa-trash-alt"></i>
-                                </span>
-                              </MDBTooltip>
-                            </td>
-                          </tr>
-                        );
-                      })
-                    ) : (
-                      <tr>
-                        <td className="text-center" colSpan={4}>
-                          <b>NO Data Found !!</b>
-                        </td>
-                      </tr>
-                    )}
+                                  <span
+                                    onClick={() => openEditActivityModal(item)}
+                                  >
+                                    <i className="fal fa-pencil"></i>
+                                  </span>
+                                </MDBTooltip>
+                                <MDBTooltip
+                                  tag="button"
+                                  wrapperProps={{ className: "edit_btn" }}
+                                  title="Edit"
+                                >
+                                  <span onClick={() => openEditGoal(item)}>
+                                    <i className="fal fa-pencil"></i>
+                                  </span>
+                                </MDBTooltip>
+                                <MDBTooltip
+                                  tag="button"
+                                  wrapperProps={{
+                                    className: "delete_btn-goal",
+                                  }}
+                                  title="Delete"
+                                >
+                                  <span onClick={() => openDeleteAlert(item)}>
+                                    <i className="fal fa-trash-alt"></i>
+                                  </span>
+                                </MDBTooltip>
+                              </td>
+                            </tr>
+                          );
+                        })
+                      ) : (
+                        <tr>
+                          <td className="text-center" colSpan={4}>
+                            <b>NO Data Found !!</b>
+                          </td>
+                        </tr>
+                      )}
                     </ReactDragListView>
                   </tbody>
                 </table>
@@ -1654,9 +1707,7 @@ const SurvivorCIT = (props) => {
 
           {selectedData && selectedData.caregivers && (
             <div className="mt-5 goalsList">
-              <h4 className="mb-4 small_heading">
-                Parents/Caregivers
-              </h4>
+              <h4 className="mb-4 small_heading">Parents/Caregivers</h4>
               <div className=" white_box_shadow_20 survivors_table_wrap position-relative">
                 <div className="table-responsive medium-mobile-responsive">
                   <table className="table table-borderless mb-0">
@@ -1674,9 +1725,7 @@ const SurvivorCIT = (props) => {
           )}
           {selectedData && selectedData.overall_score && (
             <div className="mt-5 goalsList">
-              <h4 className="mb-4 small_heading">
-              Overall score
-              </h4>
+              <h4 className="mb-4 small_heading">Overall score</h4>
               <div className=" white_box_shadow_20 survivors_table_wrap position-relative">
                 <div className="table-responsive medium-mobile-responsive">
                   <table className="table table-borderless mb-0">
@@ -1692,8 +1741,7 @@ const SurvivorCIT = (props) => {
               </div>
             </div>
           )}
-          {selectedData?.worry_statements ||
-          selectedData?.goal_statements ? (
+          {selectedData?.worry_statements || selectedData?.goal_statements ? (
             <div className="mt-5 signficantList">
               <h4 className="mb-4 small_heading">Statements</h4>
               <div className=" white_box_shadow_20 survivors_table_wrap position-relative">
@@ -1744,10 +1792,14 @@ const SurvivorCIT = (props) => {
               <Row>
                 <Form.Group as={Col} md="6" className="mb-3">
                   <Form.Label>Assessment Date</Form.Label>
-                  <DatePicker 
+                  <DatePicker
                     name="assessment_date"
-                    datePickerChange={(e)=>onAssesmentChange(e)}
-                    data={addCitData && addCitData.assessment_date && addCitData.assessment_date}
+                    datePickerChange={(e) => onAssesmentChange(e)}
+                    data={
+                      addCitData &&
+                      addCitData.assessment_date &&
+                      addCitData.assessment_date
+                    }
                     // message={"Please select Application Date"}
                   />
                   {/* <Form.Control
@@ -1769,24 +1821,30 @@ const SurvivorCIT = (props) => {
                     value={addCitData?.next_assesment_date}
                   />
                 </Form.Group>
-                <Form.Group as={Col} md="12" className="mb-3">
+                <Form.Group as={Col} md="6" className="mb-3">
                   <Form.Label>Version</Form.Label>
-                  <Form.Control
-                    name="version"
-                    type="text"
-                    // onChange={(e) =>
-                    //   setAddCitData({
-                    //     ...addCitData,
-                    //     [e.target.name]: e.target.value,
-                    //   })
-                    // }
-                    disabled={true}
-                    value={
-                      defaultData && defaultData.version
+                 
+                  <Form.Select
+                    name="cit_version"
+                    onChange={(e) =>
+                      setAddCitData({
+                        ...addCitData,
+                        [e.target.name]: e.target.value,
+                      })
                     }
-                  />
+                    value={addCitData && addCitData.cit_version ?  addCitData.cit_version  : citVersionList &&
+                      citVersionList.length > 0 &&
+                      citVersionList[0]._id}
+                  >
+                    <option hidden={true}>Please Select</option>
+                    {citVersionList &&
+                      citVersionList.length > 0 &&
+                      citVersionList.map((item) => {
+                        return <option value={item && item._id}>{item && item.name}</option>
+                      })}
+                  </Form.Select>
                 </Form.Group>
-                <Form.Group as={Col} md="12" className="mb-3">
+                <Form.Group as={Col} md="6" className="mb-3">
                   <Form.Label>Status</Form.Label>
                   <Form.Select
                     name="status"
@@ -1796,7 +1854,7 @@ const SurvivorCIT = (props) => {
                         [e.target.name]: e.target.value,
                       })
                     }
-                    value={defaultData && defaultData.status}
+                    value={addCitData && addCitData.status ?  addCitData.status  : defaultData.status}
                   >
                     <option hidden={true}>Please Select</option>
                     <option value={"ongoing"}>Ongoing</option>
@@ -1824,7 +1882,6 @@ const SurvivorCIT = (props) => {
                         ? true
                         : !addCitData.next_assesment_date
                         ? true
-                       
                         : false
                     }
                     onClick={addCitFunc}
@@ -2130,7 +2187,10 @@ const SurvivorCIT = (props) => {
                                 moment(item.createdAt).format("DD/MM/YYYY")}
                             </td>
                             <td>{item.dimension_id?.name}</td>
-                            <td>{item.dimension_queston && item.dimension_queston?.data}</td>
+                            <td>
+                              {item.dimension_queston &&
+                                item.dimension_queston?.data}
+                            </td>
                             <td>{item.duty_bearer}</td>
                             <td>{item.department}</td>
                           </tr>

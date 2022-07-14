@@ -61,10 +61,17 @@ import {changeLogList} from "./reducers/changeLogList";
 import {survivorActionDetails} from "./reducers/survivorActionDetails";
 import {allCitList} from "./reducers/allCitList";
 import {adminDashboardData,ageDashboardData,monthDashboardData,stateDashboardData} from "./reducers/adminDashboardData";
+import {notificationList} from "./reducers/notificationList";
+import {citVersionList} from "./reducers/citVersionList";
+import {pendingItemList} from "./reducers/pendingItemList";
+import {survivorArchiveItem} from "./reducers/survivorArchiveItem";
 
 
 const rootReducer = combineReducers({
   pcWhyList,
+  pendingItemList,
+  survivorArchiveItem,
+  citVersionList,
   adminDashboardData,
   ageDashboardData,
   stateDashboardData,
@@ -128,7 +135,8 @@ const rootReducer = combineReducers({
   actList,
   sectionList,
   sectionByActId,
-  SupplimentarychargeSheetList
+  SupplimentarychargeSheetList,
+  notificationList
 });
 
 export default rootReducer;

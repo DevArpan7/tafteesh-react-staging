@@ -16,10 +16,10 @@ import { TriStateCheckbox } from "primereact/tristatecheckbox";
 // import './DataTableDemo.css';
 import moment from "moment";
 
-const LawyersListDataTable = (props) => {
+const CitVersionDataTable = (props) => {
   const [customers1, setCustomers1] = useState([]);
   const [filters1, setFilters1] = useState(null);
-  const { lawyersList, onSelectRow,isLoading } = props;
+  const { citVersionList, onSelectRow ,isLoading} = props;
 
   const [globalFilterValue1, setGlobalFilterValue1] = useState("");
   const [globalFilterValue2, setGlobalFilterValue2] = useState("");
@@ -33,9 +33,9 @@ const LawyersListDataTable = (props) => {
     console.log(props, "props");
     let obj = {};
     let arr = [];
-    lawyersList &&
-      lawyersList.length > 0 &&
-      lawyersList.map((item) => {
+    citVersionList &&
+    citVersionList.length > 0 &&
+    citVersionList.map((item) => {
         console.log(item, "itemitemitem");
         return (
           (obj = { survivor_name: item.survivor_name, image: "amyelsner.png" }),
@@ -50,7 +50,7 @@ const LawyersListDataTable = (props) => {
   // ];
 
   const customerService =
-    lawyersList && lawyersList.length > 0 && lawyersList;
+    citVersionList && citVersionList.length > 0 && citVersionList;
 
   console.log(customerService, "customer servicessssss");
 
@@ -279,51 +279,47 @@ const LawyersListDataTable = (props) => {
     );
   };
 
-  const categoryBodyTemplate = (rowData) => {
+  const emailBodyTemplate = (rowData) => {
     // return formatDate(rowData.received_on);
     
     return (
-      <>
-      {rowData.category && rowData.category.length>0 && rowData.category.map((item,index)=> {
-      return(
-
-      <span className={`customer-badge status-${item && ( rowData.category.length-1 ==index && item.name || item.name+"," )}`}>
-        {item && ( rowData.category.length-1 ==index && item.name || item.name+"," )}
-      </span>
-      )})}
-      </>
-      
-    );
-  };
-
-  const blockIdBodyTemplate = (rowData) => {
-    // return formatDate(rowData.received_on);
-    
-    return (
-      <>  {rowData.court && rowData.court.length>0 && rowData.court.map((item,index)=> {
-        return(
-      <span className={`customer-badge status-${item && ( rowData.court.length-1 ==index && item.name || item.name+"," )}`}>
-        {item && ( rowData.court.length-1 ==index && item.name || item.name+"," )}
-      </span>
-        )})}
-</>
-    );
-  };
-  const locationBodyTemplate = (rowData) => {
-    // return formatDate(rowData.received_on);
-    
-    return (
-      <span className={`customer-badge status-${rowData.location && rowData.location !== null ? rowData.location.name : ""}`}>
-        {rowData.location && rowData.location !== null ? rowData.location.name : "" }
+      <span className={`customer-badge status-${rowData.email}`}>
+        {rowData.email}
       </span>
     );
   };
 
+  const isTraffickerBodyTemplate = (rowData) => {
+    // return formatDate(rowData.received_on);
+    
+    return (
+      <span className={`customer-badge status-${rowData.is_trafficker}`}>
+        {rowData.is_trafficker}
+      </span>
+    );
+  };
 
   const createdAtMarkBodyTemplate = (rowData) => {
     return formatDate(rowData.createdAt);
   };
+
+  const amountBodyTemplate = (rowData) => {
+    return (
+      <span className={`customer-badge status-${rowData.location}`}>
+        {rowData.location}
+      </span>
+    );
+  };
+
   
+
+  const installmentBodyTemplate = (rowData) => {
+    return (
+      <span className={`customer-badge status-${rowData.rescue_conducted_by}`}>
+        {rowData.rescue_conducted_by}
+      </span>
+    );
+  };
 
   
 
@@ -471,9 +467,7 @@ const LawyersListDataTable = (props) => {
           responsiveLayout="scroll"
           globalFilterFields={[
             "name",
-            "court",
-            "category",
-            "location"
+            "createdAt"         
           ]}
           header={header1}
           emptyMessage="No Data found."
@@ -491,38 +485,18 @@ const LawyersListDataTable = (props) => {
         />
 
         <Column
-            header="Category"
-            //dataType="date"
-            filterField="category"
+            header="Created At"
+            dataType="date"
+            filterField="createdAt"
             style={{ minWidth: "15rem" }}
-            body={categoryBodyTemplate}
+            body={createdAtMarkBodyTemplate}
             filter
             filterElement={balanceFilterTemplate}
         />
-        <Column
-            header="Court"
-            //dataType="date"
-            filterField="court"
-            style={{ minWidth: "15rem" }}
-            body={blockIdBodyTemplate}
-            filter
-            filterElement={balanceFilterTemplate}
-        />
-        <Column
-            header="Location"
-            // dataType="date"
-            filterField="location"
-            style={{ minWidth: "15rem" }}
-            body={locationBodyTemplate}
-            filter
-            filterElement={balanceFilterTemplate}
-        />
-        
-        
 
         </DataTable>
     </div>
   );
 };
 
-export default LawyersListDataTable;
+export default CitVersionDataTable;

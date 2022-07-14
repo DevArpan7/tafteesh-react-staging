@@ -7,7 +7,7 @@ import { Link, useHistory } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import NotificationPage from "../../components/NotificationPage";
 import axios from "axios";
-import { getCollectivesList ,deleteCollective} from "../../redux/action";
+import { getCollectivesList, deleteCollective } from "../../redux/action";
 import Dropdown from "react-bootstrap/Dropdown";
 import DropdownButton from "react-bootstrap/DropdownButton";
 import moment from "moment";
@@ -18,7 +18,7 @@ import CollectivesDataTable from "./CollectivesDataTable";
 
 const KamoCollectives = (props) => {
   const [modalAddShow, setModalAddShow] = useState(false);
-  const [isLoading,setIsLoading] = useState(true)
+  const [isLoading, setIsLoading] = useState(true);
 
   const dispatch = useDispatch();
   const [open, setOpen] = useState(false);
@@ -37,7 +37,8 @@ const KamoCollectives = (props) => {
   const [selectedData, setSelectedData] = useState({});
   const [showAlert, setShowAlert] = useState(false);
   const handleCloseAlert = () => setShowAlert(false);
-
+  const [fieldData, setFieldData] = useState({ field: "", message: "" });
+  const [loader, setLoader] = useState(false);
   //////// delete function call //////////
   const onDeleteChangeFunc = () => {
     if (selectedData && !selectedData._id) {
@@ -75,6 +76,7 @@ const KamoCollectives = (props) => {
   const onCancel = () => {
     setModalAddShow(false);
     setAddCollectiveData({});
+    setFieldData({ field: "", message: "" });
     // setSelectedData({});
   };
 
@@ -93,50 +95,70 @@ const KamoCollectives = (props) => {
     setSelectedData({});
   };
 
+  useEffect(() => {
+    if (addCollectiveData && addCollectiveData.name) {
+      setFieldData({ field: "name", message: "" });
+    } else {
+    }
+  }, [addCollectiveData]);
+
   ///// add shg api cll function /////
 
   const addCollectiveFunc = (e) => {
     e.preventDefault();
-    var body = addCollectiveData;
-
-    if (addCollectiveData && addCollectiveData._id) {
-      axios
-        .patch(api + "/update/" + addCollectiveData._id, body, axiosConfig)
-        .then((response) => {
-          console.log(response);
-          handleClick();
-
-          setUpdateMessage(response && response.data.message);
-
-          if (response.data && response.data.error === false) {
-            const { data } = response;
-            dispatch(getCollectivesList());
-            setModalAddShow(false);
-            // setSelectedData({});
-            setActiveClass(false);
-            setAddCollectiveData({});
-          }
-        })
-        .catch((error) => {
-          console.log(error, "shg add error");
-        });
+    if (addCollectiveData && !addCollectiveData.name) {
+      setFieldData({
+        field: "name",
+        message: "Please enter Collective name",
+      });
     } else {
-      axios
-        .post(api + "/create", body, axiosConfig)
-        .then((response) => {
-          console.log(response);
-          handleClick();
-          setUpdateMessage(response && response.data.message);
-          if (response.data && response.data.error === false) {
-            const { data } = response;
-            dispatch(getCollectivesList());
-            setModalAddShow(false);
-            setAddCollectiveData({});
-          }
-        })
-        .catch((error) => {
-          console.log(error, "shg add error");
-        });
+      setFieldData({ field: "", message: "" });
+      var body = addCollectiveData;
+
+      if (addCollectiveData && addCollectiveData._id) {
+        setLoader(true);
+        axios
+          .patch(api + "/update/" + addCollectiveData._id, body, axiosConfig)
+          .then((response) => {
+            console.log(response);
+            handleClick();
+
+            setUpdateMessage(response && response.data.message);
+            setLoader(false);
+            if (response.data && response.data.error === false) {
+              const { data } = response;
+              dispatch(getCollectivesList());
+              setModalAddShow(false);
+              // setSelectedData({});
+              setActiveClass(false);
+              setAddCollectiveData({});
+            }
+          })
+          .catch((error) => {
+            setLoader(false);
+            console.log(error, "shg add error");
+          });
+      } else {
+        setLoader(true);
+        axios
+          .post(api + "/create", body, axiosConfig)
+          .then((response) => {
+            console.log(response);
+            handleClick();
+            setUpdateMessage(response && response.data.message);
+            setLoader(false);
+            if (response.data && response.data.error === false) {
+              const { data } = response;
+              dispatch(getCollectivesList());
+              setModalAddShow(false);
+              setAddCollectiveData({});
+            }
+          })
+          .catch((error) => {
+            setLoader(false);
+            console.log(error, "shg add error");
+          });
+      }
     }
   };
 
@@ -165,8 +187,8 @@ const KamoCollectives = (props) => {
 
     // Convert users data to a csv
     let usersCsv = collectivesList.data.reduce((acc, user) => {
-      const { _id,name, createdAt } = user;
-      acc.push([_id,name, createdAt].join(","));
+      const { _id, name, createdAt } = user;
+      acc.push([_id, name, createdAt].join(","));
       return acc;
     }, []);
 
@@ -320,16 +342,18 @@ const KamoCollectives = (props) => {
                 wrapperProps={{ className: "delete_btn" }}
                 title="Delete"
               >
-                <span onClick={()=> onDeleteChangeFunc()}>
+                <span onClick={() => onDeleteChangeFunc()}>
                   <i className="fal fa-trash-alt"></i>
                 </span>
               </MDBTooltip>
             </div>
-            <CollectivesDataTable 
-              collectivesList={collectivesList &&
-              collectivesList.data &&
-              collectivesList.data.length > 0 &&
-              collectivesList.data}
+            <CollectivesDataTable
+              collectivesList={
+                collectivesList &&
+                collectivesList.data &&
+                collectivesList.data.length > 0 &&
+                collectivesList.data
+              }
               onSelectRow={onSelectRow}
               isLoading={isLoading}
             />
@@ -411,7 +435,9 @@ const KamoCollectives = (props) => {
         >
           <Modal.Header closeButton>
             <Modal.Title id="contained-modal-title-vcenter">
-            {addCollectiveData && addCollectiveData._id ? "Update Collective": "Add Collective"}  
+              {addCollectiveData && addCollectiveData._id
+                ? "Update Collective"
+                : "Add Collective"}
             </Modal.Title>
           </Modal.Header>
           <Modal.Body>
@@ -436,6 +462,11 @@ const KamoCollectives = (props) => {
                         })
                       }
                     />
+                    {fieldData.field == "name" && (
+                      <small className="mt-4 mb-2 text-danger">
+                        {fieldData && fieldData.message}
+                      </small>
+                    )}
                   </Form.Group>
                 </Row>
                 <Row className="justify-content-between">
@@ -452,15 +483,15 @@ const KamoCollectives = (props) => {
                   <Form.Group as={Col} md="auto">
                     <Button
                       type="submit"
-                      disabled={
-                        addCollectiveData && !addCollectiveData.name
-                          ? true
-                          : false
-                      }
+                      disabled={loader == true ? true : false}
                       onClick={addCollectiveFunc}
                       className="submit_btn shadow-0"
                     >
-                      Submit
+                      {loader && loader === true ? (
+                        <div class="spinner-border bigSpinnerWidth text-info text-center"></div>
+                      ) : (
+                        "Submit"
+                      )}
                     </Button>
                   </Form.Group>
                 </Row>
@@ -469,10 +500,13 @@ const KamoCollectives = (props) => {
           </Modal.Body>
         </Modal>
       </main>
-      {
-        showAlert === true && 
-        <AlertComponent showAlert={showAlert}handleCloseAlert={handleCloseAlert}onDeleteFunction={onDeleteFunction}  />
-      }
+      {showAlert === true && (
+        <AlertComponent
+          showAlert={showAlert}
+          handleCloseAlert={handleCloseAlert}
+          onDeleteFunction={onDeleteFunction}
+        />
+      )}
     </>
   );
 };

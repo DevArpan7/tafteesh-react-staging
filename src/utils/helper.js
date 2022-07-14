@@ -14,6 +14,8 @@ export const goToAdd = (e, history) => {
     // history.go();
   }
 };
+
+
 export const goToEditSurvivor = (e, id, history) => {
   console.log(e, e.target);
 
@@ -38,6 +40,15 @@ export const gotoSurvivorDetails = (e, id, history) => {
 };
 
 
+export const gotoSurvivorArchive=(e,type,history)=>{
+  if (
+    findAncestor(e.target, "anotherTarget") === undefined ||
+    findAncestor(e.target, "anotherTarget") === null
+  ) {
+    history.push(`/archive-list?module=${type}`);
+    // history.go();
+  }
+}
 export const goToSurvivorFir = (e, id, history) => {
   if (
     findAncestor(e.target, "anotherTarget") === undefined ||

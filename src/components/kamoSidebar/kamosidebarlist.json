@@ -20,6 +20,11 @@
         "path": "/cit_dimension"
     },
     {
+        "title": "CIT Version",
+        "icon": "fal fa-home-heart",
+        "path": "/cit_version"
+    },
+    {
         "title": "CIT Dimension Question",
         "icon": "fal fa-home-heart",
         "path": "/cit_dimension_ques"

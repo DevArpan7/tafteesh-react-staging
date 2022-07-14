@@ -121,6 +121,11 @@
 
 
 /* Feedback Box */
+.tafteesh_feedback_box{
+    position: sticky;
+    position: -webkit-sticky;
+    top: 100px;
+}
 .tafteesh_feedback_box h3{
     font-size: 20px;
     margin-bottom: 20px;
@@ -271,6 +276,9 @@
 @media (max-width:575px) {
     .white_box_title, .page_title{
         font-size: 20px;
+    }
+    .page_title{
+        margin-bottom: 15px;
     }
     .vc_summary_tab_menu li{
         width: 110px;

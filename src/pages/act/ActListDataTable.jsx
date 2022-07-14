@@ -78,15 +78,9 @@ const ActListDataTable = (props) => {
     //     month: '2-digit',
     //     year: 'numeric',
     // });
-    return moment(value).format("DD MMM, YYYY");
+    return moment(value).format("DD-MMM-YYYY");
   };
 
-  //   const formatCurrency = (value) => {
-  //     return value.toLocaleString("en-US", {
-  //       style: "currency",
-  //       currency: "USD",
-  //     });
-  //   };
 
   const clearFilter1 = () => {
     initFilters1();
